@@ -53,7 +53,7 @@ function Help() {
             />
           </div>
 
-          <div className="absolute left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">
+          <div className="absolute left-0 top-0 z-30 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">
             <h2 className="font-craftwork-grotesk text-4xl font-bold leading-[47.3px] sm:text-5xl sm:leading-[63.07px]">
               How can we help you?
             </h2>

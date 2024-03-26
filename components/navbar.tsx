@@ -1,25 +1,36 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Button from "./ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import MobileMenu from "./mobile-menu";
 
 function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useRouter();
 
   const handleLogin = () => navigate.push("/signup");
   const handleSignup = () => navigate.push("/login");
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <nav className="flex h-11 w-full flex-row justify-between font-satoshi text-sm font-medium">
       <div className="flex flex-row items-center justify-start gap-20">
-        <Image
-          src="/assets/images/logo.svg"
-          alt="logo"
-          width={106.54}
-          height={24}
-        />
+        <Link href="/">
+          <Image
+            src="/assets/images/logo.svg"
+            alt="logo"
+            width={106.54}
+            height={24}
+            className="hover:cursor-pointer"
+          />
+        </Link>
+
+        {/* desktop menu */}
         <div className="hidden xl:block">
           <ul className="flex flex-row gap-10 ">
             <li>
@@ -49,8 +60,11 @@ function Navbar() {
               className="hidden sm:block"
             />
 
-            <select name="language" id="lang">
-              <option value="en">EN</option>
+            <select name="language" id="lang" className="bg-transparent">
+              <option value="en">English</option>
+              <option value="am">Amharic</option>
+              <option value="afom">Afan Oromo</option>
+              <option value="somali">Somali</option>
             </select>
           </div>
 
@@ -63,14 +77,21 @@ function Navbar() {
             </Button>
           </div>
         </div>
-        {/* mobile menu icon */}
-        <Image
-          src="/assets/icons/menu-icon.svg"
-          alt="logo"
-          width={24}
-          height={24}
-          className="block xl:hidden"
-        />
+
+        <div className="relative">
+          {/* mobile menu icon */}
+          <button type="button" onClick={toggleMobileMenu}>
+            <Image
+              src="/assets/icons/menu-icon.svg"
+              alt="logo"
+              width={24}
+              height={24}
+              className="block xl:hidden"
+            />
+          </button>
+
+          {isMobileMenuOpen && <MobileMenu />}
+        </div>
       </div>
     </nav>
   );

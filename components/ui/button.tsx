@@ -18,7 +18,7 @@ function Button({ variant, children, type, className, onClick }: ButtonProps) {
       <button
         onClick={onClick}
         type={type ?? "button"}
-        className={`h-full min-h-[54px] w-full rounded-full ${className}`}
+        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full ${className}`}
       >
         {children}
       </button>
