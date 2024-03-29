@@ -16,14 +16,16 @@ function OtpSignup() {
       <section className="my-10 flex min-h-[95%] flex-col gap-6 md:my-[60px] xl:flex-row xl:justify-between xl:gap-0">
         {/* hero left section */}
         <div className="xl:w-[50%]">
-          <div className="relative">
+          <div className="relative overflow-hidden">
             <Image
               src="/assets/images/hero-background-vector.svg"
               alt="logo"
               width={269}
               height={443}
-              className="absolute left-0 top-0 z-20  max-h-[250px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
+              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
             />
+
+            <div className="absolute left-0 top-0 z-10 h-full w-full bg-gradient-to-r from-black opacity-80"></div>
 
             <Image
               src="/assets/images/women-holding-phone.jpeg"
@@ -33,7 +35,7 @@ function OtpSignup() {
               className="rounded-2xl"
             />
 
-            <div className="absolute bottom-0 m-auto w-full ">
+            <div className="absolute bottom-0 z-20 m-auto w-full">
               <Textt
                 variant="p1-satoshi"
                 className="px-4 pb-16 text-white md:px-16 2xl:px-24"
@@ -68,7 +70,7 @@ function OtpSignup() {
 
             <Textt
               variant="span1-satoshi"
-              className="text-primary mb-5 mt-[10px]"
+              className="mb-5 mt-[10px] text-primary"
             >
               +251 93 542 5899
             </Textt>

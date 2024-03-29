@@ -11,8 +11,10 @@ function Hero() {
           alt="logo"
           width={495}
           height={352}
-          className="absolute left-0 top-0 z-20 hidden sm:block"
+          className="absolute left-0 top-0 z-30 hidden sm:block"
         />
+
+        <div className="absolute left-0 top-0 z-30 h-full w-full bg-gradient-to-r from-black opacity-80"></div>
 
         {/* mobile vector left */}
         <Image
@@ -20,7 +22,7 @@ function Hero() {
           alt="logo"
           width={235}
           height={91}
-          className="absolute bottom-0 left-0 z-20 block sm:hidden"
+          className="absolute bottom-0 left-0 z-30 block sm:hidden"
         />
 
         {/* mobile vector right */}
@@ -29,7 +31,7 @@ function Hero() {
           alt="logo"
           width={93}
           height={235}
-          className="absolute bottom-0 right-0 z-20 block sm:hidden"
+          className="absolute bottom-0 right-0 z-30 block sm:hidden"
         />
 
         {/* hero */}
@@ -41,7 +43,7 @@ function Hero() {
           className="object-fit-cover absolute left-0 top-0 h-[352px] w-full rounded-[20px] object-cover sm:h-[352px] sm:w-full"
         />
       </div>
-      <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">
+      <div className="absolute left-0 top-0 z-40 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">
         <h2 className="font-craftwork-grotesk text-4xl font-bold leading-[47.3px] sm:w-[377px] sm:text-5xl sm:leading-[63.07px]">
           Send top-up to Ethiopia.
         </h2>

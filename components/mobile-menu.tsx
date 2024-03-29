@@ -15,8 +15,8 @@ function objectToBoolean(obj: object) {
 function MobileMenu() {
   const navigate = useRouter();
 
-  const handleLogin = () => navigate.push("/signup");
-  const handleSignup = () => navigate.push("/login");
+  const handleLogin = () => navigate.push("/login");
+  const handleSignup = () => navigate.push("/signup");
 
   //   const { isLoggedIn, onLogin } = useContext(authContext);
   const [loginLocal, setLoginLocal] = useState<any>();

@@ -10,8 +10,8 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useRouter();
 
-  const handleLogin = () => navigate.push("/signup");
-  const handleSignup = () => navigate.push("/login");
+  const handleLogin = () => navigate.push("/login");
+  const handleSignup = () => navigate.push("/signup");
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

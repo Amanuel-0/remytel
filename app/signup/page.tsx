@@ -1,7 +1,7 @@
 "use client";
 import Footer from "@/components/footer";
 import Container from "@/components/container";
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Textt from "@/components/text";
@@ -9,8 +9,15 @@ import Card from "@/components/card";
 import PhoneInput from "@/components/form/phone-input";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import PhoneInputLib from "@/components/form/phone-input-lib";
 
 function Signup() {
+  const [phone, setPhone] = React.useState("");
+
+  useEffect(() => {
+    console.log(phone);
+  }, [phone]);
+
   const navigate = useRouter();
 
   const handleClick = () => navigate.push("/verify-login");
@@ -22,14 +29,16 @@ function Signup() {
       <section className="my-10 flex min-h-[95%] flex-col gap-6 md:my-[60px] xl:flex-row xl:justify-between xl:gap-0">
         {/* hero left section */}
         <div className="xl:w-[50%]">
-          <div className="relative">
+          <div className="relative overflow-hidden">
             <Image
               src="/assets/images/hero-background-vector.svg"
               alt="logo"
               width={269}
               height={443}
-              className="absolute left-0 top-0 z-20  max-h-[250px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
+              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
             />
+
+            <div className="absolute left-0 top-0 z-10 h-full w-full bg-gradient-to-r from-black opacity-80"></div>
 
             <Image
               src="/assets/images/women-holding-phone.jpeg"
@@ -39,7 +48,7 @@ function Signup() {
               className="rounded-2xl"
             />
 
-            <div className="absolute bottom-0 m-auto w-full ">
+            <div className="absolute bottom-0 z-20 m-auto w-full">
               <Textt
                 variant="p1-satoshi"
                 className="px-4 pb-16 text-white md:px-16 2xl:px-24"
@@ -66,7 +75,14 @@ function Signup() {
                 {`We'll text you a code to verify your number`}
               </Textt>
 
-              <PhoneInput className="my-[10px]" />
+              <div className="my-[10px]">
+                <PhoneInputLib
+                  value={phone}
+                  onChange={(val) => setPhone(val)}
+                />
+              </div>
+
+              {/* <PhoneInput className="my-[10px]" /> */}
             </form>
 
             <Textt

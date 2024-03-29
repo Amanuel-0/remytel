@@ -3,12 +3,19 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import React from "react";
+import React, { useEffect } from "react";
 import PhoneInput from "@/components/form/phone-input";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import PhoneInputLib from "@/components/form/phone-input-lib";
 
 function SignupSendTopup() {
+  const [phone, setPhone] = React.useState("");
+
+  useEffect(() => {
+    console.log(phone);
+  }, [phone]);
+
   const navigate = useRouter();
 
   const handleClick = () => navigate.push("/send-topup/verify");
@@ -34,7 +41,10 @@ function SignupSendTopup() {
             {`We'll text you a code to verify your number`}
           </Textt>
 
-          <PhoneInput className="my-[10px]" />
+          <div className="my-[10px]">
+            <PhoneInputLib value={phone} onChange={(val) => setPhone(val)} />
+          </div>
+          {/* <PhoneInput className="my-[10px]" /> */}
 
           <Textt variant="span1-satoshi" className="mb-5 mt-[10px] text-start">
             {`I'd like to receive discounts, exclusive special offers and other updates from Topup.et via e-mail and SMS.`}

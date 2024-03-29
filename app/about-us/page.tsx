@@ -1,11 +1,9 @@
-import Card from "@/components/card";
-import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
-import Link from "next/link";
 import Container from "@/components/container";
 import React from "react";
 import Image from "next/image";
+import FooterAlt from "@/components/footer-alt";
 
 function AboutUs() {
   return (
@@ -150,136 +148,7 @@ function AboutUs() {
         </Container>
       </Container>
 
-      <footer className="w-full">
-        <Container>
-          <Card>
-            {/* 1 */}
-            <div className="flex flex-col gap-5 pt-7 xl:flex-row xl:justify-between xl:gap-0">
-              <Image
-                src="/assets/images/logo.svg"
-                alt="logo"
-                width={106.54}
-                height={24}
-              />
-
-              <div className="flex flex-row justify-between gap-4 sm:whitespace-nowrap md:gap-[92px]">
-                <div>
-                  <Textt variant="h6-satoshi" className="mb-3 text-start">
-                    Company
-                  </Textt>
-
-                  <div className="flex flex-col gap-2">
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        About us
-                      </Textt>
-                    </a>
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Help
-                      </Textt>
-                    </a>
-                  </div>
-                </div>
-
-                <div>
-                  <Textt variant="h6-satoshi" className="mb-3 text-start ">
-                    Legal
-                  </Textt>
-
-                  <div className="flex flex-col gap-2">
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Privacy notice
-                      </Textt>
-                    </a>
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Terms & conditions
-                      </Textt>
-                    </a>
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Cookies
-                      </Textt>
-                    </a>
-                  </div>
-                </div>
-
-                <div>
-                  <Textt variant="h6-satoshi" className="mb-3 text-start ">
-                    Help
-                  </Textt>
-
-                  <div className="flex flex-col gap-2">
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Support center
-                      </Textt>
-                    </a>
-                    <a href="#">
-                      <Textt variant="span2-satoshi" className="text-start">
-                        Sitemap
-                      </Textt>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 2 */}
-            <div className="flex flex-col gap-1 py-8 md:flex-row md:justify-between">
-              <Textt variant="span2-satoshi" className="text-start">
-                Gift your Friends & Families back home.
-              </Textt>
-
-              <div className="flex gap-5">
-                <Link href={"/"}>
-                  <Image
-                    src={"/assets/icons/logo-facebook.svg"}
-                    alt={"facebook"}
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link href={"/"}>
-                  <Image
-                    src={"/assets/icons/logo-linkedin.svg"}
-                    alt={"linkedin"}
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link href={"/"}>
-                  <Image
-                    src={"/assets/icons/logo-twitter.svg"}
-                    alt={"twitter"}
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link href={"/"}>
-                  <Image
-                    src={"/assets/icons/logo-instagram.svg"}
-                    alt={"instagram"}
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-              </div>
-            </div>
-
-            <hr />
-
-            {/* 3 */}
-            <div>
-              <Textt variant="span2-satoshi" className="pb-10 pt-4 md:pt-9">
-                Copyright © 2024 Top-up.et. All rights reserved.
-              </Textt>
-            </div>
-          </Card>
-        </Container>
-      </footer>
+      <FooterAlt />
     </>
   );
 }
