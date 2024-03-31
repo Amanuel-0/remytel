@@ -24,11 +24,21 @@ function Bill() {
       <Textt variant="h4-craftwork">Your Order</Textt>
 
       <div className="mt-5">
-        <TopupToDetailCard />
+        <TopupToDetailCard
+          phone={""}
+          onPhoneEdit={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
 
       <div className="mt-5">
-        <TopupOptionDetailCard />
+        <TopupOptionDetailCard
+          productOrPlan={""}
+          onProductOrPlanEdit={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
 
       <Card className="my-8">
