@@ -10,6 +10,7 @@ import Button from "@/components/ui/button";
 import Container from "@/components/container";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
+import Link from "next/link";
 
 function Login() {
   const [phone, setPhone] = React.useState("");
@@ -96,9 +97,11 @@ function Login() {
 
             <div className="flex w-full items-center justify-center gap-2">
               <Textt variant="span1-satoshi">Don’t have an account?</Textt>
-              <Textt variant="span1-satoshi" className="text-primary">
-                Sign Up Here
-              </Textt>
+              <Link href={"/signup"}>
+                <Textt variant="span1-satoshi" className="text-primary">
+                  Sign Up Here
+                </Textt>
+              </Link>
             </div>
           </Card>
         </div>

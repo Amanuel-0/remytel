@@ -5,18 +5,40 @@ import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
 import Button from "@/components/ui/button";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Image from "next/image";
 import FaqAccordion from "@/components/faq-accordion";
 import FooterAlt from "@/components/footer-alt";
 import PhoneInputLib from "@/components/form/phone-input-lib";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function LandingPage() {
-  const [phone, setPhone] = React.useState("");
+  const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   useEffect(() => {
-    console.log(phone);
-  }, [phone]);
+    const phone = searchParams.get("to") || "";
+    setReceiverPhoneNumber(phone);
+  }, [searchParams]);
+
+  const handleStarttopup = () => {
+    router.push(
+      `/send-topup/options?${createQueryString("to", receiverPhoneNumber)}`,
+    );
+  };
 
   return (
     <>
@@ -41,12 +63,17 @@ function LandingPage() {
 
               <PhoneInputLib
                 hideDropdown={true}
-                value={phone}
-                onChange={(val) => setPhone(val)}
+                disableCountryGuess={true}
+                value={receiverPhoneNumber}
+                onChange={(val) => setReceiverPhoneNumber(val)}
               />
               {/* <PhoneInput className="mb-3" /> */}
               {/* <Button variant="primary-normal">Start top-up</Button> */}
-              <Button variant="primary-normal">
+              <Button
+                variant="primary-normal"
+                onClick={handleStarttopup}
+                className="mt-2"
+              >
                 <Textt variant="h6-satoshi" className="text-white">
                   Start top-up
                 </Textt>

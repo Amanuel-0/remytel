@@ -3,33 +3,79 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import React, { useEffect } from "react";
-import PhoneInput from "@/components/form/phone-input";
+import React, { useCallback, useEffect } from "react";
 import Button from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 
 function SignupSendTopup() {
-  const [phone, setPhone] = React.useState("");
+  const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
+
+  const handleEditPhone = () => {
+    router.push(`/?${createQueryString("to", searchParams.get("to") || "")}`);
+  };
+  const handleProductOrPlanEdit = () => {
+    if (searchParams.get("productId")) {
+      router.push(
+        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
+      );
+    }
+    if (searchParams.get("planId")) {
+      router.push(
+        `/send-topup/options?${createQueryString("planId", searchParams.get("planId") || "")}`,
+      );
+    }
+  };
+
+  const handleSignup = () => {
+    router.push(
+      `/send-topup/verify?${createQueryString("from", senderPhoneNumber)}`,
+    );
+  };
 
   useEffect(() => {
-    console.log(phone);
-  }, [phone]);
+    console.log("senderPhoneNumber", senderPhoneNumber);
+  }, [senderPhoneNumber]);
 
   const navigate = useRouter();
 
-  const handleClick = () => navigate.push("/send-topup/verify");
+  useEffect(() => {
+    const phone = searchParams.get("from") || "";
+    setSenderPhoneNumber(phone);
+  }, [searchParams]);
 
   return (
     <>
       <Textt variant="h4-craftwork">You’re senRemytel top-up to</Textt>
 
       <div className="mt-5">
-        <TopupToDetailCard />
+        <TopupToDetailCard
+          phone={searchParams.get("to") || ""}
+          onPhoneEdit={handleEditPhone}
+        />
       </div>
 
       <div className="mt-5">
-        <TopupOptionDetailCard />
+        <TopupOptionDetailCard
+          productOrPlan={
+            searchParams.get("productId") || searchParams.get("planId") || ""
+          }
+          onProductOrPlanEdit={handleProductOrPlanEdit}
+        />
       </div>
 
       {/* topups & plans */}
@@ -42,7 +88,11 @@ function SignupSendTopup() {
           </Textt>
 
           <div className="my-[10px]">
-            <PhoneInputLib value={phone} onChange={(val) => setPhone(val)} />
+            <PhoneInputLib
+              defaultCountry="US"
+              value={senderPhoneNumber}
+              onChange={(val) => setSenderPhoneNumber(val)}
+            />
           </div>
           {/* <PhoneInput className="my-[10px]" /> */}
 
@@ -110,7 +160,7 @@ function SignupSendTopup() {
           <Button
             variant="primary-normal"
             className="my-4"
-            onClick={handleClick}
+            onClick={handleSignup}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Confirm Phone Number

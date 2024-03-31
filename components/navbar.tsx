@@ -1,20 +1,32 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "./ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MobileMenu from "./mobile-menu";
+import authContext from "@/states/auth-context";
+import Textt from "./text";
+import AccountMenu from "./account-menu";
 
 function Navbar() {
+  const { isLoggedIn, onLogin } = useContext(authContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const navigate = useRouter();
+
+  useEffect(() => {
+    onLogin(false);
+  }, []);
 
   const handleLogin = () => navigate.push("/login");
   const handleSignup = () => navigate.push("/signup");
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+  const toggleAccountMenu = () => {
+    setIsAccountMenuOpen(!isAccountMenuOpen);
   };
 
   return (
@@ -34,7 +46,8 @@ function Navbar() {
         <div className="hidden xl:block">
           <ul className="flex flex-row gap-10 ">
             <li>
-              <Link href="/send-topup/options">Send top-up</Link>
+              <Link href="/send-topup/to">Send top-up</Link>
+              {/* <Link href="/send-topup/options">Send top-up</Link> */}
             </li>
             <li>
               <Link href="/request-topup/signup">Request top-up</Link>
@@ -68,13 +81,43 @@ function Navbar() {
             </select>
           </div>
 
-          <div className="flex w-[173px] flex-row gap-3">
-            <Button variant="light-normal" onClick={handleLogin}>
-              Login
-            </Button>
-            <Button variant="primary-gradient-top-left" onClick={handleSignup}>
-              Signup
-            </Button>
+          <div className="relative flex w-[173px] flex-row gap-3">
+            {isLoggedIn ? (
+              <>
+                <button
+                  onClick={toggleAccountMenu}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <Image
+                    src={"/assets/icons/person-black-icon.svg"}
+                    alt={"account-img"}
+                    width={14}
+                    height={16}
+                  />
+                  <Textt variant="span1-satoshi">My Account</Textt>
+                  <Image
+                    src={"/assets/icons/filled-down-icon.svg"}
+                    alt={"down-img"}
+                    width={6}
+                    height={6}
+                  />
+                </button>
+
+                {isAccountMenuOpen && <AccountMenu />}
+              </>
+            ) : (
+              <>
+                <Button variant="light-normal" onClick={handleLogin}>
+                  Login
+                </Button>
+                <Button
+                  variant="primary-gradient-top-left"
+                  onClick={handleSignup}
+                >
+                  Signup
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
@@ -90,7 +133,8 @@ function Navbar() {
             />
           </button>
 
-          {isMobileMenuOpen && <MobileMenu />}
+          {isMobileMenuOpen && isLoggedIn && <AccountMenu />}
+          {isMobileMenuOpen && !isLoggedIn && <MobileMenu />}
         </div>
       </div>
     </nav>

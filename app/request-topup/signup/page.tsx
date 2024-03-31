@@ -32,7 +32,12 @@ function SignupSendTopup() {
           </Textt>
 
           <div className="my-[10px]">
-            <PhoneInputLib value={phone} onChange={(val) => setPhone(val)} />
+            <PhoneInputLib
+              hideDropdown={true}
+              disableCountryGuess={true}
+              value={phone}
+              onChange={(val) => setPhone(val)}
+            />
           </div>
 
           {/* <PhoneInput className="my-[10px]" /> */}

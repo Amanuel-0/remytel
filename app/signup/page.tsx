@@ -6,10 +6,10 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Textt from "@/components/text";
 import Card from "@/components/card";
-import PhoneInput from "@/components/form/phone-input";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
+import Link from "next/link";
 
 function Signup() {
   const [phone, setPhone] = React.useState("");
@@ -159,9 +159,11 @@ function Signup() {
 
             <div className="flex w-full items-center justify-center gap-2">
               <Textt variant="span1-satoshi">Already have an account?</Textt>
-              <Textt variant="span1-satoshi" className="text-primary">
-                Log in
-              </Textt>
+              <Link href={"/login"}>
+                <Textt variant="span1-satoshi" className="text-primary">
+                  Log in
+                </Textt>
+              </Link>
             </div>
           </Card>
         </div>

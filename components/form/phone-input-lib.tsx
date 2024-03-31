@@ -8,11 +8,15 @@ import "react-international-phone/style.css";
 
 interface PhoneInputLibProps {
   hideDropdown?: boolean;
+  disableCountryGuess?: boolean;
+  defaultCountry?: string;
   value: string;
   onChange: (value: string) => void;
 }
 function PhoneInputLib({
   hideDropdown = false,
+  defaultCountry = "et",
+  disableCountryGuess = false,
   value,
   onChange,
 }: PhoneInputLibProps) {
@@ -28,7 +32,8 @@ function PhoneInputLib({
     <>
       {/* react-international-phone */}
       <PhoneInput
-        defaultCountry="et"
+        defaultCountry={defaultCountry ?? "et"}
+        disableCountryGuess={disableCountryGuess}
         hideDropdown={hideDropdown}
         value={value}
         onChange={(val: any) => onChange(val)}

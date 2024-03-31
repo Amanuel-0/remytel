@@ -2,7 +2,7 @@ import React from "react";
 import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface ITopup {
   id: number;
@@ -19,7 +19,11 @@ const topupOptions: ITopup[] = [
   { id: 5, priceInETB: 138, priceInUSD: 2.79, isPopular: false },
 ];
 
-function TopupOptions() {
+function TopupOptions({
+  onProductSelection,
+}: {
+  onProductSelection: (id: number) => void;
+}) {
   const navigate = useRouter();
 
   const handleBuy = () => navigate.push("/send-topup/signup");
@@ -49,7 +53,7 @@ function TopupOptions() {
               </span>
 
               <button
-                onClick={handleBuy}
+                onClick={() => onProductSelection(topup.id)}
                 className="h-full min-h-[38px] w-[120px] rounded-full bg-[#04A94D] text-white "
               >
                 <Textt variant="span1-satoshi" className="text-white">
