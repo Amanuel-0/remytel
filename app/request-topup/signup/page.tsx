@@ -1,21 +1,74 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useEffect } from "react";
-import Button from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import React, { useCallback, useContext, useEffect } from "react";
+import MyButton from "@/components/ui/my-button";
+import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
+import authContext from "@/states/auth-context";
+import { isPhoneValid } from "@/utils";
+import { login } from "@/services";
 
 function SignupSendTopup() {
-  const [phone, setPhone] = React.useState("");
+  const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
+  const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const { isLoggedIn } = useContext(authContext);
+
+  // do not show this page if the user is logged in and return to
+  // the previous page or somewhere else
+  // if (isLoggedIn) {
+  //   router.back();
+  // }
+
+  const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   useEffect(() => {
-    console.log(phone);
-  }, [phone]);
+    console.log(senderPhoneNumber);
+  }, [senderPhoneNumber]);
   const navigate = useRouter();
 
-  const handleClick = () => navigate.push("/request-topup/verify");
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!isSenderPhoneValid) {
+      setSenderPhoneTouched(true);
+      return;
+    }
+
+    // for now, just redirect to signup page
+    router.push(
+      `/request-topup/verify?${createQueryString("from", senderPhoneNumber)}`,
+    );
+    return;
+
+    // login user
+    const userData = await login({
+      phoneNumber: senderPhoneNumber,
+    });
+    // todo: save user data in react context & local storage
+
+    console.log("login reponse data: ", userData);
+    if (userData) {
+      router.push(
+        `/request-topup/signup?${createQueryString("from", senderPhoneNumber)}`,
+      );
+    }
+  };
+
   return (
     <>
       <Textt variant="h4-craftwork" className="text-start">
@@ -33,24 +86,33 @@ function SignupSendTopup() {
 
           <div className="my-[10px]">
             <PhoneInputLib
+              name="phoneNumber"
               hideDropdown={true}
               disableCountryGuess={true}
-              value={phone}
-              onChange={(val) => setPhone(val)}
+              value={senderPhoneNumber}
+              onChange={(val) => {
+                if (isSenderPhoneValid) {
+                }
+                setSenderPhoneNumber(val);
+              }}
             />
+
+            {senderPhoneTouched && !isSenderPhoneValid && (
+              <small className="text-xs text-red-500">Phone is not valid</small>
+            )}
           </div>
 
           {/* <PhoneInput className="my-[10px]" /> */}
 
-          <Button
+          <MyButton
             variant="primary-normal"
             className="my-4"
-            onClick={handleClick}
+            onClick={handleSubmit}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Confirm Phone Number
             </Textt>
-          </Button>
+          </MyButton>
 
           <Textt variant="p1-satoshi" className="mb-5 mt-[10px]">
             By continuing, you agree to our 

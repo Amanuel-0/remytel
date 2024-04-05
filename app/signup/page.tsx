@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Textt from "@/components/text";
 import Card from "@/components/card";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
@@ -147,7 +147,7 @@ function Signup() {
               {/* radio end */}
             </div>
 
-            <Button
+            <MyButton
               variant="primary-normal"
               className="my-4"
               onClick={handleClick}
@@ -155,7 +155,7 @@ function Signup() {
               <Textt variant="h5-satoshi" className="text-white">
                 Confirm Phone Number
               </Textt>
-            </Button>
+            </MyButton>
 
             <div className="flex w-full items-center justify-center gap-2">
               <Textt variant="span1-satoshi">Already have an account?</Textt>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import Card from "./card";
-import Button from "./ui/button";
+import MyButton from "./ui/my-button";
 import authContext from "@/states/auth-context";
 import Image from "next/image";
 import Textt from "./text";

@@ -7,8 +7,12 @@ import IconButton from "@/components/ui/icon-button";
 import VerifyOtp from "@/components/verify-otp";
 import React from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 function Verify() {
+  const searchParams = useSearchParams();
+  const senderPhone = searchParams.get("from") ?? "";
+
   return (
     <>
       <Card className="my-8">
@@ -32,7 +36,7 @@ function Verify() {
             variant="span1-satoshi"
             className="mb-5 mt-[10px] text-primary"
           >
-            +251 93 542 5899
+            {senderPhone}
           </Textt>
 
           <IconButton className="h-8 w-8">
@@ -46,7 +50,10 @@ function Verify() {
         </div>
 
         {/* verify opt form */}
-        <VerifyOtp />
+        <VerifyOtp
+          redirectUrl="/request-topup/create-topup-link"
+          senderPhoneNumber={senderPhone}
+        />
 
         <Textt variant="span1-satoshi" className="underline">
           Request new code

@@ -1,14 +1,23 @@
 import axios from "axios";
 import { API_URL } from ".";
 
-interface Price {
+// export interface IPage {
+//   page: number;
+//   perPage: number;
+// }
+// export const defaultPaging: IPage = {
+//   page: 1,
+//   perPage: 10,
+// };
+
+export interface Price {
   amount: number;
   currency: string;
   fee: number;
   total: number;
 }
 
-interface Product {
+export interface Product {
   amount: number;
   unit: string;
   description: string;
@@ -17,15 +26,15 @@ interface Product {
   operator: number;
   operator_name: string;
   price: Price;
-  type: string;
+  type: "Airtime" | "Bundle" | "Data";
 }
 
 // products
-export const getProducts = async () => {
+export const getProducts = async (phoneNumber?: number) => {
   const response = await axios.get(
-    `${API_URL}service/products?page=1&perPage=100&phoneNumber=251963158999`,
+    `${API_URL}service/products?page=1&perPage=100&phoneNumber=${phoneNumber ?? "251963158999"}`,
   );
-  return response.data as Partial<Product[]>;
+  return response.data;
 };
 
 // buy product

@@ -9,16 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
     "axios": "^1.6.8",
+    "class-variance-authority": "^0.7.0",
+    "clipboard": "^2.0.11",
     "clsx": "^2.1.0",
+    "date-fns": "^3.6.0",
+    "formik": "^2.4.5",
     "framer-motion": "^11.0.20",
+    "google-libphonenumber": "^3.2.34",
+    "lucide-react": "^0.364.0",
     "next": "13.5.6",
     "react": "^18",
+    "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "react-international-phone": "^4.2.6",
-    "react-phone-number-input": "^3.3.9"
+    "react-onesignal": "^3.0.1",
+    "react-phone-number-input": "^3.3.9",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/google-libphonenumber": "^7.4.30",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

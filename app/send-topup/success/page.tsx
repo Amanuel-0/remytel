@@ -1,10 +1,34 @@
+"use client";
 import Card from "@/components/card";
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/my-button";
+import { useRouter, useSearchParams } from "next/navigation";
+import productContext from "@/states/product-context";
+import { Product } from "@/services";
+import SaveContactModal from "@/components/save-contact-modal";
 
 function Success() {
+  const { product, onProductChange } = useContext(productContext);
+  const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const senderPhone = searchParams.get("from") ?? "";
+  const receiverPhone = searchParams.get("to") ?? "";
+  const topupFrequency = searchParams.get("topup-frq") ?? "";
+
+  const handleSendAnotherTopup = () => {
+    // onProductChange({} as Product);
+    router.push("/send-topup/options");
+  };
+  const handleDone = () => {
+    // onProductChange({} as Product);
+    // router.push("/send-topup");
+    console.log("Done");
+  };
+
   return (
     <>
       <Card className="flex flex-col items-center">
@@ -22,16 +46,20 @@ function Success() {
           22 Mar 2024, 03:07 PM
         </Textt>
 
-        <div className="mt-2 flex items-center justify-start gap-2">
-          <Image
-            src={"/assets/icons/schedule-icon.svg"}
-            alt={"success"}
-            width={16}
-            height={17}
-          />
+        {topupFrequency && (
+          <div className="mt-2 flex items-center justify-start gap-2">
+            <Image
+              src={"/assets/icons/schedule-icon.svg"}
+              alt={"success"}
+              width={16}
+              height={17}
+            />
 
-          <Textt variant="span1-satoshi">Auto top-up every 30 days </Textt>
-        </div>
+            <Textt variant="span1-satoshi">
+              Auto top-up every {topupFrequency} days 
+            </Textt>
+          </div>
+        )}
 
         <button className="mt-2 flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
           <Textt variant="span2-satoshi">View receipt</Textt>
@@ -47,11 +75,14 @@ function Success() {
       <Card className="mt-5">
         <div className="flex items-center justify-between">
           <Textt variant="h4-satoshi" className="text-start">
-            +251938649359
+            {receiverPhone}
           </Textt>
 
-          <button className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
-            <Textt variant="span2-satoshi">View receipt</Textt>
+          <button
+            className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]"
+            onClick={() => setOpenSaveContactModal(true)}
+          >
+            <Textt variant="span2-satoshi">Save contact</Textt>
             <Image
               src={"/assets/icons/arrow-right.svg"}
               alt={"right"}
@@ -65,7 +96,7 @@ function Success() {
           <Textt variant="p1-satoshi" className="text-start">
             Received your top-up of
           </Textt>
-          <Textt variant="h6-satoshi">138 ETB</Textt>
+          <Textt variant="h6-satoshi">{product.amount} ETB</Textt>
         </div>
 
         <div className="mb-6 mt-5 flex items-center justify-between">
@@ -116,7 +147,7 @@ function Success() {
           </Textt>
         </div>
 
-        <Button variant="primary-normal">
+        <Button variant="primary-normal" onClick={handleSendAnotherTopup}>
           <Textt variant="h5-satoshi" className="text-white">
             Send another top-up
           </Textt>
@@ -128,6 +159,12 @@ function Success() {
           </Textt>
         </Button>
       </Card>
+
+      {/* save contact modal */}
+      <SaveContactModal
+        open={openSaveContactModal}
+        onClose={() => setOpenSaveContactModal(false)}
+      />
     </>
   );
 }

@@ -2,6 +2,9 @@
 
 /.VSCodeCounter
 
+globals copy.css
+tailwind.config copy.ts
+
 # dependencies
 /node_modules
 /.pnp

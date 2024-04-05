@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
+import { Product } from "@/services";
 
 interface IPlan {
   id: number;
@@ -39,28 +40,37 @@ const plansOptions: IPlan[] = [
   },
 ];
 
-function PlansOptions() {
+interface PlansOptionsProps {
+  products: Product[]; // product are type of 'Bundle'
+  onProductSelection: (id: number) => void;
+}
+function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
   return (
     <>
-      {plansOptions.map((plan) => (
-        <div key={plan.id} className="mb-[10px]">
+      {products.map((product) => (
+        <div key={product.id} className="mb-[10px]">
           <Card
-            className={`relative ${plan.isPopular ? "border-2 border-black" : "border border-[#DBDBDB]"}`}
+            className={`relative ${false ? "border-2 border-black" : "border border-[#DBDBDB]"}`}
+            // className={`relative ${plan.isPopular ? "border-2 border-black" : "border border-[#DBDBDB]"}`}
           >
             <Textt variant="h4-satoshi" className="blocks text-start">
-              {plan.title}
+              {product.name}
             </Textt>
 
             <div className="mt-[10px] flex items-end justify-between">
               <span className="flex items-end justify-start gap-1">
                 <Textt variant="span2-satoshi" className="blocks text-start">
-                  Valid for {plan.validityPeriod} days
+                  Valid for unknown days
+                  {/* Valid for {product?.validityPeriod} days */}
                 </Textt>
               </span>
 
-              <button className="h-full min-h-[38px] w-[120px] rounded-full bg-[#04A94D] text-white ">
+              <button
+                onClick={() => onProductSelection(product.id)}
+                className="h-full min-h-[38px] w-[120px] rounded-full bg-[#04A94D] text-white "
+              >
                 <Textt variant="span1-satoshi" className="text-white">
-                  Buy {plan.priceInUSD} USD
+                  Buy {product.price.amount} USD
                 </Textt>
               </button>
             </div>
@@ -68,12 +78,13 @@ function PlansOptions() {
             <div className="mt-[10px] flex items-center justify-start gap-2">
               <div className="h-2 w-2 rounded-full bg-[#808080]"></div>
               <Textt variant="span2-satoshi" className="blocks text-start">
-                {plan.plan}
+                {product.description}
               </Textt>
             </div>
 
             {/* popular badge */}
-            {plan.isPopular && (
+            {false && (
+              // {product.isPopular && (
               <div className="p absolute -top-2.5 left-4 flex h-[22px] w-[74px] items-center justify-center gap-[6px] rounded-full bg-primary font-satoshi text-[10px] font-bold leading-[13.14px] text-white">
                 <Image
                   src={"/assets/icons/star-icon.svg"}

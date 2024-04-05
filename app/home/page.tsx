@@ -4,7 +4,7 @@ import Container from "@/components/container";
 import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
 import React, { useCallback, useEffect } from "react";
 import Image from "next/image";
 import FaqAccordion from "@/components/faq-accordion";
@@ -69,7 +69,7 @@ function LandingPage() {
               />
               {/* <PhoneInput className="mb-3" /> */}
               {/* <Button variant="primary-normal">Start top-up</Button> */}
-              <Button
+              <MyButton
                 variant="primary-normal"
                 onClick={handleStarttopup}
                 className="mt-2"
@@ -77,7 +77,7 @@ function LandingPage() {
                 <Textt variant="h6-satoshi" className="text-white">
                   Start top-up
                 </Textt>
-              </Button>
+              </MyButton>
             </Card>
 
             <span className="my-5 flex h-[36px] w-[163px] flex-row items-center justify-center gap-[10px] rounded-full border border-[#E1E1E1] bg-white text-sm leading-[18.4px]">
@@ -200,9 +200,9 @@ function LandingPage() {
               </Textt>
 
               <div className="w-36">
-                <Button variant="primary-gradient-bottom-right">
+                <MyButton variant="primary-gradient-bottom-right">
                   Start top-up
-                </Button>
+                </MyButton>
               </div>
             </div>
 

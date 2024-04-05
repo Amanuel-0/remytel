@@ -6,7 +6,7 @@ import Footer from "@/components/footer";
 import PhoneInput from "@/components/form/phone-input";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
 import Container from "@/components/container";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
@@ -85,7 +85,7 @@ function Login() {
               {/* <PhoneInput className="my-[10px]" /> */}
             </form>
 
-            <Button
+            <MyButton
               variant="primary-normal"
               className="my-4"
               onClick={handleClick}
@@ -93,7 +93,7 @@ function Login() {
               <Textt variant="h5-satoshi" className="text-white">
                 Confirm Phone Number
               </Textt>
-            </Button>
+            </MyButton>
 
             <div className="flex w-full items-center justify-center gap-2">
               <Textt variant="span1-satoshi">Don’t have an account?</Textt>

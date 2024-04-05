@@ -1,28 +1,37 @@
 "use client";
 import Card from "@/components/card";
-import PhoneInput from "@/components/form/phone-input";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import Button from "@/components/ui/button";
 import VerifyOtp from "@/components/verify-otp";
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import SetAutoTopupModal from "@/components/set-auto-topup-modal";
+import productContext from "@/states/product-context";
+import authContext from "@/states/auth-context";
 
 function Verify() {
+  const { product } = useContext(productContext);
+  const { isLoggedIn } = useContext(authContext);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const senderPhone = searchParams.get("from") ?? "";
+  const senderCountryCode = searchParams.get("fromCountryCode") ?? "";
+  const receiverPhone = searchParams.get("to") ?? "";
+
+  // do not show this page if the user is logged in and return to
+  // the previous page or somewhere else
+  // if (isLoggedIn) {
+  //   router.back();
+  // }
 
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair
   const createQueryString = useCallback(
-    (name: string, value: string) => {
+    (name?: string, value?: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
+      if (name && value) params.set(name, value);
 
       return params.toString();
     },
@@ -30,22 +39,17 @@ function Verify() {
   );
 
   const handleEditReceiverPhone = () => {
-    router.push(`/?${createQueryString("to", searchParams.get("to") || "")}`);
+    router.push(`/?${createQueryString("to", receiverPhone || "")}`);
   };
   const handleEditSenderPhone = () => {
     router.push(
-      `/send-topup/signup?${createQueryString("from", searchParams.get("from") || "")}`,
+      `/send-topup/signup?${createQueryString("from", senderPhone || "")}`,
     );
   };
-  const handleProductOrPlanEdit = () => {
+  const handleProductEdit = () => {
     if (searchParams.get("productId")) {
       router.push(
         `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
-      );
-    }
-    if (searchParams.get("planId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("planId", searchParams.get("planId") || "")}`,
       );
     }
   };
@@ -67,10 +71,8 @@ function Verify() {
 
       <div className="mt-5">
         <TopupOptionDetailCard
-          productOrPlan={
-            searchParams.get("productId") || searchParams.get("planId") || ""
-          }
-          onProductOrPlanEdit={handleProductOrPlanEdit}
+          product={product}
+          onProductEdit={handleProductEdit}
         />
       </div>
 
@@ -113,7 +115,12 @@ function Verify() {
         </div>
 
         {/* verify opt form */}
-        <VerifyOtp />
+        <VerifyOtp
+          redirectUrl={`/send-topup/auto-topup?${createQueryString()}`}
+          // redirectUrl={`/send-topup/bill?${createQueryString()}`}
+          senderPhoneNumber={senderPhone}
+          code={senderCountryCode}
+        />
 
         <Textt variant="span1-satoshi" className="underline">
           Request new code

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 //
-import { PhoneInput } from "react-international-phone";
+import { ParsedCountry, PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 
 interface PhoneInputLibProps {
@@ -11,7 +11,12 @@ interface PhoneInputLibProps {
   disableCountryGuess?: boolean;
   defaultCountry?: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (
+    phone: string,
+    meta: { country: ParsedCountry; inputValue: string },
+  ) => void;
+  onBlur?: (e: any) => void;
+  name?: string;
 }
 function PhoneInputLib({
   hideDropdown = false,
@@ -19,6 +24,8 @@ function PhoneInputLib({
   disableCountryGuess = false,
   value,
   onChange,
+  onBlur,
+  name,
 }: PhoneInputLibProps) {
   // `value` will be the parsed phone number in E.164 format.
   // Example: "+12133734253".
@@ -35,8 +42,10 @@ function PhoneInputLib({
         defaultCountry={defaultCountry ?? "et"}
         disableCountryGuess={disableCountryGuess}
         hideDropdown={hideDropdown}
+        name={name}
         value={value}
-        onChange={(val: any) => onChange(val)}
+        onChange={onChange}
+        onBlur={onBlur}
         countrySelectorStyleProps={{
           buttonStyle: {
             height: "54px",

@@ -1,14 +1,47 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
-import Button from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import MyButton from "@/components/ui/my-button";
+import { useRouter, useSearchParams } from "next/navigation";
+import productContext from "@/states/product-context";
+import { DatePickerDemo } from "@/components/ui/date-picker";
+import EditReceiverPhoneModal from "@/components/edit-receiver-phone-modal";
+// import { useDayPicker, DayPickerProvider } from "react-day-picker";
 
 function Payment() {
+  const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = React.useState(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
+    React.useState(false);
+
+  const senderPhone = searchParams.get("from") ?? "";
+  const receiverPhone = searchParams.get("to") ?? "";
+  const topupFrequency = searchParams.get("topup-frq") ?? "";
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name?: string, value?: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (name && value) params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
+
+  const handleProductEdit = () => {
+    if (searchParams.get("productId")) {
+      router.push(
+        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
+      );
+    }
+  };
 
   const handleTogglePaymentDetail = () => {
     setShowPaymentDetail(!showPaymentDetail);
@@ -16,7 +49,8 @@ function Payment() {
 
   const navigate = useRouter();
 
-  const handleClick = () => navigate.push("/send-topup/success");
+  const handleClick = () =>
+    navigate.push(`/send-topup/success?${createQueryString()}`);
 
   return (
     <>
@@ -25,34 +59,53 @@ function Payment() {
       </Textt>
 
       {/* This card was what was previously => <TopupToDetailCard /> */}
-      <Card className="mt-5 flex items-center justify-between">
-        <div>
-          <span className="flex items-center justify-center gap-3">
-            <Image
-              src={"/assets/images/flags/ethiopian-flag.png"}
-              alt="ethiopian-flag"
-              width={30}
-              height={30}
-            />
-            <Textt variant="h6-satoshi">+251 93 542 5899</Textt>
+      <Card>
+        <div className="mt-5 flex items-center justify-between">
+          <div>
+            <span className="flex items-center justify-center gap-3">
+              <Image
+                src={"/assets/images/flags/ethiopian-flag.png"}
+                alt="ethiopian-flag"
+                width={30}
+                height={30}
+              />
+              <Textt variant="h6-satoshi">{receiverPhone}</Textt>
 
+              <Image
+                src={"/assets/images/ethiotel-logo.svg"}
+                alt="ethiotel-logo"
+                width={55}
+                height={14}
+              />
+            </span>
+          </div>
+
+          <IconButton
+            className="h-8 w-8"
+            onClick={() => setOpenEditSenderPhoneModal(true)}
+          >
             <Image
-              src={"/assets/images/ethiotel-logo.svg"}
-              alt="ethiotel-logo"
-              width={55}
+              src={"/assets/icons/edit-icon.svg"}
+              alt={"edit-icon"}
+              width={14}
               height={14}
             />
-          </span>
+          </IconButton>
         </div>
 
-        <IconButton className="h-8 w-8">
-          <Image
-            src={"/assets/icons/edit-icon.svg"}
-            alt={"edit-icon"}
-            width={14}
-            height={14}
-          />
-        </IconButton>
+        {topupFrequency && (
+          <div className="mt-7 flex items-center justify-start gap-2">
+            <Image
+              src={"/assets/icons/schedule-icon.svg"}
+              alt={"schedule-icon"}
+              width={16}
+              height={17}
+            />
+            <Textt variant="span1-satoshi">
+              Auto top-up every {topupFrequency} days 
+            </Textt>
+          </div>
+        )}
       </Card>
 
       {/* This card was what was previously => <TopupOptionDetailCard /> */}
@@ -61,11 +114,11 @@ function Payment() {
           <span className="flex items-center justify-center gap-3">
             <Textt variant="h6-satoshi">{`You're senRemytel`}</Textt>
             <Textt variant="h6-satoshi" className="text-primary">
-              {` 138`} ETB
+              {product.amount} ETB
             </Textt>
           </span>
 
-          <IconButton className="h-8 w-8">
+          <IconButton className="h-8 w-8" onClick={handleProductEdit}>
             <Image
               src={"/assets/icons/edit-icon.svg"}
               alt={"edit-icon"}
@@ -86,7 +139,7 @@ function Payment() {
               </Textt>
 
               <div className="flex items-center justify-end gap-2">
-                <Textt variant="span1-satoshi">19.18 USD</Textt>
+                <Textt variant="span1-satoshi">{product.price.total} USD</Textt>
 
                 <Image
                   src={
@@ -107,7 +160,7 @@ function Payment() {
                   Top-up Subtotal
                 </Textt>
 
-                <Textt variant="span1-satoshi">19.18 USD</Textt>
+                <Textt variant="span1-satoshi">{product.price.total} USD</Textt>
               </div>
 
               <div className="mt-2 flex w-full justify-between">
@@ -115,7 +168,7 @@ function Payment() {
                   Top-up Fee
                 </Textt>
 
-                <Textt variant="span1-satoshi">2.69 USD</Textt>
+                <Textt variant="span1-satoshi">{product.price.fee} USD</Textt>
               </div>
             </div>
           </div>
@@ -237,11 +290,15 @@ function Payment() {
                 Expiry
               </Textt>
             </label>
-            <input
+            <DatePickerDemo />
+            {/* <DayPickerProvider initialProps={{}}>
+              <DatePickerDemo />
+            </DayPickerProvider> */}
+            {/* <input
               type="date"
               id="expiryDate"
               className="mt-4 block h-[54px] w-full rounded-2xl border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#808080] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
-            />
+            /> */}
           </div>
 
           <div className="mb-[18px] h-[91px]">
@@ -317,16 +374,22 @@ function Payment() {
           </label>
         </div>
 
-        <Button
+        <MyButton
           variant="primary-normal"
           className="mt-10"
           onClick={handleClick}
         >
           <Textt variant="h5-satoshi" className="text-white">
-            Pay USD $19.18 Now
+            Pay USD ${product?.price?.amount} Now
           </Textt>
-        </Button>
+        </MyButton>
       </Card>
+
+      {/* edit phone modal */}
+      <EditReceiverPhoneModal
+        open={openEditSenderPhoneModal}
+        onClose={() => setOpenEditSenderPhoneModal(false)}
+      />
     </>
   );
 }

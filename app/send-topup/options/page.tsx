@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Textt from "@/components/text";
@@ -7,14 +7,32 @@ import TopupOptions from "@/components/topups-options";
 import PlansOptions from "@/components/plans-options";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Product, getProducts } from "@/services";
+import { products as productsData } from "./products-data";
+import productContext from "@/states/product-context";
 
 type MenuType = "topup" | "plans";
 
 function TopUpAndPlans() {
   const [selectedMenu, setSelectedMenu] = React.useState<MenuType>("topup");
-  // product === topup
-  const [selectedProduct, setSelectedProduct] = React.useState<any>({});
-  const [selectedPlan, setSelectedPlan] = React.useState<any>({});
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const { product, onProductChange } = useContext(productContext);
+
+  useEffect(() => {
+    // setProducts(productsData);
+    const fetchProducts = async () => {
+      const products = await getProducts();
+      if (!!products) {
+        console.log("products: ", product);
+        setProducts(products);
+      } else {
+        // setProducts(productsData);
+      }
+    };
+
+    fetchProducts();
+    console.log("fetched products", products);
+  }, []);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,17 +52,17 @@ function TopUpAndPlans() {
   const handleEditPhone = () => {
     router.push(`/?${createQueryString("to", searchParams.get("to") || "")}`);
   };
-  const handleTopupProductSelection = (productId: number) => {
+  const handleProductSelection = (productId: number) => {
+    // update product context
+    const selectedProduct: Product | undefined = products?.find((product) => {
+      return product.id === productId;
+    });
+    onProductChange(selectedProduct ?? ({} as Product));
+
     router.push(
       `/send-topup/signup?${createQueryString("productId", productId.toString())}`,
     );
     console.log("topup product selected", productId);
-  };
-  const handlePlanSelection = (planId: number) => {
-    router.push(
-      `/send-topup/signup?${createQueryString("planId", planId.toString())}`,
-    );
-    console.log("plan selected", planId);
   };
 
   const handleMenuSelectionChange = (menu: MenuType) => {
@@ -98,9 +116,19 @@ function TopUpAndPlans() {
 
         <div className="mt-5">
           {selectedMenu === "topup" ? (
-            <TopupOptions onProductSelection={handleTopupProductSelection} />
+            <TopupOptions
+              products={(products ?? []).filter(
+                (product) => product.type === "Airtime",
+              )}
+              onProductSelection={handleProductSelection}
+            />
           ) : (
-            <PlansOptions />
+            <PlansOptions
+              products={(products ?? []).filter(
+                (product) => product.type === "Bundle",
+              )}
+              onProductSelection={handleProductSelection}
+            />
           )}
         </div>
       </Card>

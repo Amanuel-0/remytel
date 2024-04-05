@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Card from "./card";
 import Image from "next/image";
-import Button from "./ui/button";
+import MyButton from "./ui/my-button";
 // import authContext from "@/state/auth-context";
 // import LanguageOption from "./LanguageOption";
 
@@ -83,16 +83,16 @@ function MobileMenu() {
             </div>
 
             <div className="mt-4 w-[173px]">
-              <Button variant="light-normal" onClick={handleLogin}>
+              <MyButton variant="light-normal" onClick={handleLogin}>
                 Login
-              </Button>
-              <Button
+              </MyButton>
+              <MyButton
                 variant="primary-gradient-top-left"
                 onClick={handleSignup}
                 className="mt-2"
               >
                 Signup
-              </Button>
+              </MyButton>
             </div>
           </div>
         </Card>

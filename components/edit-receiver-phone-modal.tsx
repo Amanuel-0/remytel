@@ -4,7 +4,7 @@ import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
 import IconButton from "./ui/icon-button";
 import Image from "next/image";
-import Button from "./ui/button";
+import MyButton from "./ui/my-button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "./form/phone-input-lib";
 
@@ -95,7 +95,7 @@ function EditReceiverPhoneModal({
           /> */}
         </div>
 
-        <Button
+        <MyButton
           variant="primary-normal"
           className="mt-4"
           onClick={handleStarttopup}
@@ -103,7 +103,7 @@ function EditReceiverPhoneModal({
           <Textt variant="h5-satoshi" className="text-white">
             Start top-up
           </Textt>
-        </Button>
+        </MyButton>
       </div>
     </ModalWrapper>
   );

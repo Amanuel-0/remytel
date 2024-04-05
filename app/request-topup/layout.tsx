@@ -6,7 +6,7 @@ import Image from "next/image";
 
 function SendTopupLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Container className="relative flex min-h-screen flex-col items-center justify-between">
+    <Container className="relative flex min-h-screen flex-col items-center justify-between ">
       <Image
         src="/assets/images/hero-background-vector.svg"
         alt="logo"

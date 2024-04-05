@@ -1,10 +1,45 @@
+"use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import Image from "next/image";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
+import productContext from "@/states/product-context";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function AutoTopup() {
+  const [selectedFrequency, setSelectedFrequency] = React.useState<
+    "7" | "14" | "30"
+  >("30"); // ["7", "14", "30"]
+  const { product } = useContext(productContext);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const senderPhone = searchParams.get("from") ?? "";
+  const receiverPhone = searchParams.get("to") ?? "";
+
+  const frequencyOptions = ["7", "14", "30"];
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name?: string, value?: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (name && value) params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
+
+  const handleSendAutoTopup = () => {
+    router.push(
+      `/send-topup/bill?${createQueryString("topup-frq", selectedFrequency)}`,
+    );
+  };
+  const handleNoThanks = () => {
+    router.push(`/send-topup/bill?${createQueryString()}`);
+  };
+
   return (
     <>
       <Card className="my-8">
@@ -29,7 +64,7 @@ function AutoTopup() {
         <Textt
           variant="p2-satoshi"
           className="mt-4 text-start md:text-center"
-        >{`We'll automatically resend 138 ETB to +251984841930 so that you don't have to.`}</Textt>
+        >{`We'll automatically resend ${product.amount} ETB to ${receiverPhone} so that you don't have to.`}</Textt>
 
         <Textt
           variant="h5-craftwork"
@@ -39,17 +74,32 @@ function AutoTopup() {
         </Textt>
 
         <div className="mt-6">
-          <Button className="border border-black bg-white text-black">
-            <Textt variant="h6-satoshi">7 Days</Textt>
-          </Button>
-          <Button className="mt-[10px] border border-black bg-white text-black">
-            <Textt variant="h6-satoshi">14 Days</Textt>
-          </Button>
-          <Button variant="primary-normal" className="mt-[10px]">
-            <Textt variant="h6-satoshi" className="text-white">
-              30 Days
-            </Textt>
-          </Button>
+          {frequencyOptions.map((option) => {
+            if (option === selectedFrequency) {
+              return (
+                <MyButton
+                  key={option}
+                  variant="primary-normal"
+                  className="mt-[10px]"
+                  onClick={() => setSelectedFrequency(option as any)}
+                >
+                  <Textt variant="h6-satoshi" className="text-white">
+                    {option} Days
+                  </Textt>
+                </MyButton>
+              );
+            }
+
+            return (
+              <MyButton
+                key={option}
+                className={`mt-[10px] border border-black bg-white text-black`}
+                onClick={() => setSelectedFrequency(option as any)}
+              >
+                <Textt variant="h6-satoshi">{option} Days</Textt>
+              </MyButton>
+            );
+          })}
 
           <Textt variant="span1-satoshi" className="mt-6">
             Renews automatically. No extra costs. cancel anytime.
@@ -57,14 +107,21 @@ function AutoTopup() {
         </div>
 
         <div className="mt-10">
-          <Button className="border border-gray-300 bg-white text-black">
+          <MyButton
+            className="border border-gray-300 bg-white text-black"
+            onClick={handleNoThanks}
+          >
             <Textt variant="span2-satoshi">No Thanks</Textt>
-          </Button>
-          <Button variant="primary-normal" className="mt-[10px]">
+          </MyButton>
+          <MyButton
+            variant="primary-normal"
+            className="mt-[10px]"
+            onClick={handleSendAutoTopup}
+          >
             <Textt variant="span2-satoshi" className="text-white">
               Send Auto top-up
             </Textt>
-          </Button>
+          </MyButton>
         </div>
       </Card>
     </>

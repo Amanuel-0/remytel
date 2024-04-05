@@ -1,6 +1,6 @@
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
 import React from "react";
 
 function SendTopupLinkSMS() {
@@ -26,11 +26,11 @@ function SendTopupLinkSMS() {
         className="mt-2 block h-[54px] w-full rounded-2xl border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
       />
 
-      <Button variant="primary-normal" className="my-4 mt-8">
+      <MyButton variant="primary-normal" className="my-4 mt-8">
         <Textt variant="h5-satoshi" className="text-white">
           Send Link Via SMS
         </Textt>
-      </Button>
+      </MyButton>
     </Card>
   );
 }

@@ -2,6 +2,16 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthContextProvider } from "@/states/auth-context";
+import { ProductContextProvider } from "@/states/product-context";
+import { UserContextProvider } from "@/states/user-context";
+import { Inter as FontSans } from "next/font/google";
+import { cn } from "@/lib/utils";
+import OneSignalWrapper from "./onesignal-wrapper";
+
+// const fontSans = FontSans({
+//   subsets: ["latin"],
+//   variable: "--font-sans",
+// });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +27,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#F9F9F9]`}>
-        <AuthContextProvider>{children}</AuthContextProvider>
+      <body className={`${cn("font-sans")} bg-[#F9F9F9]`}>
+        {/* <body className={`${inter.className} bg-[#DDE1E9]`}> */}
+        <AuthContextProvider>
+          <UserContextProvider>
+            <ProductContextProvider>
+              <OneSignalWrapper>{children}</OneSignalWrapper>
+            </ProductContextProvider>
+          </UserContextProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );

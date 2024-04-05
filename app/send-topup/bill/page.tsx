@@ -3,13 +3,43 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
+import productContext from "@/states/product-context";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useContext, useState } from "react";
 
 function Bill() {
-  const [showPaymentDetail, setShowPaymentDetail] = React.useState(false);
+  const { product } = useContext(productContext);
+  const [showPaymentDetail, setShowPaymentDetail] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const senderPhone = searchParams.get("from") ?? "";
+  const receiverPhone = searchParams.get("to") ?? "";
+  const topupFrequency = searchParams.get("topup-frq") ?? "";
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name?: string, value?: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (name && value) params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
+
+  const handleEditReceiverPhone = () => {
+    router.push(`/?${createQueryString("to", receiverPhone || "")}`);
+  };
+  const handleProductEdit = () => {
+    if (searchParams.get("productId")) {
+      router.push(
+        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
+      );
+    }
+  };
 
   const handleTogglePaymentDetail = () => {
     setShowPaymentDetail(!showPaymentDetail);
@@ -17,7 +47,8 @@ function Bill() {
 
   const navigate = useRouter();
 
-  const handleClick = () => navigate.push("/send-topup/payment");
+  const handleClick = () =>
+    navigate.push(`/send-topup/payment?${createQueryString()}`);
 
   return (
     <>
@@ -25,19 +56,15 @@ function Bill() {
 
       <div className="mt-5">
         <TopupToDetailCard
-          phone={""}
-          onPhoneEdit={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          phone={receiverPhone}
+          onPhoneEdit={handleEditReceiverPhone}
         />
       </div>
 
       <div className="mt-5">
         <TopupOptionDetailCard
-          productOrPlan={""}
-          onProductOrPlanEdit={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          product={product}
+          onProductEdit={handleProductEdit}
         />
       </div>
 
@@ -48,18 +75,20 @@ function Bill() {
               Receives
             </Textt>
             <Textt variant="h3-satoshi" className="mt-2 block text-start">
-              138 ETB
+              {product.amount} ETB
             </Textt>
           </div>
 
-          <div className="">
-            <Textt variant="span2-satoshi" className="block text-start">
-              Auto top-up
-            </Textt>
-            <Textt variant="h3-satoshi" className="mt-2 block text-start">
-              Every 30 days
-            </Textt>
-          </div>
+          {topupFrequency && (
+            <div className="">
+              <Textt variant="span2-satoshi" className="block text-start">
+                Auto top-up
+              </Textt>
+              <Textt variant="h3-satoshi" className="mt-2 block text-start">
+                Every {topupFrequency} days
+              </Textt>
+            </div>
+          )}
         </div>
 
         <button className="my-6 flex items-center justify-start gap-2">
@@ -87,7 +116,9 @@ function Bill() {
               </Textt>
 
               <div className="flex items-center justify-end gap-2">
-                <Textt variant="span1-satoshi">19.18 USD</Textt>
+                <Textt variant="span1-satoshi">
+                  {product.price.amount} USD
+                </Textt>
 
                 <Image
                   src={
@@ -108,7 +139,9 @@ function Bill() {
                   Top-up Subtotal
                 </Textt>
 
-                <Textt variant="span1-satoshi">19.18 USD</Textt>
+                <Textt variant="span1-satoshi">
+                  {product.price.amount} USD
+                </Textt>
               </div>
 
               <div className="mt-2 flex w-full justify-between">
@@ -116,13 +149,13 @@ function Bill() {
                   Top-up Fee
                 </Textt>
 
-                <Textt variant="span1-satoshi">2.69 USD</Textt>
+                <Textt variant="span1-satoshi">{product.price.fee} USD</Textt>
               </div>
             </div>
           </div>
         </div>
 
-        <Button
+        <MyButton
           variant="primary-normal"
           className="mb-[10px] mt-10"
           onClick={handleClick}
@@ -130,7 +163,7 @@ function Bill() {
           <Textt variant="h5-satoshi" className="text-white">
             Continue Payment
           </Textt>
-        </Button>
+        </MyButton>
       </Card>
     </>
   );

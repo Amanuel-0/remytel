@@ -12,9 +12,10 @@ type LoginData = {
 type VerifyOtpData = {
   otp: string;
   phoneNumber: string;
+  code: string;
 };
 
-interface Session {
+export interface Session {
   id: string;
   token: string;
   deviceAgent: string;
@@ -32,7 +33,7 @@ interface Session {
   profileId: string;
 }
 
-interface User {
+export interface User {
   id: string;
   firstName: string;
   lastName: string;
@@ -61,7 +62,7 @@ interface User {
 }
 
 // login
-export const login = async (data: LoginData) => {
+export const login = async (data: Partial<LoginData>) => {
   const response = await axios.post(`${API_URL}auth/login`, data);
   return response.data as Partial<User>;
 };
@@ -80,4 +81,10 @@ export const getProfile = async (token: string) => {
     },
   });
   return response.data as Partial<User>;
+};
+
+// logout
+export const logout = async () => {
+  // remove token from local storage
+  localStorage.removeItem("user");
 };

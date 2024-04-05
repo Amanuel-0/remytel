@@ -1,7 +1,7 @@
 "use client";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import Button from "./ui/button";
+import MyButton from "./ui/my-button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MobileMenu from "./mobile-menu";
@@ -107,15 +107,15 @@ function Navbar() {
               </>
             ) : (
               <>
-                <Button variant="light-normal" onClick={handleLogin}>
+                <MyButton variant="light-normal" onClick={handleLogin}>
                   Login
-                </Button>
-                <Button
+                </MyButton>
+                <MyButton
                   variant="primary-gradient-top-left"
                   onClick={handleSignup}
                 >
                   Signup
-                </Button>
+                </MyButton>
               </>
             )}
           </div>

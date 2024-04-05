@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import Textt from "./text";
-import Button from "./ui/button";
+import MyButton from "./ui/my-button";
 import Image from "next/image";
 import ModalWrapper from "./modal-wrapper";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -83,31 +83,31 @@ function SetAutoTopupModal({
         Choose the Frequency:
       </Textt>
       <div className="mt-6">
-        <Button className="border border-black bg-white text-black">
+        <MyButton className="border border-black bg-white text-black">
           <Textt variant="h6-satoshi">7 Days</Textt>
-        </Button>
-        <Button className="mt-[10px] border border-black bg-white text-black">
+        </MyButton>
+        <MyButton className="mt-[10px] border border-black bg-white text-black">
           <Textt variant="h6-satoshi">14 Days</Textt>
-        </Button>
-        <Button variant="primary-normal" className="mt-[10px]">
+        </MyButton>
+        <MyButton variant="primary-normal" className="mt-[10px]">
           <Textt variant="h6-satoshi" className="text-white">
             30 Days
           </Textt>
-        </Button>
+        </MyButton>
 
         <Textt variant="span1-satoshi" className="mt-6">
           Renews automatically. No extra costs. cancel anytime.
         </Textt>
       </div>
       <div className="mt-10">
-        <Button className="border border-gray-300 bg-white text-black">
+        <MyButton className="border border-gray-300 bg-white text-black">
           <Textt variant="span2-satoshi">No Thanks</Textt>
-        </Button>
-        <Button variant="primary-normal" className="mt-[10px]">
+        </MyButton>
+        <MyButton variant="primary-normal" className="mt-[10px]">
           <Textt variant="span2-satoshi" className="text-white">
             Send Auto top-up
           </Textt>
-        </Button>
+        </MyButton>
       </div>
     </ModalWrapper>
   );
