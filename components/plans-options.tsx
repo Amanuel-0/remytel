@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
-import { Product } from "@/services";
+import { Product } from "@/models";
 
 interface IPlan {
   id: number;

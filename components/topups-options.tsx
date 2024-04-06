@@ -2,22 +2,7 @@ import React, { useEffect } from "react";
 import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
-import { Product } from "@/services";
-
-// interface ITopup {
-//   id: number;
-//   priceInETB: number;
-//   priceInUSD: number;
-//   isPopular?: boolean;
-// }
-
-// const topupOptions: ITopup[] = [
-//   { id: 1, priceInETB: 691, priceInUSD: 14.49, isPopular: true },
-//   { id: 2, priceInETB: 138, priceInUSD: 2.79, isPopular: false },
-//   { id: 3, priceInETB: 276, priceInUSD: 5.59, isPopular: false },
-//   { id: 4, priceInETB: 691, priceInUSD: 14.49, isPopular: false },
-//   { id: 5, priceInETB: 138, priceInUSD: 2.79, isPopular: false },
-// ];
+import { Product } from "@/models";
 
 interface TopupOptionsProps {
   products: Product[]; // product are type of 'Airtime'

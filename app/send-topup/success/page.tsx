@@ -6,7 +6,6 @@ import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
-import { Product } from "@/services";
 import SaveContactModal from "@/components/save-contact-modal";
 
 function Success() {

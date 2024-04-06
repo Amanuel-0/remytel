@@ -3,7 +3,7 @@ import Card from "./card";
 import Textt from "./text";
 import IconButton from "./ui/icon-button";
 import Image from "next/image";
-import { Product } from "@/services";
+import { Product } from "@/models";
 
 interface TopupOptionDetailCardProps {
   product: Partial<Product>;
