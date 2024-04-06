@@ -11,6 +11,7 @@ import { getProducts } from "@/services";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import { Product } from "@/models";
+import withAuth from "@/components/protected-route";
 
 type MenuType = "topup" | "plans";
 
@@ -115,4 +116,4 @@ function TopUpAndPlans() {
   );
 }
 
-export default TopUpAndPlans;
+export default withAuth(TopUpAndPlans);

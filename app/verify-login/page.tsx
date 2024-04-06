@@ -8,6 +8,7 @@ import Image from "next/image";
 import React from "react";
 import VerifyOtp from "@/components/verify-otp";
 import { useSearchParams } from "next/navigation";
+import withOutAuth from "@/components/public-route";
 
 function OtpLogin() {
   const searchParams = useSearchParams();
@@ -99,4 +100,4 @@ function OtpLogin() {
   );
 }
 
-export default OtpLogin;
+export default withOutAuth(OtpLogin);

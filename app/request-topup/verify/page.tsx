@@ -3,22 +3,15 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import IconButton from "@/components/ui/icon-button";
 import VerifyOtp from "@/components/verify-otp";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import topupRequestContext from "@/states/request-topup-context";
-import authContext from "@/states/auth-context";
+import withOutAuth from "@/components/public-route";
 
 function Verify() {
-  const { isLoggedIn } = useContext(authContext);
   const { topupRequest } = useContext(topupRequestContext);
   const router = useRouter();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.back();
-    }
-  }, []);
 
   const navigateToSignUp = () => {
     router.push("/request-topup/signup");
@@ -76,4 +69,4 @@ function Verify() {
   );
 }
 
-export default Verify;
+export default withOutAuth(Verify);

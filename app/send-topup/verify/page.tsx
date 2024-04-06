@@ -4,25 +4,18 @@ import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import VerifyOtp from "@/components/verify-otp";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
 import { useRouter } from "next/navigation";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
-import authContext from "@/states/auth-context";
+import withOutAuth from "@/components/public-route";
 
 function Verify() {
-  const { isLoggedIn } = useContext(authContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const router = useRouter();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.back();
-    }
-  }, []);
 
   const handleEditSenderPhone = () => {
     router.push(`/send-topup/signup`);
@@ -107,4 +100,4 @@ function Verify() {
   );
 }
 
-export default Verify;
+export default withOutAuth(Verify);

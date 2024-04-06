@@ -9,6 +9,7 @@ import userContext from "@/states/user-context";
 import { validateEmail } from "@/utils";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect } from "react";
+import withAuth from "@/components/protected-route";
 
 function CreateTopupLink() {
   const { user, onUser } = useContext(userContext);
@@ -217,4 +218,4 @@ function CreateTopupLink() {
   );
 }
 
-export default CreateTopupLink;
+export default withAuth(CreateTopupLink);

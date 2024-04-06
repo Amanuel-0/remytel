@@ -8,6 +8,7 @@ import ModalWrapper from "@/components/modal-wrapper";
 import userContext from "@/states/user-context";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import withAuth from "@/components/protected-route";
 
 function TopupLink() {
   const { user, onUser } = useContext(userContext);
@@ -101,4 +102,4 @@ function TopupLink() {
   );
 }
 
-export default TopupLink;
+export default withAuth(TopupLink);

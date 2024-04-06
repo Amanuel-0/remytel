@@ -11,6 +11,7 @@ import { DatePickerDemo } from "@/components/ui/date-picker";
 import EditReceiverPhoneModal from "@/components/edit-receiver-phone-modal";
 import sendTopupContext from "@/states/send-topup-context";
 // import { useDayPicker, DayPickerProvider } from "react-day-picker";
+import withAuth from "@/components/protected-route";
 
 function Payment() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
@@ -372,4 +373,4 @@ function Payment() {
   );
 }
 
-export default Payment;
+export default withAuth(Payment);

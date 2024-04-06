@@ -8,6 +8,7 @@ import Container from "@/components/container";
 import Image from "next/image";
 import React from "react";
 import { useSearchParams } from "next/navigation";
+import withOutAuth from "@/components/public-route";
 
 function VerifySignup() {
   const searchParams = useSearchParams();
@@ -99,4 +100,4 @@ function VerifySignup() {
   );
 }
 
-export default VerifySignup;
+export default withOutAuth(VerifySignup);

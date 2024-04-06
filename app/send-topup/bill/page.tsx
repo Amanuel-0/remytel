@@ -9,6 +9,7 @@ import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
+import withAuth from "@/components/protected-route";
 
 function Bill() {
   const { sendTopup } = useContext(sendTopupContext);
@@ -142,4 +143,4 @@ function Bill() {
   );
 }
 
-export default Bill;
+export default withAuth(Bill);

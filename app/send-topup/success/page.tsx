@@ -7,6 +7,8 @@ import MyButton from "@/components/ui/my-button";
 import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import SaveContactModal from "@/components/save-contact-modal";
+import withAuth from "@/components/protected-route";
+import { Product } from "@/models";
 
 function Success() {
   const { product, onProductChange } = useContext(productContext);
@@ -168,4 +170,4 @@ function Success() {
   );
 }
 
-export default Success;
+export default withAuth(Success);

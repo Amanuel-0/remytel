@@ -5,6 +5,7 @@ import MyButton from "@/components/ui/my-button";
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import withAuth from "@/components/protected-route";
 
 function Success() {
   const router = useRouter();
@@ -41,4 +42,4 @@ function Success() {
   );
 }
 
-export default Success;
+export default withAuth(Success);

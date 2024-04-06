@@ -1,15 +1,16 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
 import authContext from "@/states/auth-context";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
 import topupRequestContext from "@/states/request-topup-context";
+import withOutAuth from "@/components/public-route";
 
 function SignupSendTopup() {
   const { topupRequest, setTopupRequest } = useContext(topupRequestContext);
@@ -20,12 +21,6 @@ function SignupSendTopup() {
 
   // by the default teh requester is from Ethiopia
   const code = "et";
-
-  if (isLoggedIn) {
-    // router.push("/account/home");
-    // router.push("/request-topup/create-topup-link");
-    router.back();
-  }
 
   useEffect(() => {
     setSenderPhoneNumber(topupRequest.senderPhoneNumber);
@@ -132,4 +127,4 @@ function SignupSendTopup() {
   );
 }
 
-export default SignupSendTopup;
+export default withOutAuth(SignupSendTopup);

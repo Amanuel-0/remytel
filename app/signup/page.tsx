@@ -10,24 +10,17 @@ import MyButton from "@/components/ui/my-button";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
-import authContext from "@/states/auth-context";
 import { login } from "@/services";
 import { isPhoneValid } from "@/utils";
 import useCreateQueryString from "@/hooks/use-create-query-params";
+import withOutAuth from "@/components/public-route";
 
 function Signup() {
   const [phone, setPhone] = React.useState("");
   const [countryCode, setCountryCode] = React.useState("US"); // ["US", "ET", ...]
-  const { isLoggedIn } = useContext(authContext);
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
   const { createQueryString } = useCreateQueryString();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push("/account/home");
-    }
-  }, [isLoggedIn]);
 
   const isSenderPhoneValid = isPhoneValid(phone);
 
@@ -223,4 +216,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default withOutAuth(Signup);

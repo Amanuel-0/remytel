@@ -10,11 +10,10 @@ import PhoneInputLib from "@/components/form/phone-input-lib";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
 import productContext from "@/states/product-context";
-import authContext from "@/states/auth-context";
 import sendTopupContext from "@/states/send-topup-context";
-import { parsePhoneNumber } from "libphonenumber-js";
 import { ParsedCountry } from "react-international-phone";
 // import {parsePhoneNumber} from 'google-libphonenumber'
+import withOutAuth from "@/components/public-route";
 
 function SignupSendTopup() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
@@ -24,13 +23,7 @@ function SignupSendTopup() {
   const [subscription, setSubscription] = React.useState<"yes" | "no">("yes"); // ["yes", "no"]
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
-
   const { product } = useContext(productContext);
-  const { isLoggedIn } = useContext(authContext);
-
-  if (isLoggedIn) {
-    router.back();
-  }
 
   const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
 
@@ -206,4 +199,4 @@ function SignupSendTopup() {
   );
 }
 
-export default SignupSendTopup;
+export default withOutAuth(SignupSendTopup);
