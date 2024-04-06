@@ -9,7 +9,10 @@ function AccountLayout({ children }: { children: React.ReactNode }) {
       <div className="bg-[#DDE1E9]">
         <Container>
           <Navbar />
-          {children}
+
+          <section className="mb-10 mt-10 w-full md:mb-16 md:mt-[60px]">
+            {children}
+          </section>
         </Container>
       </div>
 
