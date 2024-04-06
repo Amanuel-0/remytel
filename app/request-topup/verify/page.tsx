@@ -1,17 +1,28 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import TopupOptionDetailCard from "@/components/topup-option-detail-card";
-import TopupToDetailCard from "@/components/topup-to-detail-card";
 import IconButton from "@/components/ui/icon-button";
 import VerifyOtp from "@/components/verify-otp";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import topupRequestContext from "@/states/request-topup-context";
+import authContext from "@/states/auth-context";
 
 function Verify() {
-  const searchParams = useSearchParams();
-  const senderPhone = searchParams.get("from") ?? "";
+  const { isLoggedIn } = useContext(authContext);
+  const { topupRequest } = useContext(topupRequestContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.back();
+    }
+  }, []);
+
+  const navigateToSignUp = () => {
+    router.push("/request-topup/signup");
+  };
 
   return (
     <>
@@ -36,10 +47,10 @@ function Verify() {
             variant="span1-satoshi"
             className="mb-5 mt-[10px] text-primary"
           >
-            {senderPhone}
+            {topupRequest.senderPhoneNumber}
           </Textt>
 
-          <IconButton className="h-8 w-8">
+          <IconButton className="h-8 w-8" onClick={navigateToSignUp}>
             <Image
               src={"/assets/icons/edit-icon.svg"}
               alt={"edit-icon"}
@@ -52,7 +63,9 @@ function Verify() {
         {/* verify opt form */}
         <VerifyOtp
           redirectUrl="/request-topup/create-topup-link"
-          senderPhoneNumber={senderPhone}
+          // redirectUrl="/account/home"
+          phoneNumber={topupRequest.senderPhoneNumber}
+          code={topupRequest.code}
         />
 
         <Textt variant="span1-satoshi" className="underline">

@@ -4,54 +4,31 @@ import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import VerifyOtp from "@/components/verify-otp";
-import React, { useCallback, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import productContext from "@/states/product-context";
+import sendTopupContext from "@/states/send-topup-context";
 import authContext from "@/states/auth-context";
 
 function Verify() {
-  const { product } = useContext(productContext);
   const { isLoggedIn } = useContext(authContext);
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const { product } = useContext(productContext);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const senderPhone = searchParams.get("from") ?? "";
-  const senderCountryCode = searchParams.get("fromCountryCode") ?? "";
-  const receiverPhone = searchParams.get("to") ?? "";
 
-  // do not show this page if the user is logged in and return to
-  // the previous page or somewhere else
-  // if (isLoggedIn) {
-  //   router.back();
-  // }
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.back();
+    }
+  }, []);
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name?: string, value?: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (name && value) params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const handleEditReceiverPhone = () => {
-    router.push(`/?${createQueryString("to", receiverPhone || "")}`);
-  };
   const handleEditSenderPhone = () => {
-    router.push(
-      `/send-topup/signup?${createQueryString("from", senderPhone || "")}`,
-    );
+    router.push(`/send-topup/signup`);
   };
   const handleProductEdit = () => {
-    if (searchParams.get("productId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
-      );
-    }
+    router.push(`/send-topup/options`);
   };
 
   const handleNavigateBack = () => {
@@ -63,10 +40,7 @@ function Verify() {
       <Textt variant="h4-craftwork">You’re senRemytel top-up to</Textt>
 
       <div className="mt-5">
-        <TopupToDetailCard
-          phone={searchParams.get("to") || ""}
-          onPhoneEdit={handleEditReceiverPhone}
-        />
+        <TopupToDetailCard phone={sendTopup.to} />
       </div>
 
       <div className="mt-5">
@@ -100,8 +74,7 @@ function Verify() {
             variant="span1-satoshi"
             className="mb-5 mt-[10px] text-primary"
           >
-            {searchParams.get("from")}
-            {/* +251 93 542 5899 */}
+            {sendTopup.from}
           </Textt>
 
           <IconButton className="h-8 w-8" onClick={handleEditSenderPhone}>
@@ -116,10 +89,9 @@ function Verify() {
 
         {/* verify opt form */}
         <VerifyOtp
-          redirectUrl={`/send-topup/auto-topup?${createQueryString()}`}
-          // redirectUrl={`/send-topup/bill?${createQueryString()}`}
-          senderPhoneNumber={senderPhone}
-          code={senderCountryCode}
+          redirectUrl={`/send-topup/auto-topup`}
+          phoneNumber={sendTopup.from}
+          code={sendTopup.fromCountryCode}
         />
 
         <Textt variant="span1-satoshi" className="underline">

@@ -5,39 +5,27 @@ import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import Image from "next/image";
 import FaqAccordion from "@/components/faq-accordion";
 import FooterAlt from "@/components/footer-alt";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import { useRouter, useSearchParams } from "next/navigation";
+import sendTopupContext from "@/states/send-topup-context";
 
 function LandingPage() {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   useEffect(() => {
-    const phone = searchParams.get("to") || "";
+    const phone = sendTopup.to || "";
     setReceiverPhoneNumber(phone);
-  }, [searchParams]);
+  }, [sendTopup.to]);
 
-  const handleStarttopup = () => {
-    router.push(
-      `/send-topup/options?${createQueryString("to", receiverPhoneNumber)}`,
-    );
+  const navigateToTopUpOptions = () => {
+    setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
+    router.push("/send-topup/options");
   };
 
   return (
@@ -65,13 +53,13 @@ function LandingPage() {
                 hideDropdown={true}
                 disableCountryGuess={true}
                 value={receiverPhoneNumber}
-                onChange={(val) => setReceiverPhoneNumber(val)}
+                onChange={(phoneNumber) => setReceiverPhoneNumber(phoneNumber)}
               />
               {/* <PhoneInput className="mb-3" /> */}
               {/* <Button variant="primary-normal">Start top-up</Button> */}
               <MyButton
                 variant="primary-normal"
-                onClick={handleStarttopup}
+                onClick={navigateToTopUpOptions}
                 className="mt-2"
               >
                 <Textt variant="h6-satoshi" className="text-white">
@@ -84,9 +72,9 @@ function LandingPage() {
               <span>With in 5 seconds</span>
               <Image
                 src={"/assets/icons/lighting-bolt-icon.svg"}
-                alt={""}
+                alt={"lighting-bolt-icon"}
                 width={8}
-                height={14}
+                height={15}
               />
             </span>
           </div>

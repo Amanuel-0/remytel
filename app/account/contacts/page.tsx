@@ -1,44 +1,17 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import Card from "@/components/card";
 import IconButton from "@/components/ui/icon-button";
+import withAuth from "@/components/protected-route";
+import AccountNav from "../account-nav";
 
 function Contacts() {
   return (
     <div>
-      <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center justify-start gap-4">
-            <button className="flex h-11 w-11  min-w-12 items-center justify-center rounded-full bg-white">
-              <Image
-                src={"/assets/icons/arrow-back-black-icon.svg"}
-                alt={"arrow-back-black-icon"}
-                width={16}
-                height={16}
-              />
-            </button>
-            <Textt variant="h6-satoshi" className="hidden md:block">
-              My Account
-            </Textt>
-          </div>
-
-          <div>
-            <MyButton
-              variant="primary-gradient-top-left"
-              className="min-w-[125px]"
-            >
-              <Textt
-                variant="span1-satoshi"
-                className="font-extrabold text-white"
-              >
-                Send top-up
-              </Textt>
-            </MyButton>
-          </div>
-        </div>
-      </section>
+      <AccountNav />
 
       <section className="my-[10px] flex h-full w-full flex-col gap-[10px] md:flex-row">
         <Card className="w-full p-[30px]">
@@ -129,4 +102,4 @@ function Contacts() {
   );
 }
 
-export default Contacts;
+export default withAuth(Contacts);

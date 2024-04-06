@@ -1,12 +1,27 @@
+"use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import CopyToClipboardBtn from "@/components/ui/copy-to-clipboard-btn";
 import ModalWrapper from "@/components/modal-wrapper";
+import userContext from "@/states/user-context";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function TopupLink() {
-  const textToCopy = "https://www.remytel.com/8734t8837458";
+  const { user, onUser } = useContext(userContext);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const topupLinkURL = searchParams.get("topup-link");
+
+  const onCopyLinkCopied = () => {
+    // console.log("Link copied");
+    setTimeout(() => {
+      console.log("Link copied");
+      router.push("/request-topup/success");
+    }, 1000);
+  };
 
   return (
     <>
@@ -41,7 +56,10 @@ function TopupLink() {
               width={30}
               height={30}
             />
-            <Textt variant="span1-satoshi">+251 93 542 5899</Textt>
+            <Textt variant="span1-satoshi">
+              {user.user.phoneNumber}
+              {/* +251 93 542 5899 */}
+            </Textt>
 
             <Image
               src={"/assets/icons/check-icon.svg"}
@@ -59,18 +77,21 @@ function TopupLink() {
         <div className="my-8 flex items-center justify-center gap-2">
           <div className="rounded-lg border border-[#ECECEC] p-2">
             <Textt variant="span2-satoshi" className="underline">
-              {textToCopy}
+              {topupLinkURL}
             </Textt>
           </div>
 
           <CopyToClipboardBtn
-            onClick={() => {}}
+            onClick={onCopyLinkCopied}
             variant="icon-btn"
-            textToCopy={textToCopy}
+            textToCopy={topupLinkURL}
           ></CopyToClipboardBtn>
         </div>
 
-        <CopyToClipboardBtn textToCopy={textToCopy}>
+        <CopyToClipboardBtn
+          textToCopy={topupLinkURL}
+          onClick={onCopyLinkCopied}
+        >
           Copy Link
         </CopyToClipboardBtn>
       </Card>

@@ -2,23 +2,36 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Card from "./card";
-import MyButton from "./ui/my-button";
 import authContext from "@/states/auth-context";
-import Image from "next/image";
 import Textt from "./text";
+import userContext from "@/states/user-context";
+import { LocalStorageUtil } from "@/utils";
+import { User } from "@/models";
+import sendTopupContext from "@/states/send-topup-context";
+import topupRequestContext from "@/states/request-topup-context";
 
 function AccountMenu() {
-  const { isLoggedIn, onLogin } = useContext(authContext);
-  const navigate = useRouter();
-
-  const handleLogin = () => navigate.push("/login");
-  const handleSignup = () => navigate.push("/signup");
-
+  const { onLogin } = useContext(authContext);
+  const { user, onUser } = useContext(userContext);
+  const { setSendTopup } = useContext(sendTopupContext);
+  const { setTopupRequest } = useContext(topupRequestContext);
   const router = useRouter();
 
   const logout = () => {
+    // clear context data
+    onLogin(false);
+    onUser({} as User);
+    setSendTopup({} as any);
+    setTopupRequest({} as any);
+    // clear local storage data (this are actually cookies)
+    LocalStorageUtil.removeItem("isLoggedIn");
+    LocalStorageUtil.removeItem("user");
+    LocalStorageUtil.removeItem("product");
+    LocalStorageUtil.removeItem("sendtopup");
+    LocalStorageUtil.removeItem("requesttopup");
+
     router.push("/", { scroll: true });
   };
 
@@ -33,11 +46,14 @@ function AccountMenu() {
         {/* mobile menu */}
         <Card className="shadow-xl">
           <div>
-            <Textt variant="h4-satoshi" className="text-start">
-              Oumer Sualih
-            </Textt>
+            <Link href={"/account/home"}>
+              <Textt variant="h4-satoshi" className="text-start">
+                {!user.user.firstName && !user.user.lastName && "Account"}
+                {user.user.firstName} {user.user.lastName}
+              </Textt>
+            </Link>
             <Textt variant="span1-satoshi" className="mb-3 mt-2 text-start">
-              251935425899
+              {user.user.phoneNumber ?? "No phone number"}
             </Textt>
           </div>
 
@@ -46,19 +62,21 @@ function AccountMenu() {
           {/* sec 1 */}
           <ul className="flex w-full flex-col">
             <li className="my-[10px] w-full font-satoshi text-sm">
-              <Link href="#">History</Link>
+              <Link href="/account/history">History</Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
-              <Link href="#">Auto top-up</Link>
+              <Link href="/account/auto-topups">Auto top-up</Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
-              <Link href="#">Contacts</Link>
+              <Link href="/account/contacts">Contacts</Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
-              <Link href="#">Profile Settings</Link>
+              <Link href="/account/settings">Profile Settings</Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
-              <Link href="#">Request top-up</Link>
+              <Link href="/request-topup/create-topup-link">
+                Request top-up
+              </Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="#">Refer a Friend</Link>
@@ -67,7 +85,7 @@ function AccountMenu() {
 
           <hr />
 
-          <button className="mt-4">
+          <button type="button" className="mt-4" onClick={logout}>
             <Textt variant="h6-satoshi" className="text-red-500">
               Log Out
             </Textt>

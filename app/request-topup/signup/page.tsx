@@ -9,37 +9,33 @@ import Link from "next/link";
 import authContext from "@/states/auth-context";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
+import topupRequestContext from "@/states/request-topup-context";
 
 function SignupSendTopup() {
+  const { topupRequest, setTopupRequest } = useContext(topupRequestContext);
+  const { isLoggedIn } = useContext(authContext);
   const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const { isLoggedIn } = useContext(authContext);
+  // by the default teh requester is from Ethiopia
+  const code = "et";
 
-  // do not show this page if the user is logged in and return to
-  // the previous page or somewhere else
-  // if (isLoggedIn) {
-  //   router.back();
-  // }
+  if (isLoggedIn) {
+    // router.push("/account/home");
+    // router.push("/request-topup/create-topup-link");
+    router.back();
+  }
+
+  useEffect(() => {
+    setSenderPhoneNumber(topupRequest.senderPhoneNumber);
+  }, [topupRequest.senderPhoneNumber]);
 
   const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   useEffect(() => {
     console.log(senderPhoneNumber);
   }, [senderPhoneNumber]);
-  const navigate = useRouter();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -49,23 +45,16 @@ function SignupSendTopup() {
       return;
     }
 
-    // for now, just redirect to signup page
-    router.push(
-      `/request-topup/verify?${createQueryString("from", senderPhoneNumber)}`,
-    );
-    return;
-
     // login user
     const userData = await login({
       phoneNumber: senderPhoneNumber,
+      code, // the country code of the sender phone number
     });
-    // todo: save user data in react context & local storage
-
     console.log("login reponse data: ", userData);
+
     if (userData) {
-      router.push(
-        `/request-topup/signup?${createQueryString("from", senderPhoneNumber)}`,
-      );
+      setTopupRequest({ ...topupRequest, senderPhoneNumber, code });
+      router.push(`/request-topup/verify`);
     }
   };
 
@@ -86,14 +75,17 @@ function SignupSendTopup() {
 
           <div className="my-[10px]">
             <PhoneInputLib
+              defaultCountry="et"
               name="phoneNumber"
               hideDropdown={true}
               disableCountryGuess={true}
               value={senderPhoneNumber}
-              onChange={(val) => {
-                if (isSenderPhoneValid) {
-                }
-                setSenderPhoneNumber(val);
+              onChange={(
+                phone: string,
+                { country: ParsedCountry, inputValue: string },
+              ) => {
+                // setFromCountryCode(ParsedCountry.iso2);
+                setSenderPhoneNumber(phone);
               }}
             />
 

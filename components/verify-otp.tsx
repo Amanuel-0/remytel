@@ -1,44 +1,36 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import OtpInput from "./form/otp-input";
 import { useRouter } from "next/navigation";
 import { verifyOtp } from "@/services";
 import authContext from "@/states/auth-context";
 import userContext from "@/states/user-context";
+import { User } from "@/models";
 
 interface VerifyOtpProps {
   redirectUrl: string;
-  senderPhoneNumber: string;
+  phoneNumber: string;
   code: string;
 }
-function VerifyOtp({ redirectUrl, senderPhoneNumber, code }: VerifyOtpProps) {
-  const { isLoggedIn, onLogin } = useContext(authContext);
-  const { user, onUser } = useContext(userContext);
+function VerifyOtp({ redirectUrl, phoneNumber, code }: VerifyOtpProps) {
+  const { onLogin } = useContext(authContext);
+  const { onUser } = useContext(userContext);
   const navigate = useRouter();
 
   const handleSubmit = async (pin: string) => {
-    // for now, just for testing
-    // navigate.push(redirectUrl);
-    // return;
-
     const otpResponse = await verifyOtp({
       otp: pin,
-      phoneNumber: senderPhoneNumber,
+      phoneNumber: phoneNumber,
       code: code,
     });
 
-    if (otpResponse.error) {
-      console.log(otpResponse.error);
-      return;
+    if (otpResponse && otpResponse.user && otpResponse.token) {
+      // update auth & user context
+      onLogin(true);
+      onUser({ ...otpResponse } as User);
     }
 
-    // update auth & user context
-    onLogin(true);
-    onUser(otpResponse);
-    // store auth & user to local storage
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("user", JSON.stringify(otpResponse));
-
+    console.log("returning to", redirectUrl);
     navigate.push(redirectUrl);
   };
 

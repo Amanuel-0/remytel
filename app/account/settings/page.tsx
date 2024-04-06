@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Card from "@/components/card";
@@ -6,42 +7,20 @@ import MyButton from "@/components/ui/my-button";
 import IconButton from "@/components/ui/icon-button";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
+import withAuth from "@/components/protected-route";
+import { useRouter } from "next/navigation";
+import AccountNav from "../account-nav";
 
 function Settings() {
+  const router = useRouter();
+
+  const navigateToEditSetting = () => {
+    router.push("/account/settings/edit");
+  };
+
   return (
     <div>
-      {/*  */}
-      <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center justify-start gap-4">
-            <button className="flex h-11 w-11  min-w-12 items-center justify-center rounded-full bg-white">
-              <Image
-                src={"/assets/icons/arrow-back-black-icon.svg"}
-                alt={"arrow-back-black-icon"}
-                width={16}
-                height={16}
-              />
-            </button>
-            <Textt variant="h6-satoshi" className="hidden md:block">
-              My Account
-            </Textt>
-          </div>
-
-          <div>
-            <MyButton
-              variant="primary-gradient-top-left"
-              className="min-w-[125px]"
-            >
-              <Textt
-                variant="span1-satoshi"
-                className="font-extrabold text-white"
-              >
-                Send top-up
-              </Textt>
-            </MyButton>
-          </div>
-        </div>
-      </section>
+      <AccountNav />
 
       {/*  */}
       <section className="my-[10px] flex h-full w-full flex-col gap-[10px] md:flex-row">
@@ -51,7 +30,7 @@ function Settings() {
               Personal Details
             </Textt>
 
-            <IconButton className="h-8 w-8">
+            <IconButton className="h-8 w-8" onClick={navigateToEditSetting}>
               <Image
                 src={"/assets/icons/edit-icon.svg"}
                 alt={"edit-icon"}
@@ -61,7 +40,7 @@ function Settings() {
             </IconButton>
           </div>
 
-          <div className="">
+          <div className="mt-5">
             {/*  */}
             <div className={`flex items-center justify-start gap-5`}>
               <div
@@ -82,7 +61,7 @@ function Settings() {
 
             {/*  */}
             <div className="flex items-center justify-between border-b border-b-[#EAEAEA] py-5 md:justify-start">
-              <Textt variant="span2-satoshi" className="text-start">
+              <Textt variant="span2-satoshi" className="text-start md:w-1/4">
                 Date of birth
               </Textt>
 
@@ -93,7 +72,7 @@ function Settings() {
 
             {/*  */}
             <div className="flex items-center justify-between border-b border-b-[#EAEAEA] py-5 md:justify-start">
-              <Textt variant="span2-satoshi" className="text-start">
+              <Textt variant="span2-satoshi" className="text-start md:w-1/4">
                 Phone number
               </Textt>
 
@@ -104,7 +83,7 @@ function Settings() {
 
             {/*  */}
             <div className="flex items-center justify-between border-b border-b-[#EAEAEA] py-5 md:justify-start">
-              <Textt variant="span2-satoshi" className="text-start">
+              <Textt variant="span2-satoshi" className="text-start md:w-1/4">
                 Email address
               </Textt>
 
@@ -115,7 +94,7 @@ function Settings() {
 
             {/*  */}
             <Textt variant="span2-satoshi" className="py-5 text-start">
-              We care about your data and it's only used in line With our{" "}
+              {"We care about your data and it's only used in line With our "}
               <Link href={"#"} className="inline-block text-start text-primary">
                 Privacy notice
               </Link>
@@ -141,7 +120,7 @@ function Settings() {
                   />
                 </div>
 
-                <IconButton className="h-8 w-8">
+                <IconButton className="h-8 w-8" onClick={navigateToEditSetting}>
                   <Image
                     src={"/assets/icons/edit-icon.svg"}
                     alt={"edit-icon"}
@@ -153,7 +132,10 @@ function Settings() {
 
               <div className="mt-3">
                 <div className="flex items-center justify-between py-1 md:justify-start">
-                  <Textt variant="span2-satoshi" className="text-start">
+                  <Textt
+                    variant="span2-satoshi"
+                    className="text-start md:w-2/5"
+                  >
                     Card Number
                   </Textt>
 
@@ -162,7 +144,10 @@ function Settings() {
                   </Textt>
                 </div>
                 <div className="flex items-center justify-between py-1 md:justify-start">
-                  <Textt variant="span2-satoshi" className="text-start">
+                  <Textt
+                    variant="span2-satoshi"
+                    className="text-start md:w-2/5"
+                  >
                     Expiry Date
                   </Textt>
 
@@ -217,4 +202,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default withAuth(Settings);

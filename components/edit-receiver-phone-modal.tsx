@@ -1,12 +1,14 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
 import IconButton from "./ui/icon-button";
 import Image from "next/image";
 import MyButton from "./ui/my-button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import PhoneInputLib from "./form/phone-input-lib";
+import sendTopupContext from "@/states/send-topup-context";
+import productContext from "@/states/product-context";
 
 function EditReceiverPhoneModal({
   open,
@@ -15,67 +17,59 @@ function EditReceiverPhoneModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const { product } = useContext(productContext);
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [receiverPhone, setReceiverPhone] = useState<string>(
-    searchParams.get("to") || "",
+    sendTopup.to || "",
   );
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name?: string, value?: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (name && value) {
-        params.set(name, value);
-      }
+  useEffect(() => {
+    setReceiverPhone(sendTopup.to || "");
+  }, [sendTopup.to]);
 
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const handleProductOrPlanEdit = () => {
-    if (searchParams.get("productId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
-      );
-    }
-    if (searchParams.get("planId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("planId", searchParams.get("planId") || "")}`,
-      );
-    }
+  const handleProductEdit = () => {
+    onClose();
+    router.push(`/send-topup/options`);
   };
 
   const handleStarttopup = () => {
-    router.push(pathname + `?${createQueryString("to", receiverPhone)}`);
+    setSendTopup({ ...sendTopup, to: receiverPhone });
     onClose();
   };
 
   return (
     <ModalWrapper open={open} onClose={onClose}>
       <div className="w-full max-w-[466px]">
-        <Textt variant="span2-satoshi" className="text-start">
-          Receiver Gets:
-        </Textt>
-
-        <div className="mt-2 flex items-center justify-between">
-          <Textt variant="h3-satoshi" className="text-start">
-            138 ETB
+        {!product.amount && (
+          <Textt variant="span2-satoshi" className="text-start">
+            Receiver
           </Textt>
+        )}
 
-          <IconButton className="h-8 w-8" onClick={handleProductOrPlanEdit}>
-            {/* <IconButton className="h-8 w-8" onClick={onPhoneEdit}> */}
-            <Image
-              src={"/assets/icons/edit-icon.svg"}
-              alt={"edit-icon"}
-              width={14}
-              height={14}
-            />
-          </IconButton>
-        </div>
+        {product.amount && (
+          <>
+            <Textt variant="span2-satoshi" className="text-start">
+              Receiver Gets:
+            </Textt>
+
+            <div className="mt-2 flex items-center justify-between">
+              <Textt variant="h3-satoshi" className="text-start">
+                {product.amount} ETB
+              </Textt>
+
+              <IconButton className="h-8 w-8" onClick={handleProductEdit}>
+                {/* <IconButton className="h-8 w-8" onClick={onPhoneEdit}> */}
+                <Image
+                  src={"/assets/icons/edit-icon.svg"}
+                  alt={"edit-icon"}
+                  width={14}
+                  height={14}
+                />
+              </IconButton>
+            </div>
+          </>
+        )}
 
         <div className="relative mt-8">
           <PhoneInputLib

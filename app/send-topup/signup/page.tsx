@@ -3,68 +3,39 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
 import productContext from "@/states/product-context";
 import authContext from "@/states/auth-context";
+import sendTopupContext from "@/states/send-topup-context";
+import { parsePhoneNumber } from "libphonenumber-js";
 import { ParsedCountry } from "react-international-phone";
+// import {parsePhoneNumber} from 'google-libphonenumber'
 
 function SignupSendTopup() {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
   const [fromCountryCode, setFromCountryCode] = React.useState("US"); // ["US", "ET", ...]
+  // const { createQueryString } = useCreateQueryString();
   const [subscription, setSubscription] = React.useState<"yes" | "no">("yes"); // ["yes", "no"]
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const { product } = useContext(productContext);
   const { isLoggedIn } = useContext(authContext);
 
-  // do not show this page if the user is logged in and return to
-  // the previous page or somewhere else
-  // if (isLoggedIn) {
-  //   router.back();
-  // }
-
-  useEffect(() => {
-    console.log("product context state: ", product);
-  }, [product]);
+  if (isLoggedIn) {
+    router.back();
+  }
 
   const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
 
-  useEffect(() => {
-    console.log("subscription", subscription);
-  }, [subscription]);
-
-  const createQueryString = useCallback(
-    (q: { name: string; value: string }[]) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (q) {
-        for (let i = 0; i < q.length; i++) {
-          params.set(q[i].name, q[i].value);
-        }
-      }
-      //  params.set(name, value);
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const handleEditPhone = () => {
-    router.push(
-      `/?${createQueryString([{ name: "to", value: searchParams.get("to") || "" }])}`,
-    );
-  };
   const handleProductEdit = () => {
-    if (searchParams.get("productId")) {
-      router.push(
-        `/send-topup/options?${createQueryString([{ name: "productId", value: searchParams.get("productId") || "" }])}`,
-      );
-    }
+    router.push(`/send-topup/options`);
   };
 
   const handleSubmit = async (e: any) => {
@@ -75,43 +46,25 @@ function SignupSendTopup() {
       return;
     }
 
-    // for now, just redirect to signup page
-    // router.push(
-    //   `/send-topup/verify?${createQueryString("from", senderPhoneNumber)}`,
-    // );
-    // return;
-
     // login user
     const userData = await login({
       phoneNumber: senderPhoneNumber,
+      code: fromCountryCode, // the country code of the sender phone number
     });
-    // todo: save user data in react context & local storage
-
     console.log("login reponse data: ", userData);
+
     if (userData) {
-      router.push(
-        `/send-topup/verify?${createQueryString([
-          { name: "from", value: senderPhoneNumber },
-          { name: "fromCountryCode", value: fromCountryCode },
-        ])}`,
-      );
+      setSendTopup({ ...sendTopup, from: senderPhoneNumber, fromCountryCode });
+      router.push(`/send-topup/verify`);
     }
   };
-
-  useEffect(() => {
-    const phone = searchParams.get("from") || "";
-    setSenderPhoneNumber(phone);
-  }, [searchParams]);
 
   return (
     <>
       <Textt variant="h4-craftwork">You’re senRemytel top-up to</Textt>
 
       <div className="mt-5">
-        <TopupToDetailCard
-          phone={searchParams.get("to") || ""}
-          onPhoneEdit={handleEditPhone}
-        />
+        <TopupToDetailCard phone={sendTopup.to} />
       </div>
 
       <div className="mt-5">
@@ -137,14 +90,23 @@ function SignupSendTopup() {
               name="phoneNumber"
               value={senderPhoneNumber}
               // setFromCountryCode(val)
+              // onChange={(phone: string, { country, inputValue: string }) => {
+              //   const phoneNumber = parsePhoneNumber(phone, country.iso2);
+              //   if (phoneNumber) {
+              //     setFromCountryCode(country.iso2);
+              //     setSenderPhoneNumber(phoneNumber.formatInternational());
+              //   }
+              // }}
+
               onChange={(
                 phone: string,
-                { country: ParsedCountry, inputValue: string },
+                meta: { country: ParsedCountry; inputValue: string },
               ) => {
                 // console.log("phone", phone);
                 // console.log("ParsedCountry", ParsedCountry);
                 // console.log("inputValue", inputValue);
-                setFromCountryCode(ParsedCountry.iso2);
+                // const phoneNumber = parsePhoneNumber(phone, meta.country.name);
+                setFromCountryCode(meta.country.iso2);
                 setSenderPhoneNumber(phone);
               }}
             />

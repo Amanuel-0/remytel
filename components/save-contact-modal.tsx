@@ -5,6 +5,7 @@ import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
 import MyButton from "./ui/my-button";
 import { useSearchParams } from "next/navigation";
+import { isPhoneValid } from "@/utils";
 
 function SaveContactModal({
   open,
@@ -13,12 +14,50 @@ function SaveContactModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const searchParams = useSearchParams();
-  const receiverPhone = searchParams.get("to") || "";
-  const [receiverName, setReceiverName] = useState<string>("");
+  const [contactName, setContactName] = useState<string>("");
+  const [contactNameValid, setContactNameValid] = useState<boolean>(false);
+  const [contactNameTouched, setContactNameTouched] = useState<boolean>(false);
+  const [contactPhoneNumber, setContactPhoneNumber] = useState<string>("");
+  const [contactPhoneNumberValid, setContactPhoneNumberValid] =
+    useState<boolean>(false);
+  const [contactPhoneNumberTouched, setContactPhoneNumberTouched] =
+    useState<boolean>(false);
 
-  const handleSaveContact = () => {
-    console.log("Save Contact/Receiver", receiverName, receiverPhone);
+  const searchParams = useSearchParams();
+
+  // const receiverPhone = searchParams.get("to") || "";
+  // const [receiverName, setReceiverName] = useState<string>("");
+
+  const handleContactNameChange = (e: any) => {
+    e.preventDefault();
+    if (e.target.value.length > 3) {
+      setContactNameValid(true);
+    } else {
+      setContactNameValid(false);
+    }
+    setContactName(e.target.value);
+  };
+  const handleContactPhoneNumberChange = (e: any) => {
+    e.preventDefault();
+    if (isPhoneValid(e.target.value)) {
+      setContactPhoneNumberValid(true);
+    } else {
+      setContactPhoneNumberValid(false);
+    }
+    setContactPhoneNumber(e.target.value);
+  };
+
+  const saveContact = async () => {
+    if (!contactNameValid || !contactPhoneNumberValid) {
+      setContactNameTouched(true);
+      setContactPhoneNumberTouched(true);
+      return;
+    }
+
+    // todo: save contact
+    // const contactRes = await saveContact({})
+
+    // console.log("Save Contact/Receiver", receiverName, receiverPhone);
     onClose();
   };
 
@@ -34,7 +73,10 @@ function SaveContactModal({
                 width={30}
                 height={30}
               />
-              <Textt variant="h6-satoshi">{receiverPhone}</Textt>
+              <Textt variant="h6-satoshi">
+                {/* {receiverPhone} */}
+                Add Contact
+              </Textt>
               <Image
                 src={"/assets/images/ethiotel-logo.svg"}
                 alt="ethiotel-logo"
@@ -46,19 +88,44 @@ function SaveContactModal({
         </div>
 
         <div>
-          <input
-            id="nameOnCard"
-            type="text"
-            placeholder="Contact Name"
-            value={receiverName}
-            onChange={(e) => setReceiverName(e.target.value)}
-            className="mt-4 block h-[44px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#808080] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
-          />
+          <div>
+            <input
+              id="contactName"
+              type="text"
+              placeholder="Contact Name"
+              value={contactName}
+              onChange={(e) => handleContactNameChange(e)}
+              className="mt-4 block h-[44px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#808080] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
+            />
+
+            {contactNameTouched && !contactNameValid && (
+              <small className="text-xs text-red-500">
+                Contact name is not valid
+              </small>
+            )}
+          </div>
+
+          <div>
+            <input
+              id="contactPhoneNumber"
+              type="tel"
+              placeholder="Phone Number"
+              value={contactPhoneNumber}
+              onChange={(e) => handleContactPhoneNumberChange(e)}
+              className="mt-4 block h-[44px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#808080] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
+            />
+
+            {contactPhoneNumber && !contactPhoneNumberValid && (
+              <small className="text-xs text-red-500">
+                Phone number is not valid
+              </small>
+            )}
+          </div>
 
           <MyButton
             variant="primary-normal"
             className="mt-2"
-            onClick={handleSaveContact}
+            onClick={saveContact}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Save Contact

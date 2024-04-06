@@ -1,44 +1,27 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
+import withAuth from "@/components/protected-route";
+import AccountNav from "../account-nav";
+import CancelAutoTopupModal from "@/components/cancel-auto-topup-modal";
 
 function AutoTopups() {
+  const [openCancelAutoTopupModal, setOpenCancelAutoTopupModal] =
+    React.useState(false);
+
   return (
     <div>
-      {/*  */}
-      <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center justify-start gap-4">
-            <button className="flex h-11 w-11  min-w-12 items-center justify-center rounded-full bg-white">
-              <Image
-                src={"/assets/icons/arrow-back-black-icon.svg"}
-                alt={"arrow-back-black-icon"}
-                width={16}
-                height={16}
-              />
-            </button>
-            <Textt variant="h6-satoshi" className="hidden md:block">
-              My Account
-            </Textt>
-          </div>
+      {/* cancel autotopup modal   */}
+      <CancelAutoTopupModal
+        open={openCancelAutoTopupModal}
+        onClose={() => setOpenCancelAutoTopupModal(false)}
+      />
 
-          <div>
-            <MyButton
-              variant="primary-gradient-top-left"
-              className="min-w-[125px]"
-            >
-              <Textt
-                variant="span1-satoshi"
-                className="font-extrabold text-white"
-              >
-                Send top-up
-              </Textt>
-            </MyButton>
-          </div>
-        </div>
-      </section>
+      {/*  */}
+      <AccountNav />
 
       {/*  */}
       <section className="my-[10px]">
@@ -111,7 +94,11 @@ function AutoTopups() {
                   </Textt>
                 </div>
 
-                <MyButton className="max-w-[164px] border border-[#C7C7C7]">
+                <MyButton
+                  type="button"
+                  onClick={() => setOpenCancelAutoTopupModal(true)}
+                  className="max-w-[164px] border border-[#C7C7C7]"
+                >
                   <Textt variant="span1-satoshi">Cancel auto top-up</Textt>
                 </MyButton>
               </div>
@@ -123,4 +110,4 @@ function AutoTopups() {
   );
 }
 
-export default AutoTopups;
+export default withAuth(AutoTopups);

@@ -1,76 +1,23 @@
+import {
+  LoginPayload,
+  User,
+  OtpVerificationPayload,
+  UserProfile,
+  UpdateProfilePayload,
+} from "@/models";
 import axios from "axios";
 import { API_URL } from ".";
 
-type LoginData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  code: string;
-};
-
-type VerifyOtpData = {
-  otp: string;
-  phoneNumber: string;
-  code: string;
-};
-
-export interface Session {
-  id: string;
-  token: string;
-  deviceAgent: string;
-  deviceIp: string;
-  installationId: string;
-  ipLocation: string;
-  lastSeen: string;
-  socketId: null | string;
-  active: boolean;
-  terminated: boolean;
-  fcmToken: string;
-  expiresAt: string;
-  createdAt: string;
-  updatedAt: string;
-  profileId: string;
-}
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  pendingOTP: string;
-  lastCharedAt: string;
-  verifiedPhoneNumber: boolean;
-  verifiedProfile: boolean;
-  profilePicture: null | string;
-  password: string;
-  role: string;
-  blocked: boolean;
-  deleted: boolean;
-  loginAttempts: number;
-  loginsToday: number;
-  lastLoginAt: string;
-  theme: string;
-  language: string;
-  notificationsEnabled: boolean;
-  stripeCustomerId: string;
-  paymentMethodId: string;
-  createdAt: string;
-  updatedAt: string;
-  Session: Session[];
-}
-
 // login
-export const login = async (data: Partial<LoginData>) => {
+export const login = async (data: Partial<LoginPayload>) => {
   const response = await axios.post(`${API_URL}auth/login`, data);
   return response.data as Partial<User>;
 };
 
 // verify otp
-export const verifyOtp = async (data: VerifyOtpData) => {
+export const verifyOtp = async (data: OtpVerificationPayload) => {
   const response = await axios.post(`${API_URL}auth/verify`, data);
-  return response.data;
+  return response.data as Partial<User>;
 };
 
 // get profile
@@ -81,6 +28,20 @@ export const getProfile = async (token: string) => {
     },
   });
   return response.data as Partial<User>;
+};
+
+// update profile
+export const updateProfile = async (
+  data: Partial<UpdateProfilePayload>,
+  token: string,
+) => {
+  // export const updateProfile = async (data: Partial<User>, token: string) => {
+  const response = await axios.patch(`${API_URL}profile`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data as Partial<UserProfile>;
 };
 
 // logout

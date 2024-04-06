@@ -1,56 +1,34 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import productContext from "@/states/product-context";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 import EditReceiverPhoneModal from "@/components/edit-receiver-phone-modal";
+import sendTopupContext from "@/states/send-topup-context";
 // import { useDayPicker, DayPickerProvider } from "react-day-picker";
 
 function Payment() {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = React.useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
     React.useState(false);
 
-  const senderPhone = searchParams.get("from") ?? "";
-  const receiverPhone = searchParams.get("to") ?? "";
-  const topupFrequency = searchParams.get("topup-frq") ?? "";
-
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name?: string, value?: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (name && value) params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
-
   const handleProductEdit = () => {
-    if (searchParams.get("productId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
-      );
-    }
+    router.push(`/send-topup/options`);
   };
 
   const handleTogglePaymentDetail = () => {
     setShowPaymentDetail(!showPaymentDetail);
   };
 
-  const navigate = useRouter();
-
-  const handleClick = () =>
-    navigate.push(`/send-topup/success?${createQueryString()}`);
+  const navigateToSuccess = () => router.push(`/send-topup/success`);
 
   return (
     <>
@@ -69,7 +47,7 @@ function Payment() {
                 width={30}
                 height={30}
               />
-              <Textt variant="h6-satoshi">{receiverPhone}</Textt>
+              <Textt variant="h6-satoshi">{sendTopup.to}</Textt>
 
               <Image
                 src={"/assets/images/ethiotel-logo.svg"}
@@ -93,7 +71,7 @@ function Payment() {
           </IconButton>
         </div>
 
-        {topupFrequency && (
+        {sendTopup.topupFrequency && (
           <div className="mt-7 flex items-center justify-start gap-2">
             <Image
               src={"/assets/icons/schedule-icon.svg"}
@@ -102,7 +80,7 @@ function Payment() {
               height={17}
             />
             <Textt variant="span1-satoshi">
-              Auto top-up every {topupFrequency} days 
+              Auto top-up every {sendTopup.topupFrequency} days 
             </Textt>
           </div>
         )}
@@ -377,7 +355,7 @@ function Payment() {
         <MyButton
           variant="primary-normal"
           className="mt-10"
-          onClick={handleClick}
+          onClick={navigateToSuccess}
         >
           <Textt variant="h5-satoshi" className="text-white">
             Pay USD ${product?.price?.amount} Now

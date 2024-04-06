@@ -51,7 +51,7 @@ function OtpInput({ length = 4, onComplete }: InputProps) {
           onChange={(e) => handleTextChange(e.target.value, index)}
           ref={(ref) => (inputRef.current[index] = ref as HTMLInputElement)}
           // className={`border-border-slate-500 border border-solid p-5 outline-none focus:border-blue-600`}
-          className={`focus:border-primary h-16 w-[50px] rounded-[10px] border border-solid border-[#666666] p-4 outline-none`}
+          className={`h-16 w-[50px] rounded-[10px] border border-solid border-[#666666] p-4 outline-none focus:border-primary`}
           style={{ marginRight: index === length - 1 ? "0" : "10px" }}
         />
       ))}

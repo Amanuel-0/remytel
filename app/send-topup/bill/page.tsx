@@ -5,60 +5,33 @@ import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import MyButton from "@/components/ui/my-button";
 import productContext from "@/states/product-context";
+import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useState } from "react";
 
 function Bill() {
+  const { sendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const senderPhone = searchParams.get("from") ?? "";
-  const receiverPhone = searchParams.get("to") ?? "";
-  const topupFrequency = searchParams.get("topup-frq") ?? "";
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name?: string, value?: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (name && value) params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const handleEditReceiverPhone = () => {
-    router.push(`/?${createQueryString("to", receiverPhone || "")}`);
-  };
   const handleProductEdit = () => {
-    if (searchParams.get("productId")) {
-      router.push(
-        `/send-topup/options?${createQueryString("productId", searchParams.get("productId") || "")}`,
-      );
-    }
+    router.push(`/send-topup/options`);
   };
 
   const handleTogglePaymentDetail = () => {
     setShowPaymentDetail(!showPaymentDetail);
   };
 
-  const navigate = useRouter();
-
-  const handleClick = () =>
-    navigate.push(`/send-topup/payment?${createQueryString()}`);
+  const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
 
   return (
     <>
       <Textt variant="h4-craftwork">Your Order</Textt>
 
       <div className="mt-5">
-        <TopupToDetailCard
-          phone={receiverPhone}
-          onPhoneEdit={handleEditReceiverPhone}
-        />
+        <TopupToDetailCard phone={sendTopup.to} />
       </div>
 
       <div className="mt-5">
@@ -79,13 +52,13 @@ function Bill() {
             </Textt>
           </div>
 
-          {topupFrequency && (
+          {sendTopup.topupFrequency && (
             <div className="">
               <Textt variant="span2-satoshi" className="block text-start">
                 Auto top-up
               </Textt>
               <Textt variant="h3-satoshi" className="mt-2 block text-start">
-                Every {topupFrequency} days
+                Every {sendTopup.topupFrequency} days
               </Textt>
             </div>
           )}
@@ -158,7 +131,7 @@ function Bill() {
         <MyButton
           variant="primary-normal"
           className="mb-[10px] mt-10"
-          onClick={handleClick}
+          onClick={navigateToPaymentPage}
         >
           <Textt variant="h5-satoshi" className="text-white">
             Continue Payment

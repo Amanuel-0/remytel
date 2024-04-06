@@ -1,10 +1,18 @@
+"use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import Button from "@/components/ui/button";
+import MyButton from "@/components/ui/my-button";
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 function Success() {
+  const router = useRouter();
+
+  const navigateToRequestTopup = () => {
+    router.push("/request-topup/create-topup-link");
+  };
+
   return (
     <>
       <Card className="flex flex-col items-center">
@@ -19,11 +27,15 @@ function Success() {
           Your Request was sent successfully
         </Textt>
 
-        <Button variant="primary-normal" className="my-4 mt-8">
+        <MyButton
+          variant="primary-normal"
+          className="my-4 mt-8"
+          onClick={navigateToRequestTopup}
+        >
           <Textt variant="h5-satoshi" className="text-white">
             Send Another Request
           </Textt>
-        </Button>
+        </MyButton>
       </Card>
     </>
   );

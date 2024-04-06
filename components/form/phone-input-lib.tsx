@@ -31,10 +31,6 @@ function PhoneInputLib({
   // Example: "+12133734253".
   //   const [value, setValue] = useState();
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
-
   return (
     <>
       {/* react-international-phone */}

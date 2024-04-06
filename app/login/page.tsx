@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Footer from "@/components/footer";
@@ -11,17 +11,53 @@ import Container from "@/components/container";
 import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
+import authContext from "@/states/auth-context";
+import useCreateQueryString from "@/hooks/use-create-query-params";
+import { login } from "@/services";
+import { isPhoneValid } from "@/utils";
 
 function Login() {
   const [phone, setPhone] = React.useState("");
+  const [countryCode, setCountryCode] = React.useState("US"); // ["US", "ET", ...]
+  const { isLoggedIn } = useContext(authContext);
+  const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
+  const router = useRouter();
+  const { createQueryString } = useCreateQueryString();
+
+  if (isLoggedIn) {
+    router.push("/account/home");
+  }
+
+  const isSenderPhoneValid = isPhoneValid(phone);
 
   useEffect(() => {
     console.log(phone);
   }, [phone]);
 
-  const navigate = useRouter();
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-  const handleClick = () => navigate.push("/verify-login");
+    if (!isSenderPhoneValid) {
+      setSenderPhoneTouched(true);
+      return;
+    }
+
+    // login user
+    const userData = await login({
+      phoneNumber: phone,
+      code: countryCode, // the country code of the sender phone number
+    });
+    console.log("signup data: ", userData);
+
+    if (userData) {
+      router.push(
+        `/verify-signup?${createQueryString([
+          { name: "phone", value: phone },
+          { name: "code", value: countryCode },
+        ])}`,
+      );
+    }
+  };
 
   return (
     <Container>
@@ -78,17 +114,29 @@ function Login() {
 
               <div className="my-[10px]">
                 <PhoneInputLib
+                  defaultCountry="US"
+                  name="phone"
                   value={phone}
-                  onChange={(val) => setPhone(val)}
+                  onChange={(
+                    phone: string,
+                    { country: ParsedCountry, inputValue: string },
+                  ) => {
+                    setCountryCode(ParsedCountry.iso2);
+                    setPhone(phone);
+                  }}
                 />
+                {senderPhoneTouched && !isSenderPhoneValid && (
+                  <small className="text-xs text-red-500">
+                    Phone is not valid
+                  </small>
+                )}
               </div>
-              {/* <PhoneInput className="my-[10px]" /> */}
             </form>
 
             <MyButton
               variant="primary-normal"
               className="my-4"
-              onClick={handleClick}
+              onClick={handleSubmit}
             >
               <Textt variant="h5-satoshi" className="text-white">
                 Confirm Phone Number

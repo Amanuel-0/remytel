@@ -7,6 +7,8 @@ import { UserContextProvider } from "@/states/user-context";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import OneSignalWrapper from "./onesignal-wrapper";
+import { SendTopupContextProvider } from "@/states/send-topup-context";
+import { TopupRequestContextProvider } from "@/states/request-topup-context";
 
 // const fontSans = FontSans({
 //   subsets: ["latin"],
@@ -32,7 +34,11 @@ export default function RootLayout({
         <AuthContextProvider>
           <UserContextProvider>
             <ProductContextProvider>
-              <OneSignalWrapper>{children}</OneSignalWrapper>
+              <SendTopupContextProvider>
+                <TopupRequestContextProvider>
+                  <OneSignalWrapper>{children}</OneSignalWrapper>
+                </TopupRequestContextProvider>
+              </SendTopupContextProvider>
             </ProductContextProvider>
           </UserContextProvider>
         </AuthContextProvider>

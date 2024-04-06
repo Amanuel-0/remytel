@@ -6,27 +6,20 @@ import { useRouter } from "next/navigation";
 import Card from "./card";
 import Image from "next/image";
 import MyButton from "./ui/my-button";
+import authContext from "@/states/auth-context";
 // import authContext from "@/state/auth-context";
 // import LanguageOption from "./LanguageOption";
 
-function objectToBoolean(obj: object) {
-  return Object.keys(obj).length > 0;
-}
+// function objectToBoolean(obj: object) {
+//   return Object.keys(obj).length > 0;
+// }
 function MobileMenu() {
-  const navigate = useRouter();
-
-  const handleLogin = () => navigate.push("/login");
-  const handleSignup = () => navigate.push("/signup");
-
   //   const { isLoggedIn, onLogin } = useContext(authContext);
   const [loginLocal, setLoginLocal] = useState<any>();
-
   const router = useRouter();
 
-  const logout = () => {
-    // onLogin(false);
-    router.push("/", { scroll: true });
-  };
+  const handleLogin = () => router.push("/login");
+  const handleSignup = () => router.push("/signup");
 
   //   useEffect(() => {
   // if (objectToBoolean(locale)) {
@@ -49,7 +42,7 @@ function MobileMenu() {
           {/* sec 1 */}
           <ul className="flex w-full flex-col">
             <li className="h-10 w-full">
-              <Link href="/send-topup/options">Send top-up</Link>
+              <Link href="/send-topup/to">Send top-up</Link>
             </li>
             <li className="h-10">
               <Link href="/request-topup/signup">Request top-up</Link>

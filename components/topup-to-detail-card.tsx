@@ -9,7 +9,7 @@ import EditReceiverPhoneModal from "./edit-receiver-phone-modal";
 
 interface TopupToDetailCardProps {
   phone: string;
-  onPhoneEdit: () => void;
+  onPhoneEdit?: () => void;
 }
 function TopupToDetailCard({ phone, onPhoneEdit }: TopupToDetailCardProps) {
   const [openEditPhoneModal, setOpenEditPhoneModal] = React.useState(false);

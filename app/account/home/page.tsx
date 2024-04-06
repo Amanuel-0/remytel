@@ -1,31 +1,50 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import Card from "@/components/card";
 import SendYourFirstTopupBanner from "@/components/send-your-first-topup-banner";
+import userContext from "@/states/user-context";
+import { useRouter } from "next/navigation";
+import SaveContactModal from "@/components/save-contact-modal";
+import authContext from "@/states/auth-context";
+import withAuth from "@/components/protected-route";
 
 function AccountHome() {
+  // const { isLoggedIn } = useContext(authContext);
+  const { user } = useContext(userContext);
+  //
   const [noActivity, setNoActivity] = React.useState(true);
   const [noContact, setNoContact] = React.useState(true);
   const [noAutoTopup, setNoAutoTopup] = React.useState(true);
+  const router = useRouter();
+  //
+  const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
+
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     router.push("/login");
+  //   }
+  // }, []);
+
+  const navigateToHelpPage = () => router.push("/help");
+  const navigateToAccountSettingsPage = () => router.push("/account/settings");
+  const navigateToSendTopupTo = () => {
+    router.push("/send-topup/to");
+  };
 
   return (
     <div>
+      {/* save contact modal */}
+      <SaveContactModal
+        open={openSaveContactModal}
+        onClose={() => setOpenSaveContactModal(false)}
+      />
+
       {/*  */}
       <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">
         <div className="flex w-full items-center justify-between">
-          {/* go back to account */}
-          <button className="flex hidden h-12 w-12  min-w-12 items-center justify-center rounded-full bg-white">
-            <Image
-              src={"/assets/icons/arrow-back-black-icon.svg"}
-              alt={"arrow-back-black-icon"}
-              width={16}
-              height={16}
-            />
-          </button>
-
           <div className="flex gap-5">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white ">
               <Image
@@ -37,16 +56,24 @@ function AccountHome() {
             </div>
             <div>
               <Textt variant="h3-satoshi" className="text-start">
-                Oumer Sualih
+                {user.user
+                  ? user.user.firstName + " " + user.user.lastName
+                  : "no name"}
+                {/* Oumer Sualih */}
               </Textt>
               <Textt variant="span2-satoshi" className="mt-1 text-start">
-                +251 93 542 5899
+                {user.user ? user.user.phoneNumber : "no phone"}
+                {/* +251 93 542 5899 */}
               </Textt>
             </div>
           </div>
 
           <div className="flex items-center justify-end gap-[10px]">
-            <button className="flex h-12 w-12  min-w-12 items-center justify-center rounded-full bg-white">
+            <button
+              type="button"
+              onClick={navigateToHelpPage}
+              className="flex h-12 w-12  min-w-12 items-center justify-center rounded-full bg-white"
+            >
               <Image
                 src={"/assets/icons/question-icon.svg"}
                 alt={"question-icon"}
@@ -54,7 +81,11 @@ function AccountHome() {
                 height={16}
               />
             </button>
-            <button className="flex h-12 w-full min-w-[68px] max-w-[136px] items-center justify-center gap-[10px] rounded-[30px] bg-white px-5">
+            <button
+              type="button"
+              onClick={navigateToAccountSettingsPage}
+              className="flex h-12 w-full min-w-[68px] max-w-[136px] items-center justify-center gap-[10px] rounded-[30px] bg-white px-5"
+            >
               <Image
                 src={"/assets/icons/setting-black-icon.svg"}
                 alt={"setting-icon"}
@@ -65,13 +96,19 @@ function AccountHome() {
               <Textt variant="span1-satoshi" className="hidden md:block">
                 Settings
               </Textt>
-              <div className="h-[10px] w-[10px] rounded-full bg-[#FF9142]"></div>
+
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FF9142] opacity-75"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-[#FF9142]"></span>
+              </span>
             </button>
           </div>
         </div>
 
-        <div>
+        <div className="max-h-[44px]">
           <MyButton
+            type="button"
+            onClick={navigateToSendTopupTo}
             variant="primary-gradient-top-left"
             className="min-w-[125px]"
           >
@@ -88,7 +125,11 @@ function AccountHome() {
       {/*  */}
       <section className="my-[10px] flex w-full flex-col gap-[10px] md:flex-row">
         {/* send your fist topup banner */}
-        {noActivity && <SendYourFirstTopupBanner />}
+        {noActivity && (
+          <div className="w-full md:max-w-[65%]">
+            <SendYourFirstTopupBanner />
+          </div>
+        )}
 
         {!noActivity && (
           <Card className="w-full md:max-w-[65%]">
@@ -220,6 +261,7 @@ function AccountHome() {
 
                   <button
                     type="button"
+                    onClick={() => setOpenSaveContactModal(true)}
                     className="mt-5 flex items-center justify-center gap-2"
                   >
                     <Textt variant="span1-satoshi" className="text-primary">
@@ -323,4 +365,4 @@ function AccountHome() {
   );
 }
 
-export default AccountHome;
+export default withAuth(AccountHome);

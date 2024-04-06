@@ -1,43 +1,38 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useCallback, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import MyButton from "@/components/ui/my-button";
 import productContext from "@/states/product-context";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import sendTopupContext from "@/states/send-topup-context";
 
 function AutoTopup() {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [selectedFrequency, setSelectedFrequency] = React.useState<
     "7" | "14" | "30"
   >("30"); // ["7", "14", "30"]
   const { product } = useContext(productContext);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const senderPhone = searchParams.get("from") ?? "";
-  const receiverPhone = searchParams.get("to") ?? "";
 
   const frequencyOptions = ["7", "14", "30"];
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name?: string, value?: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (name && value) params.set(name, value);
+  useEffect(() => {
+    setSendTopup({ ...sendTopup, topupFrequency: selectedFrequency });
+  }, [selectedFrequency]);
 
-      return params.toString();
-    },
-    [searchParams],
-  );
+  const handleSelectedFrequency = (option: string) => {
+    setSelectedFrequency(option as any);
+    setSendTopup({ ...sendTopup, topupFrequency: option });
+  };
 
   const handleSendAutoTopup = () => {
-    router.push(
-      `/send-topup/bill?${createQueryString("topup-frq", selectedFrequency)}`,
-    );
+    router.push(`/send-topup/bill`);
   };
   const handleNoThanks = () => {
-    router.push(`/send-topup/bill?${createQueryString()}`);
+    setSendTopup({ ...sendTopup, topupFrequency: undefined });
+    router.push(`/send-topup/bill`);
   };
 
   return (
@@ -64,7 +59,7 @@ function AutoTopup() {
         <Textt
           variant="p2-satoshi"
           className="mt-4 text-start md:text-center"
-        >{`We'll automatically resend ${product.amount} ETB to ${receiverPhone} so that you don't have to.`}</Textt>
+        >{`We'll automatically resend ${product.amount} ETB to ${sendTopup.to} so that you don't have to.`}</Textt>
 
         <Textt
           variant="h5-craftwork"
@@ -81,7 +76,7 @@ function AutoTopup() {
                   key={option}
                   variant="primary-normal"
                   className="mt-[10px]"
-                  onClick={() => setSelectedFrequency(option as any)}
+                  onClick={() => handleSelectedFrequency(option)}
                 >
                   <Textt variant="h6-satoshi" className="text-white">
                     {option} Days
@@ -94,7 +89,7 @@ function AutoTopup() {
               <MyButton
                 key={option}
                 className={`mt-[10px] border border-black bg-white text-black`}
-                onClick={() => setSelectedFrequency(option as any)}
+                onClick={() => handleSelectedFrequency(option)}
               >
                 <Textt variant="h6-satoshi">{option} Days</Textt>
               </MyButton>

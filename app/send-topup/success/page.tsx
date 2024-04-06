@@ -3,7 +3,7 @@ import Card from "@/components/card";
 import React, { useContext } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
-import Button from "@/components/ui/my-button";
+import MyButton from "@/components/ui/my-button";
 import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import { Product } from "@/services";
@@ -147,17 +147,17 @@ function Success() {
           </Textt>
         </div>
 
-        <Button variant="primary-normal" onClick={handleSendAnotherTopup}>
+        <MyButton variant="primary-normal" onClick={handleSendAnotherTopup}>
           <Textt variant="h5-satoshi" className="text-white">
             Send another top-up
           </Textt>
-        </Button>
+        </MyButton>
 
-        <Button variant="light-normal" className="mt-3">
+        <MyButton variant="light-normal" className="mt-3">
           <Textt variant="h5-satoshi" className="text-[#6D6D6D]">
             Done
           </Textt>
-        </Button>
+        </MyButton>
       </Card>
 
       {/* save contact modal */}

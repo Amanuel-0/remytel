@@ -1,5 +1,6 @@
 "use client";
-import { User } from "@/services";
+import { User } from "@/models";
+import { LocalStorageUtil } from "@/utils";
 import { createContext, useState } from "react";
 
 const userContext = createContext<{
@@ -7,20 +8,19 @@ const userContext = createContext<{
   onUser: (user: User) => void;
 }>({
   user: {
-    ...(JSON.parse(localStorage.getItem("user") ?? "{}") as User),
+    ...LocalStorageUtil.getItem<User>("user"),
   } as User,
   onUser: (user: User) => {},
 });
 
 export const UserContextProvider = (props: any) => {
   const [user, setUser] = useState<User>({
-    ...(JSON.parse(localStorage.getItem("user") ?? "{}") as User),
-  } as User);
+    ...(LocalStorageUtil.getItem<User>("user") ?? ({} as User)),
+  });
 
   const userHandler = (user: User) => {
     setUser(user);
-    // store user to local storage
-    localStorage.setItem("user", JSON.stringify(user));
+    LocalStorageUtil.setItem("user", user);
   };
 
   const contextValue = {

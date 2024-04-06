@@ -7,8 +7,13 @@ import VerifyOtp from "@/components/verify-otp";
 import Container from "@/components/container";
 import Image from "next/image";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
-function OtpSignup() {
+function VerifySignup() {
+  const searchParams = useSearchParams();
+  const phone = searchParams.get("phone") || "";
+  const code = searchParams.get("code") || "";
+
   return (
     <Container>
       <Navbar />
@@ -76,7 +81,11 @@ function OtpSignup() {
             </Textt>
 
             {/* verify opt form */}
-            <VerifyOtp />
+            <VerifyOtp
+              redirectUrl={"/account/home"}
+              phoneNumber={phone}
+              code={code}
+            />
 
             <Textt variant="span2-satoshi" className="">
               {`Request new code (00:30)`}
@@ -90,4 +99,4 @@ function OtpSignup() {
   );
 }
 
-export default OtpSignup;
+export default VerifySignup;

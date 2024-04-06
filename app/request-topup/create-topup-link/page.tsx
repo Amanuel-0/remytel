@@ -2,28 +2,88 @@
 import Card from "@/components/card";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
+import useCreateQueryString from "@/hooks/use-create-query-params";
+import { getProfile, updateProfile } from "@/services";
+import { createTopupRequest } from "@/services/request.service";
+import userContext from "@/states/user-context";
+import { validateEmail } from "@/utils";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 function CreateTopupLink() {
+  const { user, onUser } = useContext(userContext);
   const [subscription, setSubscription] = React.useState<"yes" | "no">("yes"); // ["yes", "no"]
+  //
+  const [name, setName] = React.useState("");
+  const [nameValid, setNameValid] = React.useState(false);
+  const [nameTouched, setNameTouched] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const [emailValid, setEmailValid] = React.useState(false);
+  const [emailTouched, setEmailTouched] = React.useState(false);
+  //
+  const [link, setLink] = React.useState("");
+  //
+  const { createQueryString } = useCreateQueryString();
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
+  const handleNameChange = (e: any) => {
     e.preventDefault();
+    if (e.target.value.length > 3) {
+      setNameValid(true);
+    } else {
+      setNameValid(false);
+    }
+    setName(e.target.value);
+  };
+  const handleEmailChange = (e: any) => {
+    e.preventDefault();
+    if (validateEmail(e.target.value)) {
+      setEmailValid(true);
+    } else {
+      setEmailValid(false);
+    }
+    setEmail(e.target.value);
+  };
 
-    // for now, just redirect to signup page
-    router.push(`/request-topup/topup-link`);
-    // router.push(`/request-topup/send-topup-link-sms`);
-    return;
+  const handleSubmit = async () => {
+    if (!nameValid || !emailValid) {
+      setNameTouched(true);
+      setEmailTouched(true);
+      return;
+    }
+    // console.log("name", name, "email", email);
+
+    // update profile
+    const profile = await updateProfile(
+      {
+        first_name: name,
+        email,
+      },
+      user.token,
+    );
+    // update the user context
+    if (profile) {
+      onUser({ ...user, ...profile });
+    }
 
     // create topup link
-    // const response = await createTopupLink({
-    //   senderPhoneNumber,
-    //   receiverPhoneNumber,
-    //   amount,
-    //   productId,
-    // });
+    const topupLinkData = await createTopupRequest(
+      {
+        senderPhoneNumber: user.user.phoneNumber,
+        code: "et",
+      },
+      user.token,
+    );
+    // get the topup link
+    if (topupLinkData) {
+      setLink(topupLinkData.url);
+    }
+
+    if (topupLinkData) {
+      router.push(
+        `/request-topup/topup-link?${createQueryString([{ name: "topup-link", value: topupLinkData.url }])}`,
+      );
+    }
   };
 
   useEffect(() => {
@@ -40,19 +100,36 @@ function CreateTopupLink() {
         variant="span2-satoshi"
         className="mt-8 text-start"
       >{`Add your name so people know it's you`}</Textt>
-      <input
-        type="text"
-        placeholder="Your Name"
-        id="cardNumber"
-        className="mt-[10px] block h-[54px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
-      />
+      <div>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => handleNameChange(e)}
+          placeholder="Your Name"
+          className="mt-[10px] block h-[54px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
+        />
 
-      <input
-        type="email"
-        placeholder="Your Email Address"
-        id="cardNumber"
-        className="mt-2 block h-[54px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
-      />
+        {nameTouched && !nameValid && (
+          <small className="text-xs text-red-500">Name is not valid</small>
+        )}
+      </div>
+
+      <div>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => handleEmailChange(e)}
+          placeholder="Your Email Address"
+          className="mt-2 block h-[54px] w-full rounded-[36px] border border-[#DBDBDB] p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
+        />
+        {emailTouched && !emailValid && (
+          <small className="text-xs text-red-500">Email is not valid</small>
+        )}
+      </div>
 
       <Textt variant="span1-satoshi" className="mb-5 mt-[10px] text-start">
         {`I'd like to receive discounts, exclusive special offers and other
@@ -127,6 +204,7 @@ function CreateTopupLink() {
       )}
 
       <MyButton
+        type="button"
         variant="primary-normal"
         className="my-4"
         onClick={handleSubmit}

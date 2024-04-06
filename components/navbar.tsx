@@ -13,14 +13,21 @@ function Navbar() {
   const { isLoggedIn, onLogin } = useContext(authContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-  const navigate = useRouter();
+  const router = useRouter();
 
-  useEffect(() => {
-    onLogin(false);
-  }, []);
+  const handleLogin = () => router.push("/login");
+  const handleSignup = () => router.push("/signup");
 
-  const handleLogin = () => navigate.push("/login");
-  const handleSignup = () => navigate.push("/signup");
+  const onRequestTopupMenuClicked = () => {
+    if (isLoggedIn) {
+      return "/request-topup/create-topup-link";
+    } else {
+      return "/request-topup/signup";
+    }
+  };
+  const onSendTopupMenuClicked = () => {
+    return "/send-topup/to";
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -46,11 +53,10 @@ function Navbar() {
         <div className="hidden xl:block">
           <ul className="flex flex-row gap-10 ">
             <li>
-              <Link href="/send-topup/to">Send top-up</Link>
-              {/* <Link href="/send-topup/options">Send top-up</Link> */}
+              <Link href={onSendTopupMenuClicked()}>Send top-up</Link>
             </li>
             <li>
-              <Link href="/request-topup/signup">Request top-up</Link>
+              <Link href={onRequestTopupMenuClicked()}>Request top-up</Link>
             </li>
             <li>
               <a href="#">Company</a>
