@@ -17,7 +17,7 @@ function SendTopupLayout({ children }: { children: React.ReactNode }) {
 
       <Navbar />
 
-      <section className="relative m-auto mb-10 mt-10 w-full max-w-[505px] rounded-2xl md:mb-16 md:mt-[60px]">
+      <section className="relative z-40 m-auto mb-10 mt-10 w-full max-w-[505px] rounded-2xl md:mb-16 md:mt-[60px]">
         {children}
       </section>
 

@@ -1,3 +1,5 @@
+export * from "./page-options";
+
 // auth related models
 export interface LoginPayload {
   firstName: string;
@@ -100,6 +102,11 @@ export interface BuyProductPayload {
   productId: number;
 }
 
+export interface ConfirmProductPurchasePayload {
+  transaction_id: string;
+  status: "SUCCESS" | "FAILED";
+}
+
 //  request related models
 export interface TopupRequestRequestPayload {
   senderPhoneNumber: string;
@@ -119,4 +126,38 @@ export interface GetRequestResponse {
   updatedAt: Date;
   senderProfile: UserProfile;
   profile: UserProfile;
+}
+
+// profile: transaction history, order history, subscription history
+export interface UpdateProfilePayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  promoOptIn: boolean;
+}
+
+export interface Transaction {
+  id: string;
+  hId: any;
+  profileId: string;
+  planId: string;
+  amount: number;
+  currency: string;
+  status: string;
+  receiver: string;
+  receiverName: any;
+  transactionId: string;
+  externalId: string;
+  subscriptionId: any;
+  paymentIntent: string;
+  checkoutSessionId: any;
+  receiptUrl: string;
+  chargeId: string;
+  refundId: any;
+  week: number;
+  month: number;
+  createdAt: string;
+  updatedAt: string;
+  subscription: any;
+  product: Product;
 }

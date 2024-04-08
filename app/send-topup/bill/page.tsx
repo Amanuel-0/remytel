@@ -8,7 +8,7 @@ import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import withAuth from "@/components/protected-route";
 
 function Bill() {

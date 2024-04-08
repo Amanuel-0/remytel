@@ -1,7 +1,7 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useContext } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
 import MyButton from "@/components/ui/my-button";
@@ -12,6 +12,10 @@ import EditReceiverPhoneModal from "@/components/edit-receiver-phone-modal";
 import sendTopupContext from "@/states/send-topup-context";
 // import { useDayPicker, DayPickerProvider } from "react-day-picker";
 import withAuth from "@/components/protected-route";
+import { COUNTRIES } from "@/components/country-selector/countries";
+import { SelectMenuOption } from "@/components/country-selector/types";
+import CountrySelector from "@/components/country-selector/selector";
+import Radio from "@/components/form/radio";
 
 function Payment() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
@@ -20,6 +24,19 @@ function Payment() {
   const router = useRouter();
   const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
     React.useState(false);
+
+  // form validation
+  // const [subscription, setSubscription] = React.useState<"yes" | "no">("yes"); // ["yes", "no"]
+  const [paymentMethod, setPaymentMethod] = React.useState<"card" | "paypal">(
+    "card",
+  ); // ["card", "paypal"]
+
+  // country selector
+  const myRef = React.createRef<HTMLDivElement>();
+
+  const [isOpen, setIsOpen] = useState(false);
+  // Default this to a country's code to preselect it
+  const [country, setCountry] = useState("US");
 
   const handleProductEdit = () => {
     router.push(`/send-topup/options`);
@@ -38,8 +55,8 @@ function Payment() {
       </Textt>
 
       {/* This card was what was previously => <TopupToDetailCard /> */}
-      <Card>
-        <div className="mt-5 flex items-center justify-between">
+      <Card className="mt-5 ">
+        <div className="flex items-center justify-between">
           <div>
             <span className="flex items-center justify-center gap-3">
               <Image
@@ -157,33 +174,13 @@ function Payment() {
       {/* select card */}
       <Card className="mt-5">
         <div className="flex items-center justify-between">
-          {/* radio start */}
-          <div className="inline-flex items-center">
-            <label
-              className="relative flex cursor-pointer items-center rounded-full p-3"
-              htmlFor="green"
-            >
-              <input
-                name="subscription"
-                type="radio"
-                className="before:content[''] before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-[#808080] text-green-500 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-[10px] checked:border-green-500 checked:before:bg-green-500 hover:before:opacity-10"
-                id="green"
-              />
-              <span className="pointer-events-none absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3.5 w-3.5"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                >
-                  <circle data-name="ellipse" cx="8" cy="8" r="6"></circle>
-                </svg>
-              </span>
-            </label>
-
-            <Textt variant="span2-satoshi">Card</Textt>
-          </div>
-          {/* radio end */}
+          <Radio
+            id={"payment-mastercard"}
+            name={"paymentMethod"}
+            label={"Card"}
+            checked={paymentMethod === "card"}
+            onChange={(e) => setPaymentMethod("card")}
+          />
 
           <div className="flex items-center justify-end gap-7">
             <Image
@@ -198,45 +195,19 @@ function Payment() {
               width={44}
               height={34}
             />
-            {/* <Image
-              src="/assets/images/paypal-logo.svg"
-              alt=""
-              width={27}
-              height={30}
-            /> */}
           </div>
         </div>
 
         <hr className="hidden md:block" />
 
         <div className="flex items-center justify-between">
-          {/* radio start */}
-          <div className="inline-flex items-center">
-            <label
-              className="relative flex cursor-pointer items-center rounded-full p-3"
-              htmlFor="green"
-            >
-              <input
-                name="subscription"
-                type="radio"
-                className="before:content[''] before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-[#808080] text-green-500 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-[10px] checked:border-green-500 checked:before:bg-green-500 hover:before:opacity-10"
-                id="green"
-              />
-              <span className="pointer-events-none absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3.5 w-3.5"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                >
-                  <circle data-name="ellipse" cx="8" cy="8" r="6"></circle>
-                </svg>
-              </span>
-            </label>
-
-            <Textt variant="span2-satoshi">Paypal</Textt>
-          </div>
-          {/* radio end */}
+          <Radio
+            id={"payment-paypal"}
+            name={"paymentMethod"}
+            label={"Paypal"}
+            checked={paymentMethod === "paypal"}
+            onChange={(e) => setPaymentMethod("paypal")}
+          />
 
           <Image
             src="/assets/images/paypal-logo.svg"
@@ -310,19 +281,35 @@ function Payment() {
         </div>
 
         {/* should be changed */}
-        <div className="mb-[18px] h-[91px]">
+        <div className="mb-[18px] ">
+          {/* <div className="mb-[18px] h-[91px]"> */}
           <label htmlFor="nameOnCard">
             <Textt variant="h6-satoshi" className="text-start">
               Country
             </Textt>
           </label>
-          <select
+
+          <CountrySelector
+            // ref={myRef}
+            id={"countries"}
+            open={isOpen}
+            onToggle={() => setIsOpen(!isOpen)}
+            onChange={(val: any) => setCountry(val)}
+            // We use this type assertion because we are always sure this find will return a value but need to let TS know since it could technically return null
+            selectedValue={
+              COUNTRIES.find(
+                (option: any) => option.value === country,
+              ) as SelectMenuOption
+            }
+          />
+
+          {/* <select
             id="nameOnCard"
             className="mt-4 block h-[54px] w-full rounded-2xl border border-[#DBDBDB] bg-white p-3  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] focus:border-[#808080] focus:ring-1 focus:ring-[#808080]"
           >
             <option value="ethiopia">Ethiopia</option>
             <option value="america">Ethiopia</option>
-          </select>
+          </select> */}
         </div>
 
         {/* checkbox */}

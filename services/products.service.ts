@@ -1,15 +1,10 @@
 import axios from "axios";
 import { API_URL } from ".";
-import { Product, BuyProductPayload } from "@/models";
-
-// export interface IPage {
-//   page: number;
-//   perPage: number;
-// }
-// export const defaultPaging: IPage = {
-//   page: 1,
-//   perPage: 10,
-// };
+import {
+  Product,
+  BuyProductPayload,
+  ConfirmProductPurchasePayload,
+} from "@/models";
 
 // products
 export const getProducts = async (phoneNumber?: number) => {
@@ -20,8 +15,31 @@ export const getProducts = async (phoneNumber?: number) => {
 };
 
 // buy product
+export const buyProduct = async (
+  data: Partial<BuyProductPayload>,
+  token: string,
+) => {
+  const response = await axios.post(`${API_URL}service/buy`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
 
-export const buyProduct = async (data: BuyProductPayload) => {
-  const response = await axios.post(`${API_URL}service/buy`, data);
+// confirm payment
+export const confirmPayment = async (
+  token: string,
+  confirmPayload: ConfirmProductPurchasePayload,
+) => {
+  const response = await axios.post(
+    `${API_URL}service/confirm`,
+    confirmPayload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
   return response.data;
 };

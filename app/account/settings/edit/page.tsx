@@ -1,14 +1,99 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "@/components/card";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
-import withAuth from "@/components/protected-route";
 import AccountNav from "../../account-nav";
+import userContext from "@/states/user-context";
+import { useRouter } from "next/navigation";
+import { updateProfile } from "@/services";
+import { editProfile } from "@/services/profile.service";
+import { toast } from "sonner";
+import withAuth from "@/components/protected-route";
 
 function SettingsEdit() {
+  const {
+    user: { user, token },
+    onUser,
+  } = useContext(userContext);
+
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(
+    user.notificationsEnabled,
+  );
+
+  const [personalDetails, setPersonalDetails] = useState<{
+    first_name: string;
+    last_name: string;
+    email: string;
+    phoneNumber: string;
+    day: number | undefined;
+    month: number | undefined;
+    year: number | undefined;
+  }>({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phoneNumber: "",
+    day: undefined,
+    month: undefined,
+    year: undefined,
+  });
+  const router = useRouter();
+
+  useEffect(() => {
+    setPersonalDetails({
+      first_name: user?.firstName || "",
+      last_name: user?.lastName || "",
+      email: user?.email || "",
+      phoneNumber: user?.phoneNumber || "",
+      day: undefined,
+      month: undefined,
+      year: undefined,
+      // day: user?.day || "",
+      // month: user?.month || "",
+      // year: user?.year || "",
+    });
+  }, [user]);
+
+  useEffect(() => {
+    console.log("notificationsEnabled", notificationsEnabled);
+  }, [notificationsEnabled]);
+
+  // requests
+  const updatePersonalDetails = async (e: any) => {
+    e.preventDefault();
+    console.log(personalDetails);
+
+    const response = await editProfile(token, {
+      first_name: personalDetails.first_name,
+      last_name: personalDetails.last_name,
+      email: personalDetails.email,
+      promoOptIn: notificationsEnabled,
+    });
+
+    if (response) {
+      onUser({ token: token, user: { ...user, ...response } });
+      toast.success("Profile has been updated");
+    }
+
+    console.log("edit profile response", response);
+  };
+
+  //
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setPersonalDetails((prev) => ({ ...prev, [name]: value }));
+  };
+  const toggleNotificationPreference = () => {
+    setNotificationsEnabled((prev) => !prev);
+  };
+
+  const navigateToSettings = () => {
+    router.push("/account/settings");
+  };
+
   return (
     <div>
       <AccountNav />
@@ -29,14 +114,18 @@ function SettingsEdit() {
                   id="firstName"
                   type="text"
                   placeholder="First Name"
-                  name="firstName"
+                  name="first_name"
+                  value={personalDetails.first_name}
+                  onChange={(e) => handleChange(e)}
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 />
                 <input
                   id="lastName"
                   type="text"
                   placeholder="Last Name"
-                  name="lastName"
+                  name="last_name"
+                  value={personalDetails.last_name}
+                  onChange={(e) => handleChange(e)}
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 />
               </div>
@@ -49,8 +138,7 @@ function SettingsEdit() {
                   name="day"
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] bg-transparent px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 >
-                  <option selected>Date</option>
-                  {/* // make the year to be from 1900 upto current year options */}
+                  <option selected={!Boolean(personalDetails.day)}>Date</option>
                   {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
                     <option key={day} value={day}>
                       {day}
@@ -79,7 +167,7 @@ function SettingsEdit() {
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] bg-transparent px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 >
                   <option selected>Year</option>
-                  {/* Generate year options from 1900 to the current year */}
+                  {/* // make the year to be from 1900 upto current year options */}
                   {Array.from(
                     { length: new Date().getFullYear() - 1900 + 1 },
                     (_, i) => i + 1900,
@@ -96,15 +184,19 @@ function SettingsEdit() {
                 type="email"
                 placeholder="Email"
                 name="email"
+                value={personalDetails.email}
+                onChange={(e) => handleChange(e)}
                 className="mt-5 block h-[54px] w-full rounded-full border border-[#DBDBDB] px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
               />
 
               {/* input for phone */}
               <input
-                id="phone"
+                id="phoneNumber"
                 type="tel"
-                placeholder="Phone"
-                name="phone"
+                placeholder="PhoneNumber"
+                name="phoneNumber"
+                value={personalDetails.phoneNumber}
+                onChange={(e) => handleChange(e)}
                 className="mt-5 block h-[54px] w-full rounded-full border border-[#DBDBDB] px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
               />
 
@@ -119,7 +211,12 @@ function SettingsEdit() {
               </Textt>
 
               <div className="flex justify-start gap-3">
-                <MyButton variant="primary-normal" className="max-w-[145px]">
+                <MyButton
+                  type="button"
+                  variant="primary-normal"
+                  className="max-w-[145px]"
+                  onClick={updatePersonalDetails}
+                >
                   <Textt
                     variant="span1-satoshi"
                     className="font-extrabold text-white"
@@ -127,7 +224,12 @@ function SettingsEdit() {
                     Save
                   </Textt>
                 </MyButton>
-                <MyButton variant="light-normal" className="max-w-[145px]">
+                <MyButton
+                  type="button"
+                  onClick={navigateToSettings}
+                  variant="light-normal"
+                  className="max-w-[145px]"
+                >
                   <Textt variant="span1-satoshi" className="font-extrabold">
                     Cancel
                   </Textt>
@@ -174,9 +276,15 @@ function SettingsEdit() {
                   name="month"
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] bg-transparent px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 >
-                  <option selected>Month</option>
+                  <option selected={!Boolean(personalDetails.month)}>
+                    Month
+                  </option>
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                    <option key={month} value={month}>
+                    <option
+                      key={month}
+                      value={month}
+                      selected={!!personalDetails.month}
+                    >
                       {month}
                     </option>
                   ))}
@@ -188,13 +296,19 @@ function SettingsEdit() {
                   name="year"
                   className="block h-[54px] w-full rounded-full border border-[#DBDBDB] bg-transparent px-5 py-3 font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
                 >
-                  <option selected>Year</option>
+                  <option selected={!Boolean(personalDetails.year)}>
+                    Year
+                  </option>
                   {/* Generate year options from 1900 to the current year */}
                   {Array.from(
                     { length: new Date().getFullYear() - 1900 + 1 },
                     (_, i) => i + 1900,
                   ).map((year) => (
-                    <option key={year} value={year}>
+                    <option
+                      key={year}
+                      value={year}
+                      selected={!!personalDetails.year}
+                    >
                       {year}
                     </option>
                   ))}
@@ -210,7 +324,12 @@ function SettingsEdit() {
                     Save
                   </Textt>
                 </MyButton>
-                <MyButton variant="light-normal" className="max-w-[145px]">
+                <MyButton
+                  type="button"
+                  onClick={navigateToSettings}
+                  variant="light-normal"
+                  className="max-w-[145px]"
+                >
                   <Textt variant="span1-satoshi" className="font-extrabold">
                     Cancel
                   </Textt>
@@ -266,7 +385,12 @@ function SettingsEdit() {
             </Textt>
             <div className="flex items-center justify-start gap-7 md:pr-24">
               <label htmlFor="id">Show</label>
-              <Switch id="email" defaultChecked />
+              <Switch
+                id="email"
+                checked={notificationsEnabled}
+                onClick={toggleNotificationPreference}
+                // onChange={toggleNotificationPreference}
+              />
             </div>
           </div>
         </div>

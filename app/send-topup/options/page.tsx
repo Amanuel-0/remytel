@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Textt from "@/components/text";
@@ -11,14 +11,28 @@ import { getProducts } from "@/services";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import { Product } from "@/models";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import userContext from "@/states/user-context";
+import { toast } from "sonner";
 
 type MenuType = "topup" | "plans";
 
 function TopUpAndPlans() {
+  const {
+    user: { user },
+  } = useContext(userContext);
+  const { product, onProductChange } = useContext(productContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [selectedMenu, setSelectedMenu] = React.useState<MenuType>("topup");
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = React.useState<Product[]>([]);
-  const { product, onProductChange } = useContext(productContext);
+
+  useEffect(() => {
+    setLoading(true);
+    if (product) {
+      setLoading(false);
+    }
+  }, [products]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,8 +55,16 @@ function TopUpAndPlans() {
     if (selectedProduct) {
       onProductChange(selectedProduct);
       setSendTopup({ ...sendTopup, product: selectedProduct });
+
+      // navigate to signup if user is not logged in
+      if (user) {
+        router.push(`/send-topup/bill`);
+      } else {
+        router.push(`/send-topup/signup`);
+      }
+    } else {
+      toast.error("Something went wrong, please try again later");
     }
-    router.push(`/send-topup/signup`);
   };
 
   const handleMenuSelectionChange = (menu: MenuType) => {
@@ -93,21 +115,29 @@ function TopUpAndPlans() {
           </div>
 
           <div className="mt-5">
-            {selectedMenu === "topup" ? (
-              <TopupOptions
-                products={(products ?? []).filter(
-                  (product) => product.type === "Airtime",
-                )}
-                onProductSelection={handleProductSelection}
-              />
-            ) : (
-              <PlansOptions
-                products={(products ?? []).filter(
-                  (product) => product.type === "Bundle",
-                )}
-                onProductSelection={handleProductSelection}
-              />
-            )}
+            <>
+              {loading ? (
+                <LoadingSpinner className="" />
+              ) : (
+                <>
+                  {selectedMenu === "topup" ? (
+                    <TopupOptions
+                      products={(products ?? []).filter(
+                        (product) => product.type === "Airtime",
+                      )}
+                      onProductSelection={handleProductSelection}
+                    />
+                  ) : (
+                    <PlansOptions
+                      products={(products ?? []).filter(
+                        (product) => product.type === "Bundle",
+                      )}
+                      onProductSelection={handleProductSelection}
+                    />
+                  )}
+                </>
+              )}
+            </>
           </div>
         </div>
       </Card>

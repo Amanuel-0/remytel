@@ -1,17 +1,20 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import MyButton from "@/components/ui/my-button";
 import IconButton from "@/components/ui/icon-button";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import withAuth from "@/components/protected-route";
 import { useRouter } from "next/navigation";
 import AccountNav from "../account-nav";
+import userContext from "@/states/user-context";
 
 function Settings() {
+  const {
+    user: { user },
+  } = useContext(userContext);
   const router = useRouter();
 
   const navigateToEditSetting = () => {
@@ -55,7 +58,8 @@ function Settings() {
               </div>
 
               <Textt variant="h6-satoshi" className="text-start">
-                Oumer Sualih
+                {user.firstName} {user.lastName}
+                {/* Oumer Sualih */}
               </Textt>
             </div>
 
@@ -77,7 +81,8 @@ function Settings() {
               </Textt>
 
               <Textt variant="span1-satoshi" className="text-start">
-                +251935425899
+                {user.phoneNumber ?? "No phone number"}
+                {/* +251935425899 */}
               </Textt>
             </div>
 
@@ -88,7 +93,8 @@ function Settings() {
               </Textt>
 
               <Textt variant="span1-satoshi" className="text-start">
-                oumersualih@gmail.com
+                {user.email ?? "No email"}
+                {/* oumersualih@gmail.com */}
               </Textt>
             </div>
 
@@ -193,7 +199,7 @@ function Settings() {
             </Textt>
             <div className="flex items-center justify-start gap-7 md:pr-24">
               <label htmlFor="id">Show</label>
-              <Switch id="email" defaultChecked />
+              <Switch id="email" checked={user.notificationsEnabled} />
             </div>
           </div>
         </div>

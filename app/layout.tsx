@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import OneSignalWrapper from "./onesignal-wrapper";
 import { SendTopupContextProvider } from "@/states/send-topup-context";
 import { TopupRequestContextProvider } from "@/states/request-topup-context";
+import { Toaster } from "@/components/ui/sonner";
 
 // const fontSans = FontSans({
 //   subsets: ["latin"],
@@ -42,6 +43,8 @@ export default function RootLayout({
             </ProductContextProvider>
           </UserContextProvider>
         </AuthContextProvider>
+
+        <Toaster />
       </body>
     </html>
   );
