@@ -31,6 +31,10 @@ function Payment() {
     "card",
   ); // ["card", "paypal"]
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // setSubscription(e.target.value as "yes" | "no");
+  };
+
   // country selector
   const myRef = React.createRef<HTMLDivElement>();
 

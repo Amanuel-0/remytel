@@ -24,7 +24,8 @@ function Success() {
     // onProductChange({} as Product);
     router.push("/send-topup/options");
   };
-  const handleDone = () => {
+  const navigateToAccountHome = () => {
+    router.push("/account/home");
     // onProductChange({} as Product);
     // router.push("/send-topup");
     console.log("Done");
@@ -154,7 +155,11 @@ function Success() {
           </Textt>
         </MyButton>
 
-        <MyButton variant="light-normal" className="mt-3">
+        <MyButton
+          onClick={navigateToAccountHome}
+          variant="light-normal"
+          className="mt-3"
+        >
           <Textt variant="h5-satoshi" className="text-[#6D6D6D]">
             Done
           </Textt>
