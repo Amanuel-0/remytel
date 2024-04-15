@@ -9,6 +9,9 @@ export interface ISendTopup {
   fromCountryCode: string;
   product: Product | undefined;
   topupFrequency: string | undefined;
+  // this is the transaction id that will be used to track the transaction
+  // it is fetched from the backend when creating a checkout session
+  transactionId?: string | undefined;
 }
 
 const sendTopupContext = createContext<{

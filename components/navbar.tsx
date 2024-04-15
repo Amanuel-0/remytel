@@ -87,7 +87,7 @@ function Navbar() {
             </select>
           </div>
 
-          <div className="relative flex w-[173px] flex-row gap-3">
+          <div className="relative flex flex-row gap-3">
             {isLoggedIn ? (
               <>
                 <button

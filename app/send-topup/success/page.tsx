@@ -9,26 +9,39 @@ import productContext from "@/states/product-context";
 import SaveContactModal from "@/components/save-contact-modal";
 import withAuth from "@/components/protected-route";
 import { Product } from "@/models";
+import sendTopupContext from "@/states/send-topup-context";
 
 function Success() {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product, onProductChange } = useContext(productContext);
   const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
 
+  const nextPaymentDate = new Date(
+    Date.now() + Number(sendTopup.topupFrequency) * 24 * 60 * 60 * 1000,
+  )
+    .toDateString()
+    .split(" ")
+    .splice(1, 4)
+    .join(" ");
+
+  // current date: should be the date the top-up was made
+  const currentDate = new Date(Date.now())
+    .toDateString()
+    .split(" ")
+    .splice(1, 4)
+    .join(" ");
+  // current time: should be the time the top-up was made
+  const currentTime = new Date(Date.now()).toLocaleTimeString();
+
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const senderPhone = searchParams.get("from") ?? "";
-  const receiverPhone = searchParams.get("to") ?? "";
-  const topupFrequency = searchParams.get("topup-frq") ?? "";
 
   const handleSendAnotherTopup = () => {
-    // onProductChange({} as Product);
+    onProductChange({} as Product);
     router.push("/send-topup/options");
   };
   const navigateToAccountHome = () => {
     router.push("/account/home");
-    // onProductChange({} as Product);
-    // router.push("/send-topup");
-    console.log("Done");
+    onProductChange({} as Product);
   };
 
   return (
@@ -45,10 +58,11 @@ function Success() {
           Top-up Completed
         </Textt>
         <Textt variant="span2-satoshi" className="mt-2">
-          22 Mar 2024, 03:07 PM
+          {currentDate}, {currentTime}
+          {/* 22 Mar 2024, 03:07 PM */}
         </Textt>
 
-        {topupFrequency && (
+        {sendTopup.topupFrequency && (
           <div className="mt-2 flex items-center justify-start gap-2">
             <Image
               src={"/assets/icons/schedule-icon.svg"}
@@ -58,7 +72,7 @@ function Success() {
             />
 
             <Textt variant="span1-satoshi">
-              Auto top-up every {topupFrequency} days 
+              Auto top-up every {sendTopup.topupFrequency} days 
             </Textt>
           </div>
         )}
@@ -77,7 +91,7 @@ function Success() {
       <Card className="mt-5">
         <div className="flex items-center justify-between">
           <Textt variant="h4-satoshi" className="text-start">
-            {receiverPhone}
+            {sendTopup.to}
           </Textt>
 
           <button
@@ -107,7 +121,8 @@ function Success() {
               Transaction ID
             </Textt>
             <Textt variant="p1-satoshi" className="text-primary">
-              10052435
+              {sendTopup?.transactionId ?? null}
+              {/* 10052435 */}
             </Textt>
           </div>
 
@@ -145,7 +160,8 @@ function Success() {
           </div>
 
           <Textt variant="p1-satoshi" className="mt-2 text-start">
-            Next payment on 21 Apr 2024
+            Next payment on {nextPaymentDate}
+            {/* Next payment on 21 Apr 2024 */}
           </Textt>
         </div>
 

@@ -14,6 +14,7 @@ import { Product } from "@/models";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import userContext from "@/states/user-context";
 import { toast } from "sonner";
+import SetAutoTopupModal from "@/components/set-auto-topup-modal";
 
 type MenuType = "topup" | "plans";
 
@@ -26,6 +27,9 @@ function TopUpAndPlans() {
   const [selectedMenu, setSelectedMenu] = React.useState<MenuType>("topup");
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = React.useState<Product[]>([]);
+  // const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
+  //   React.useState(false);
+  const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -58,7 +62,10 @@ function TopUpAndPlans() {
 
       // navigate to signup if user is not logged in
       if (user) {
-        router.push(`/send-topup/bill`);
+        // router.push(`/send-topup/bill`);
+        // router.push(`/send-topup/auto-topup`)
+        // todo: show a modal to select topup frequency
+        setOpenAutoTopupModal(true);
       } else {
         router.push(`/send-topup/signup`);
       }
@@ -141,6 +148,12 @@ function TopUpAndPlans() {
           </div>
         </div>
       </Card>
+
+      {/* show auto topup modal */}
+      <SetAutoTopupModal
+        open={openAutoTopupModal}
+        onClose={() => setOpenAutoTopupModal(false)}
+      />
     </>
   );
 }

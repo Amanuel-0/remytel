@@ -8,21 +8,22 @@ import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import withAuth from "@/components/protected-route";
 import { processCheckout } from "@/services/checkout.service";
 import { CheckoutPayload } from "@/models";
-import authContext from "@/states/auth-context";
 import userContext from "@/states/user-context";
+import EditDetailMenu from "@/components/edit-detail-menu";
 
 function Bill() {
   const {
     user: { user, token },
   } = useContext(userContext);
-  const { sendTopup } = useContext(sendTopupContext);
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = useState(false);
   const router = useRouter();
+  const [isEditDetailMenuOpen, setIdEditDetailMenuOpen] = useState(false);
 
   const handleProductEdit = () => {
     router.push(`/send-topup/options`);
@@ -30,6 +31,10 @@ function Bill() {
 
   const handleTogglePaymentDetail = () => {
     setShowPaymentDetail(!showPaymentDetail);
+  };
+
+  const toggleEditDetailMenu = () => {
+    setIdEditDetailMenuOpen(!isEditDetailMenuOpen);
   };
 
   // const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
@@ -55,9 +60,14 @@ function Bill() {
       // failureRoute: "/send-topup/failure",
     };
 
+    // router.push("/send-topup/success");
+
     await processCheckout(payload, token)
       .then((res: any) => {
         if ((res.message = "Order Created")) {
+          // make the transaction id available in the context
+          setSendTopup({ ...sendTopup, transactionId: res.transaction_id });
+
           window.location = res.session.url;
           // window.location.href = res.session.url;
         } else {
@@ -75,8 +85,11 @@ function Bill() {
     <>
       <Textt variant="h4-craftwork">Your Order</Textt>
 
-      <div className="mt-5">
+      <div className="relative mt-5">
         <TopupToDetailCard phone={sendTopup.to} />
+
+        {/* show the edit detail menu */}
+        {isEditDetailMenuOpen && <EditDetailMenu />}
       </div>
 
       <div className="mt-5">

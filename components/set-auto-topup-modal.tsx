@@ -5,7 +5,7 @@ import MyButton from "./ui/my-button";
 import Image from "next/image";
 import ModalWrapper from "./modal-wrapper";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import withAuth from "./protected-route";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";

@@ -11,6 +11,7 @@ import { LocalStorageUtil } from "@/utils";
 import { User } from "@/models";
 import sendTopupContext from "@/states/send-topup-context";
 import topupRequestContext from "@/states/request-topup-context";
+import Image from "next/image";
 
 function AccountMenu() {
   const { onLogin } = useContext(authContext);
@@ -44,18 +45,36 @@ function AccountMenu() {
         className=" absolute right-0 top-[100%] z-50 min-h-[156px] w-[207px] drop-shadow-sm"
       >
         {/* mobile menu */}
-        <Card className="shadow-xl">
-          <div>
-            <Link href={"/account/home"}>
-              <Textt variant="h4-satoshi" className="text-start">
-                {!user.user.firstName && !user.user.lastName && "Account"}
-                {user.user.firstName} {user.user.lastName}
-              </Textt>
-            </Link>
-            <Textt variant="span1-satoshi" className="mb-3 mt-2 text-start">
-              {user.user.phoneNumber ?? "No phone number"}
-            </Textt>
-          </div>
+        <Card className="relative shadow-xl">
+          <Image
+            src={"/assets/images/account-menu-white-top-tiangle.svg"}
+            alt={"menu-trianlg"}
+            width={13}
+            height={10}
+            className="absolute right-10 top-[-10px]"
+          />
+
+          <Link href={"/account/home"}>
+            <div className="flex justify-between gap-2">
+              <div>
+                <Textt variant="h4-satoshi" className="text-start">
+                  {!user.user.firstName && !user.user.lastName && "Account"}
+                  {user.user.firstName} {user.user.lastName}
+                </Textt>
+                <Textt variant="span2-satoshi" className="mb-3 mt-2 text-start">
+                  {user.user.phoneNumber ?? "No phone number"}
+                </Textt>
+              </div>
+
+              <Image
+                src={"/assets/icons/dropdown-icon.svg"}
+                alt="dropdown-rotated"
+                width={6}
+                height={6}
+                className="-rotate-90 transform "
+              />
+            </div>
+          </Link>
 
           <hr />
 
@@ -64,23 +83,26 @@ function AccountMenu() {
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="/account/history">History</Link>
             </li>
+            <hr />
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="/account/auto-topups">Auto top-up</Link>
             </li>
+            <hr />
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="/account/contacts">Contacts</Link>
             </li>
+            <hr />
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="/account/settings">Profile Settings</Link>
             </li>
-            <li className="my-[10px] w-full font-satoshi text-sm">
+            {/* <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="/request-topup/create-topup-link">
                 Request top-up
               </Link>
             </li>
             <li className="my-[10px] w-full font-satoshi text-sm">
               <Link href="#">Refer a Friend</Link>
-            </li>
+            </li> */}
           </ul>
 
           <hr />
