@@ -161,3 +161,12 @@ export interface Transaction {
   subscription: any;
   product: Product;
 }
+
+export interface CheckoutPayload {
+  receiverPhoneNumber: string;
+  receiverName: string;
+  subscription: string | undefined;
+  productId: number;
+  successRoute: string;
+  failureRoute: string;
+}

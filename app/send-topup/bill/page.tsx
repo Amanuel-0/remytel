@@ -10,8 +10,15 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import withAuth from "@/components/protected-route";
+import { processCheckout } from "@/services/checkout.service";
+import { CheckoutPayload } from "@/models";
+import authContext from "@/states/auth-context";
+import userContext from "@/states/user-context";
 
 function Bill() {
+  const {
+    user: { user, token },
+  } = useContext(userContext);
   const { sendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = useState(false);
@@ -25,7 +32,44 @@ function Bill() {
     setShowPaymentDetail(!showPaymentDetail);
   };
 
-  const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
+  // const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
+  const handleCheckout = async () => {
+    // make a request to /service/checkout
+    let subFreq;
+    if (sendTopup.topupFrequency === "7") {
+      subFreq = "WEEKLY";
+    } else if (sendTopup.topupFrequency === "14") {
+      subFreq = "BIWEEKLY";
+    } else if (sendTopup.topupFrequency === "30") {
+      subFreq = "MONTHLY";
+    }
+
+    const payload: CheckoutPayload = {
+      receiverPhoneNumber: sendTopup.to,
+      receiverName: "",
+      // receiverName: "Brook",
+      productId: product.id,
+      subscription: subFreq,
+      successRoute: "/send-topup/success",
+      failureRoute: "/send-topup/bill",
+      // failureRoute: "/send-topup/failure",
+    };
+
+    await processCheckout(payload, token)
+      .then((res: any) => {
+        if ((res.message = "Order Created")) {
+          window.location = res.session.url;
+          // window.location.href = res.session.url;
+        } else {
+          console.log("something went wrong on checkout!");
+        }
+      })
+      .catch((err: any) => {
+        console.log("something went wrong while processing checkout: ", err);
+      });
+
+    // if successful, navigate to /send-topup/success
+  };
 
   return (
     <>
@@ -132,7 +176,7 @@ function Bill() {
         <MyButton
           variant="primary-normal"
           className="mb-[10px] mt-10"
-          onClick={navigateToPaymentPage}
+          onClick={handleCheckout}
         >
           <Textt variant="h5-satoshi" className="text-white">
             Continue Payment
