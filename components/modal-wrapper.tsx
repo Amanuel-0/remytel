@@ -12,7 +12,10 @@ function ModalWrapper({
 }) {
   return (
     <div
-      onClick={onClose}
+      onClick={() => {
+        console.log("clicked from modal");
+        onClose();
+      }}
       className={`fixed inset-0 z-50 flex items-center justify-center transition-colors ${open ? "visible bg-black/25" : "invisible"}`}
     >
       <div

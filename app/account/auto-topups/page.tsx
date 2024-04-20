@@ -29,7 +29,7 @@ function AutoTopups() {
           {[1, 2].map((item, index) => (
             <div
               key={index}
-              className="w-full rounded-[20px] border p-5 md:w-[49%]"
+              className="w-full rounded-[20px] border p-5 xl:w-[49%]"
             >
               {/*  */}
               <div className={`flex items-center justify-start gap-5`}>

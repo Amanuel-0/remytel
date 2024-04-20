@@ -45,7 +45,7 @@ function Login() {
 
     if (userData) {
       router.push(
-        `/verify-signup?${createQueryString([
+        `/verify-login?${createQueryString([
           { name: "phone", value: phone },
           { name: "code", value: countryCode },
         ])}`,

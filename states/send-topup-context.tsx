@@ -31,10 +31,14 @@ export const SendTopupContextProvider = (props: any) => {
   });
 
   // Add a state variable to resolve hydration mismatch
-  const [to, setTo] = useState<string>("");
-  const [from, setFrom] = useState<string>("");
-  const [fromCountryCode, setFromCountryCode] = useState<string>("");
-  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [to, setTo] = useState<string>(sendTopup.to ?? "");
+  const [from, setFrom] = useState<string>(sendTopup.from ?? "");
+  const [fromCountryCode, setFromCountryCode] = useState<string>(
+    sendTopup.fromCountryCode ?? "",
+  );
+  const [product, setProduct] = useState<Product | undefined>(
+    sendTopup.product ?? undefined,
+  );
 
   useEffect(() => {
     setTo(sendTopup.to);

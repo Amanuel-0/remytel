@@ -215,31 +215,36 @@ function History() {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  onClick={handlePaginationPrev}
+                  onClick={() => {
+                    if (orderHistory.metadata.hasPrev) {
+                      handlePaginationPrev();
+                    }
+                    return;
+                  }}
                   className={`${orderHistory.metadata.hasPrev ? "cursor-pointer" : "cursor-not-allowed"}  hover:bg-transparent`}
                 />
               </PaginationItem>
-              {orderHistory.metadata.page > 0 && (
+              {orderHistory.metadata.page + 1 > 0 && (
                 <PaginationItem>
                   <PaginationLink
-                    onClick={() =>
-                      handlePagination(orderHistory.metadata.page - 1)
-                    }
+                    // onClick={() =>
+                    //   handlePagination(orderHistory.metadata.page + 1)
+                    // }
                     className="cursor-pointer hover:bg-transparent"
                   >
-                    {orderHistory.metadata.page - 1}
+                    {orderHistory.metadata.page + 1}
                   </PaginationLink>
                 </PaginationItem>
               )}
-              <PaginationItem>
+              {/* <PaginationItem>
                 <PaginationLink
                   onClick={() => handlePagination(orderHistory.metadata.page)}
                   className="cursor-pointer hover:bg-transparent"
                 >
                   {orderHistory.metadata.page}
                 </PaginationLink>
-              </PaginationItem>
-              {orderHistory.metadata.page <
+              </PaginationItem> */}
+              {/* {orderHistory.metadata.page <
                 orderHistory.metadata.total / orderHistory.metadata.size && (
                 <PaginationItem>
                   <PaginationLink
@@ -251,13 +256,18 @@ function History() {
                     {orderHistory.metadata.page + 1}
                   </PaginationLink>
                 </PaginationItem>
-              )}
+              )} */}
               {/* <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem> */}
               <PaginationItem>
                 <PaginationNext
-                  onClick={handlePaginationNext}
+                  onClick={() => {
+                    if (orderHistory.metadata.hasNext) {
+                      handlePaginationNext();
+                    }
+                    return;
+                  }}
                   className={`${orderHistory.metadata.hasNext ? "cursor-pointer" : "cursor-not-allowed"}  hover:bg-transparent`}
                 />
               </PaginationItem>

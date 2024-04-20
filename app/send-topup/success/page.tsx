@@ -1,6 +1,6 @@
 "use client";
 import Card from "@/components/card";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
@@ -8,13 +8,43 @@ import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import SaveContactModal from "@/components/save-contact-modal";
 import withAuth from "@/components/protected-route";
-import { Product } from "@/models";
+import { IPageMetadata, Product, defaultPageMetadata } from "@/models";
 import sendTopupContext from "@/states/send-topup-context";
+import Link from "next/link";
+import { getOrderHistory } from "@/services/profile.service";
+import userContext from "@/states/user-context";
 
 function Success() {
+  const {
+    user: { user, token },
+  } = useContext(userContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product, onProductChange } = useContext(productContext);
   const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    fetchOrderHistory();
+  }, []);
+
+  useEffect(() => {
+    const orderId = searchParams.get("orderId");
+
+    // find the order from the order history
+    // const order = orderHistory.find((order) => order.id === orderId);
+    // if (!order) {
+    //   router.push("/account/home");
+    // }
+  }, [searchParams]);
+
+  const fetchOrderHistory = async (
+    metadata: IPageMetadata = defaultPageMetadata,
+  ) => {
+    const response = await getOrderHistory(metadata, token);
+    // setOrderHistory(response);
+    // console.log(response);
+  };
 
   const nextPaymentDate = new Date(
     Date.now() + Number(sendTopup.topupFrequency) * 24 * 60 * 60 * 1000,
@@ -32,8 +62,6 @@ function Success() {
     .join(" ");
   // current time: should be the time the top-up was made
   const currentTime = new Date(Date.now()).toLocaleTimeString();
-
-  const router = useRouter();
 
   const handleSendAnotherTopup = () => {
     onProductChange({} as Product);
@@ -149,7 +177,9 @@ function Success() {
             </Textt>
 
             <button className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
-              <Textt variant="span2-satoshi">See more</Textt>
+              <Link href={"/account/auto-topups"}>
+                <Textt variant="span2-satoshi">See more</Textt>
+              </Link>
               <Image
                 src={"/assets/icons/arrow-right.svg"}
                 alt={"right"}

@@ -82,7 +82,8 @@ function Verify() {
 
         {/* verify opt form */}
         <VerifyOtp
-          redirectUrl={`/send-topup/auto-topup`}
+          redirectUrl="/send-topup/options"
+          // redirectUrl={`/send-topup/auto-topup`}
           phoneNumber={sendTopup.from}
           code={sendTopup.fromCountryCode}
         />

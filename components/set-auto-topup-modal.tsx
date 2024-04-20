@@ -17,14 +17,16 @@ import Card from "./card";
 function SetAutoTopupModal({
   open,
   onClose,
+  handleCloseAllModal,
 }: {
   open: boolean;
   onClose: () => void;
+  handleCloseAllModal?: () => void;
 }) {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [selectedFrequency, setSelectedFrequency] = React.useState<
     "7" | "14" | "30"
-  >("30"); // ["7", "14", "30"]
+  >((sendTopup.topupFrequency as any) || "30"); // ["7", "14", "30"]
   const { product } = useContext(productContext);
   const router = useRouter();
 
@@ -40,11 +42,19 @@ function SetAutoTopupModal({
   };
 
   const handleSendAutoTopup = () => {
-    router.push(`/send-topup/bill`);
+    if (window.location.pathname === "/send-topup/bill") {
+      handleCloseAllModal && handleCloseAllModal();
+    } else {
+      router.push(`/send-topup/bill`);
+    }
   };
   const handleNoThanks = () => {
+    if (window.location.pathname === "/send-topup/bill") {
+      handleCloseAllModal && handleCloseAllModal();
+    } else {
+      router.push(`/send-topup/bill`);
+    }
     setSendTopup({ ...sendTopup, topupFrequency: undefined });
-    router.push(`/send-topup/bill`);
   };
 
   return (
@@ -135,4 +145,5 @@ function SetAutoTopupModal({
   );
 }
 
-export default withAuth(SetAutoTopupModal);
+export default SetAutoTopupModal;
+// export default withAuth(SetAutoTopupModal);

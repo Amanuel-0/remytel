@@ -8,12 +8,14 @@ import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { use, useContext, useState } from "react";
 import withAuth from "@/components/protected-route";
 import { processCheckout } from "@/services/checkout.service";
 import { CheckoutPayload } from "@/models";
 import userContext from "@/states/user-context";
 import EditDetailMenu from "@/components/edit-detail-menu";
+import ProductAndPlanOptionsModal from "@/components/product-and-plan-options-modal";
+import SetAutoTopupModal from "@/components/set-auto-topup-modal";
 
 function Bill() {
   const {
@@ -24,9 +26,13 @@ function Bill() {
   const [showPaymentDetail, setShowPaymentDetail] = useState(false);
   const router = useRouter();
   const [isEditDetailMenuOpen, setIdEditDetailMenuOpen] = useState(false);
+  const [openAutoTopupModal, setOpenAutoTopupModal] = useState(false);
+  const [openProductAndPlanOptionsModal, setOpenProductAndPlanOptionsModal] =
+    useState(false);
 
   const handleProductEdit = () => {
-    router.push(`/send-topup/options`);
+    setOpenProductAndPlanOptionsModal(true);
+    // router.push(`/send-topup/options`);
   };
 
   const handleTogglePaymentDetail = () => {
@@ -35,6 +41,11 @@ function Bill() {
 
   const toggleEditDetailMenu = () => {
     setIdEditDetailMenuOpen(!isEditDetailMenuOpen);
+  };
+
+  const handleCloseAllModal = () => {
+    setOpenAutoTopupModal(false);
+    setOpenProductAndPlanOptionsModal(false);
   };
 
   // const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
@@ -196,6 +207,28 @@ function Bill() {
           </Textt>
         </MyButton>
       </Card>
+
+      {/* show product and plan options modal */}
+      {/* {!openAutoTopupModal && ( */}
+      <ProductAndPlanOptionsModal
+        // open & onClose are required props for the default modal
+        open={openProductAndPlanOptionsModal}
+        onClose={() => setOpenProductAndPlanOptionsModal(false)}
+        //
+        handleAutoTopupModal={setOpenAutoTopupModal}
+        // handleOnAutoTopupModalOpended={() => {
+        //   if (openProductAndPlanOptionsModal)
+        //     setOpenProductAndPlanOptionsModal(false);
+        // }}
+      />
+      {/* )} */}
+
+      {/* show auto topup modal */}
+      <SetAutoTopupModal
+        open={openAutoTopupModal}
+        onClose={() => setOpenAutoTopupModal(false)}
+        handleCloseAllModal={handleCloseAllModal}
+      />
     </>
   );
 }

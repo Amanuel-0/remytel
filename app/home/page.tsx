@@ -26,6 +26,7 @@ function LandingPage() {
   const navigateToTopUpOptions = () => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
     router.push("/send-topup/options");
+    console.log("window location", window.location.pathname);
   };
 
   return (

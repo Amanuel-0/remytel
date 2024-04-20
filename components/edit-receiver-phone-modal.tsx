@@ -58,15 +58,14 @@ function EditReceiverPhoneModal({
                 {product.amount} ETB
               </Textt>
 
-              <IconButton className="h-8 w-8" onClick={handleProductEdit}>
-                {/* <IconButton className="h-8 w-8" onClick={onPhoneEdit}> */}
+              {/* <IconButton className="h-8 w-8" onClick={handleProductEdit}>
                 <Image
                   src={"/assets/icons/edit-icon.svg"}
                   alt={"edit-icon"}
                   width={14}
                   height={14}
                 />
-              </IconButton>
+              </IconButton> */}
             </div>
           </>
         )}
