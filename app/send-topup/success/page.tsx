@@ -40,6 +40,8 @@ function Success() {
     if (orderId) {
       // write a get order details function
       getOrderDetails(orderId, token).then((order) => {
+        console.log("orderid", orderId);
+        console.log("created transaction", order);
         setTransaction(order);
         // setSendTopup({
         //   ...sendTopup,
