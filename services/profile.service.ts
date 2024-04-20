@@ -25,6 +25,16 @@ export const getOrderHistory = async (
   return response.data as IPageResponse<Transaction>;
 };
 
+// get order details
+export const getOrderDetails = async (orderId: string, token: string) => {
+  const response = await axios.get(`${API_URL}profile/order/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data as Transaction;
+};
+
 // subscription history
 export const getSubscriptionHistory = async (token: string) => {
   const response = await axios.get(`${API_URL}profile/subscriptions`, {

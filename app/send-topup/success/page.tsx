@@ -1,6 +1,6 @@
 "use client";
 import Card from "@/components/card";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
@@ -8,10 +8,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import SaveContactModal from "@/components/save-contact-modal";
 import withAuth from "@/components/protected-route";
-import { IPageMetadata, Product, defaultPageMetadata } from "@/models";
+import {
+  IPageMetadata,
+  Product,
+  Transaction,
+  defaultPageMetadata,
+} from "@/models";
 import sendTopupContext from "@/states/send-topup-context";
 import Link from "next/link";
-import { getOrderHistory } from "@/services/profile.service";
+import { getOrderDetails, getOrderHistory } from "@/services/profile.service";
 import userContext from "@/states/user-context";
 
 function Success() {
@@ -23,19 +28,25 @@ function Success() {
   const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [transaction, setTransaction] = useState<Transaction>();
 
   useEffect(() => {
     fetchOrderHistory();
   }, []);
 
   useEffect(() => {
-    const orderId = searchParams.get("orderId");
+    const orderId = searchParams.get("order_id");
 
-    // find the order from the order history
-    // const order = orderHistory.find((order) => order.id === orderId);
-    // if (!order) {
-    //   router.push("/account/home");
-    // }
+    if (orderId) {
+      // write a get order details function
+      getOrderDetails(orderId, token).then((order) => {
+        setTransaction(order);
+        // setSendTopup({
+        //   ...sendTopup,
+        //   transactionId: order.transactionId,
+        // });
+      });
+    }
   }, [searchParams]);
 
   const fetchOrderHistory = async (
@@ -106,7 +117,11 @@ function Success() {
         )}
 
         <button className="mt-2 flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
-          <Textt variant="span2-satoshi">View receipt</Textt>
+          {transaction && (
+            <Link href={transaction.receiptUrl ?? "#"} target="_blank">
+              <Textt variant="span2-satoshi">View receipt</Textt>
+            </Link>
+          )}
           <Image
             src={"/assets/icons/arrow-right.svg"}
             alt={"right"}
