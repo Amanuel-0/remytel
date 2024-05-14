@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import PhoneInputLib from "@/components/form/phone-input-lib";
@@ -7,15 +7,34 @@ import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import { useRouter } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
-import authContext from "@/states/auth-context";
 
 function To() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
-  const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
+  const [toPhone, setToPhone] = React.useState("");
+  const [isValidPhone, setIsValidPhone] = React.useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    console.log("isValidPhone", isValidPhone);
+  }, [isValidPhone]);
+
+  useEffect(() => {
+    validatePhoneNumber();
+  }, [toPhone]);
+
+  const handlePhoneNumberChange = (phone: any) => {
+    setToPhone(phone);
+    // validatePhoneNumber();
+  };
+
+  const validatePhoneNumber = () => {
+    // Regular expression for Ethiopian phone numbers
+    const ethiopianPhoneNumberRegex = /^(\+251)?[1-59]\d{8}$/;
+    setIsValidPhone(ethiopianPhoneNumberRegex.test(toPhone));
+  };
+
   const navigateToTopUpOptions = () => {
-    setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
+    setSendTopup({ ...sendTopup, to: toPhone });
     router.push(`/send-topup/options`);
   };
 
@@ -30,8 +49,8 @@ function To() {
           <PhoneInputLib
             hideDropdown={true}
             disableCountryGuess={true}
-            value={receiverPhoneNumber}
-            onChange={(phoneNumber) => setReceiverPhoneNumber(phoneNumber)}
+            value={toPhone}
+            onChange={(phoneNumber) => handlePhoneNumberChange(phoneNumber)}
           />
           {/* <PhoneInput className="mb-3" /> */}
           {/* <Button variant="primary-normal">Start top-up</Button> */}
@@ -39,6 +58,8 @@ function To() {
             variant="primary-normal"
             onClick={navigateToTopUpOptions}
             className="mt-4"
+            disabled={!isValidPhone}
+            key={toPhone}
           >
             <Textt variant="h6-satoshi" className="text-white">
               Start top-up

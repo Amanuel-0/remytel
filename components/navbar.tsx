@@ -8,11 +8,14 @@ import MobileMenu from "./mobile-menu";
 import authContext from "@/states/auth-context";
 import Textt from "./text";
 import AccountMenu from "./account-menu";
+import "./navbar.css";
+import LanguageSelector from "./Language";
 
 function Navbar() {
   const { isLoggedIn, onLogin } = useContext(authContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+
   const router = useRouter();
 
   const handleLogin = () => router.push("/login");
@@ -70,22 +73,7 @@ function Navbar() {
 
       <div>
         <div className="hidden h-full flex-row justify-end gap-10 xl:flex">
-          <div className="flex flex-row gap-2">
-            <Image
-              src="/assets/icons/ic_round-language.svg"
-              alt="logo"
-              width={19}
-              height={19}
-              className="hidden sm:block"
-            />
-
-            <select name="language" id="lang" className="bg-transparent">
-              <option value="en">English</option>
-              <option value="am">Amharic</option>
-              <option value="afom">Afan Oromo</option>
-              <option value="somali">Somali</option>
-            </select>
-          </div>
+          <LanguageSelector />
 
           <div className="relative flex min-w-[173px] flex-row gap-3 ">
             {isLoggedIn ? (

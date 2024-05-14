@@ -75,6 +75,8 @@ function CreateTopupLink() {
       },
       user.token,
     );
+
+    console.log("topupLinkData", topupLinkData);
     // get the topup link
     if (topupLinkData) {
       setLink(topupLinkData.url);
@@ -209,6 +211,7 @@ function CreateTopupLink() {
         variant="primary-normal"
         className="my-4"
         onClick={handleSubmit}
+        disabled={!nameValid || !emailValid}
       >
         <Textt variant="h5-satoshi" className="text-white">
           Create My Top-Up link

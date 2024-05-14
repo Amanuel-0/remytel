@@ -21,7 +21,7 @@ function MyButton({
   type,
   className,
   onClick,
-  disabled,
+  disabled = false,
   reff,
 }: ButtonProps) {
   const BaseButton = ({ children, type, className }: ButtonProps) => {
@@ -30,7 +30,7 @@ function MyButton({
         ref={reff}
         onClick={onClick}
         type={type ?? "button"}
-        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full ${className}`}
         disabled={disabled}
       >
         {children}
@@ -42,7 +42,7 @@ function MyButton({
     return (
       <BaseButton
         type={type}
-        className={`bg-[#04A94D] text-white hover:bg-[#04a94ee4] ${className}`}
+        className={`bg-[#04A94D] text-white ${className}`}
       >
         {/* <BaseButton type={type} className={`bg-[#80C03F] text-white ${className}`}> */}
         {children}
