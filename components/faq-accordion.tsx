@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-import Textt from "./text";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface IFaq {
   id: number;
   question: string;
   answer: string;
 }
+
 const faqAccordion: IFaq[] = [
   {
     id: 1,
@@ -41,7 +46,7 @@ const faqAccordion: IFaq[] = [
   },
 ];
 
-function FaqAccordion() {
+export default function FaqAccordion() {
   const [activeDialog, setActiveDialog] = React.useState<IFaq>(faqAccordion[0]);
 
   const handleActiveDialog = (faq: IFaq) => {
@@ -51,38 +56,19 @@ function FaqAccordion() {
   };
 
   return (
-    <section>
+    <Accordion type="single" collapsible className="w-full">
       {faqAccordion.map((faq) => (
-        <div key={faq.id} className="border-b-2 border-[#DBDBDB]">
-          <button
-            className="flex w-full justify-between py-5"
-            onClick={() => handleActiveDialog(faq)}
-          >
-            <Textt variant="h6-satoshi" className="text-start">
+        <>
+          <AccordionItem value={`item-${faq.id}`} key={faq.id}>
+            <AccordionTrigger className="font-satoshi text-lg font-bold leading-[18.3px] text-black sm:py-7 md:py-9">
               {faq.question}
-            </Textt>
-            <Image
-              src={
-                activeDialog.id === faq.id
-                  ? "/assets/icons/up-icon.svg"
-                  : "/assets/icons/down-icon.svg"
-              }
-              alt=""
-              width={12}
-              height={8}
-            />
-          </button>
-
-          <Textt
-            variant="p2-satoshi"
-            className={`mb-5 mt-4 text-start ${activeDialog.id === faq.id ? "block" : "hidden"}`}
-          >
-            {faq.answer}
-          </Textt>
-        </div>
+            </AccordionTrigger>
+            <AccordionContent className="font-satoshi text-sm font-medium leading-[18.4px] text-[#808080]">
+              {faq.answer}
+            </AccordionContent>
+          </AccordionItem>
+        </>
       ))}
-    </section>
+    </Accordion>
   );
 }
-
-export default FaqAccordion;
