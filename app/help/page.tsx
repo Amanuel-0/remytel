@@ -51,6 +51,7 @@ function Help() {
               height={853}
               className="object-fit-cover absolute left-0 top-0 h-[352px] w-full rounded-[20px] object-cover sm:h-[352px] sm:w-full"
             />
+            <div className="bg-gradient-135 absolute left-0 top-0 h-full w-full rounded-[20px] from-black to-transparent "></div>
           </div>
 
           <div className="absolute left-0 top-0 z-30 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">

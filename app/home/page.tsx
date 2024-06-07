@@ -61,7 +61,7 @@ function LandingPage() {
               <MyButton
                 variant="primary-normal"
                 onClick={navigateToTopUpOptions}
-                className="mt-2"
+                className="bg-gradient-120 mt-2 from-[#2CA342] to-[#80C03F]"
               >
                 <Textt variant="h6-satoshi" className="text-white">
                   Start top-up
@@ -165,7 +165,7 @@ function LandingPage() {
               </Textt>
               <Textt
                 variant="p1-craftwork"
-                className="max-w-[283px]"
+                className="max-w-[283px] font-semibold"
               >{`Whether you call it top-up, mobile recharge, reload, airtime, load or credit, we've got you covered. We've delivered over 5 million international mobile recharges online.`}</Textt>
             </div>
           </div>

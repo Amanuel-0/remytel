@@ -30,7 +30,7 @@ function MyButton({
         ref={reff}
         onClick={onClick}
         type={type ?? "button"}
-        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full  ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
         disabled={disabled}
       >
         {children}
