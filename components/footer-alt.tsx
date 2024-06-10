@@ -21,7 +21,7 @@ function FooterAlt() {
 
             <div className="flex flex-row justify-between gap-4 sm:whitespace-nowrap md:gap-[92px]">
               <div>
-                <Textt variant="h6-satoshi" className="mb-3 text-start">
+                <Textt variant="h6-satoshi" className="text mb-3 text-start">
                   Company
                 </Textt>
 

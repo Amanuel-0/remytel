@@ -3,9 +3,9 @@ import Image from "next/image";
 
 function Hero() {
   return (
-    <div className="relative my-10 h-[352px] w-full  sm:my-16">
+    <div className="relative my-10 h-[352px] w-full  sm:mb-16">
       {/* <div className="absolute top-0 left-0 z-10 w-full h-full rounded-xl bg-gradient-to-r from-black to-black from-"></div> */}
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full overflow-hidden rounded-[20px]">
         <Image
           src="/assets/images/desktop-hero-vector.svg"
           alt="logo"
@@ -22,7 +22,7 @@ function Hero() {
           alt="logo"
           width={235}
           height={91}
-          className="absolute bottom-0 left-0 z-30 block sm:hidden"
+          className="absolute bottom-0 left-0 z-30 block sm:hidden "
         />
 
         {/* mobile vector right */}
@@ -40,7 +40,7 @@ function Hero() {
           alt="logo"
           width={1280}
           height={853}
-          className="object-fit-cover absolute left-0 top-0 h-[352px] w-full rounded-[20px] object-cover sm:h-[352px] sm:w-full"
+          className="object-fit-cover absolute left-0 top-0 h-[352px] w-full object-cover saturate-[2] sm:h-[352px] sm:w-full"
         />
       </div>
       <div className="absolute left-0 top-0 z-40 flex h-full w-full flex-col items-center justify-end pb-5 text-center text-white sm:justify-center sm:pb-0">

@@ -59,9 +59,9 @@ function LandingPage() {
               {/* <PhoneInput className="mb-3" /> */}
               {/* <Button variant="primary-normal">Start top-up</Button> */}
               <MyButton
-                variant="primary-normal"
+                variant="primary-gradient-top-left"
                 onClick={navigateToTopUpOptions}
-                className="bg-gradient-120 mt-2 from-[#2CA342] to-[#80C03F]"
+                className=""
               >
                 <Textt variant="h6-satoshi" className="text-white">
                   Start top-up

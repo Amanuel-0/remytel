@@ -40,7 +40,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex h-11 w-full flex-row justify-between font-satoshi text-sm font-medium">
+    <nav className="flex  w-full flex-row justify-between font-satoshi text-sm font-medium">
       <div className="flex flex-row items-center justify-start gap-20">
         <Link href="/">
           <Image
@@ -75,7 +75,7 @@ function Navbar() {
         <div className="hidden h-full flex-row justify-end gap-10 xl:flex">
           <LanguageSelector />
 
-          <div className="relative flex min-w-[173px] flex-row gap-3 ">
+          <div className="relative flex min-w-[173px] flex-row items-center gap-3">
             {isLoggedIn ? (
               <>
                 <button
@@ -101,11 +101,16 @@ function Navbar() {
               </>
             ) : (
               <>
-                <MyButton variant="light-normal" onClick={handleLogin}>
+                <MyButton
+                  variant="light-normal"
+                  onClick={handleLogin}
+                  className="h-max"
+                >
                   Login
                 </MyButton>
                 <MyButton
                   variant="primary-gradient-top-left"
+                  className="h-max"
                   onClick={handleSignup}
                 >
                   Signup

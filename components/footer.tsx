@@ -15,7 +15,10 @@ function Footer() {
             height={24}
           />
 
-          <Textt variant="p2-satoshi">
+          <Textt
+            variant="p2-satoshi"
+            className="cursor-pointer transition-all hover:underline"
+          >
             Copyright © 2024 Top-up.et. All rights reserved.
           </Textt>
         </div>

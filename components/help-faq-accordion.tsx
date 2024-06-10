@@ -41,6 +41,12 @@ const faqAccordion: IFaq[] = [
     answer:
       "Yes, you can also send data. You can send data to someone in another country by using Topup.et. You can send data to someone in another country by using Topup.et.",
   },
+  {
+    id: 6,
+    question: "Can I also send data?",
+    answer:
+      "Yes, you can also send data. You can send data to someone in another country by using Topup.et. You can send data to someone in another country by using Topup.et.",
+  },
 ];
 
 function HelpFaqAccordion() {
@@ -52,36 +58,48 @@ function HelpFaqAccordion() {
     }
   };
 
+  function groupItems<T>(items: T[], groupSize: number) {
+    const groupedItems: T[][] = [];
+    for (let i = 0; i < items.length; i += groupSize) {
+      groupedItems.push(items.slice(i, i + groupSize));
+    }
+    return groupedItems;
+  }
+  const groupedFaqs = groupItems<IFaq>(faqAccordion, 2);
   return (
-    <section className="flex w-full flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap md:justify-end">
-      {faqAccordion.map((faq) => (
-        <Card key={faq.id} className="w-full max-w-[400px]">
-          <button
-            className="flex w-full justify-between py-5"
-            onClick={() => handleActiveDialog(faq)}
-          >
-            <Textt variant="h6-satoshi" className="text-start">
-              {faq.question}
-            </Textt>
-            <Image
-              src={
-                activeDialog.id === faq.id
-                  ? "/assets/icons/up-icon.svg"
-                  : "/assets/icons/down-icon.svg"
-              }
-              alt=""
-              width={12}
-              height={8}
-            />
-          </button>
+    <section className="grid-rows grid grid-cols-3 justify-center gap-4 ">
+      {groupedFaqs.map((faqGroup) => (
+        <div key={faqGroup[0].id} className="grid-cols-2 space-y-3">
+          {faqGroup.map((faq) => (
+            <Card key={faq.id} className="w-full max-w-[400px]">
+              <button
+                className="flex h-14 w-full justify-between pt-5"
+                onClick={() => handleActiveDialog(faq)}
+              >
+                <Textt variant="h6-satoshi" className="text-start">
+                  {faq.question}
+                </Textt>
+                <Image
+                  src={
+                    activeDialog.id === faq.id
+                      ? "/assets/icons/up-icon.svg"
+                      : "/assets/icons/down-icon.svg"
+                  }
+                  alt=""
+                  width={12}
+                  height={8}
+                />
+              </button>
 
-          <Textt
-            variant="p2-satoshi"
-            className={`mb-5 mt-4 text-start ${activeDialog.id === faq.id ? "block" : "hidden"}`}
-          >
-            {faq.answer}
-          </Textt>
-        </Card>
+              <Textt
+                variant="p2-satoshi"
+                className={` overflow-hidden text-start transition-all duration-300 ${activeDialog.id === faq.id ? "mb-5 mt-4 h-max" : "h-0"}`}
+              >
+                {faq.answer}
+              </Textt>
+            </Card>
+          ))}
+        </div>
       ))}
     </section>
   );
