@@ -7,18 +7,20 @@ import VerifyOtp from "@/components/verify-otp";
 import React, { useContext } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import withOutAuth from "@/components/public-route";
 
 function Verify() {
+  const searchParams = useSearchParams();
+  const selectedOption = searchParams.get("selectedOption");
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const router = useRouter();
 
   const handleEditSenderPhone = () => {
-    router.push(`/send-topup/signup`);
+    router.push(`/send-topup/signup?selectedOption=${selectedOption}`);
   };
   const handleProductEdit = () => {
     router.push(`/send-topup/options`);
@@ -82,7 +84,7 @@ function Verify() {
 
         {/* verify opt form */}
         <VerifyOtp
-          redirectUrl="/send-topup/options"
+          redirectUrl={`/send-topup/options?selectedOption=${selectedOption}`}
           // redirectUrl={`/send-topup/auto-topup`}
           phoneNumber={sendTopup.from}
           code={sendTopup.fromCountryCode}

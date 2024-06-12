@@ -5,7 +5,7 @@ import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import React, { useContext } from "react";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
@@ -16,6 +16,8 @@ import { ParsedCountry } from "react-international-phone";
 import withOutAuth from "@/components/public-route";
 
 function SignupSendTopup() {
+  const searchParams = useSearchParams();
+  const selectedOption = searchParams.get("selectedOption");
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
   const [fromCountryCode, setFromCountryCode] = React.useState("US"); // ["US", "ET", ...]
@@ -48,7 +50,7 @@ function SignupSendTopup() {
 
     if (userData) {
       setSendTopup({ ...sendTopup, from: senderPhoneNumber, fromCountryCode });
-      router.push(`/send-topup/verify`);
+      router.push(`/send-topup/verify?selectedOption=${selectedOption}`);
     }
   };
 

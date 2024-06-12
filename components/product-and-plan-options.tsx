@@ -93,7 +93,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
         {/* menu */}
         <div className="mt-4 flex w-[235px] gap-4">
           <button
-            className={`flex h-full min-h-[44px] w-full items-center justify-center gap-[10px] rounded-full  bg-white text-primary ${selectedMenu === "topup" ? "border-2 border-black" : ""}`}
+            className={`flex h-full min-h-[44px] w-full items-center justify-center gap-[10px] rounded-full  border-2 bg-white text-primary transition-all duration-300 ${selectedMenu === "topup" ? " border-black" : "border-transparent"}`}
             onClick={() => handleMenuSelectionChange("topup")}
           >
             <Image
@@ -105,7 +105,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
             <Textt variant="span1-satoshi">Top-up</Textt>
           </button>
           <button
-            className={`flex h-full min-h-[44px] w-full items-center justify-center gap-[10px] rounded-full  bg-white text-primary ${selectedMenu === "plans" ? "border-2 border-black" : ""}`}
+            className={`flex h-full min-h-[44px] w-full items-center justify-center gap-[10px] rounded-full  border-2 bg-white text-primary transition-all duration-300 ${selectedMenu === "plans" ? " border-black" : "border-transparent"}`}
             onClick={() => handleMenuSelectionChange("plans")}
           >
             <Image

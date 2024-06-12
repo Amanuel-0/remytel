@@ -30,7 +30,7 @@ function MyButton({
         ref={reff}
         onClick={onClick}
         type={type ?? "button"}
-        className={`bg-200% h-full max-h-[54px] min-h-[44px] w-full rounded-full  ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full bg-200%  ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
         disabled={disabled}
       >
         {children}
@@ -42,7 +42,7 @@ function MyButton({
     return (
       <BaseButton
         type={type}
-        className={`bg-[#04A94D] text-white hover:bg-[#04a94ee4] ${className}`}
+        className={`bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)] ${className}`}
       >
         {/* <BaseButton type={type} className={`bg-[#80C03F] text-white ${className}`}> */}
         {children}
@@ -76,7 +76,7 @@ function MyButton({
     return (
       <BaseButton
         type={type}
-        className={`bg-200% bg-gradient-to-tr from-[#2CA342] to-[#80C03F] text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md ${className}`}
+        className={`bg-gradient-to-tr from-[#2CA342] to-[#80C03F] bg-200% text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md ${className}`}
       >
         {children}
       </BaseButton>

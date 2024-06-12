@@ -77,12 +77,12 @@ function SaveContactModal({
                 {/* {receiverPhone} */}
                 Add Contact
               </Textt>
-              <Image
+              {/* <Image
                 src={"/assets/images/ethiotel-logo.svg"}
                 alt="ethiotel-logo"
                 width={55}
                 height={14}
-              />
+              /> */}
             </span>
           </div>
         </div>

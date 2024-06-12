@@ -110,7 +110,7 @@ function SetAutoTopupModal({
             return (
               <MyButton
                 key={option}
-                className={`mt-[10px] border border-black bg-white text-black`}
+                className={`mt-[10px] border border-black bg-white text-black transition-colors duration-300 hover:bg-primary/5`}
                 onClick={() => handleSelectedFrequency(option)}
               >
                 <Textt variant="h6-satoshi">{option} Days</Textt>
@@ -125,7 +125,7 @@ function SetAutoTopupModal({
 
         <div className="mt-10">
           <MyButton
-            className="border border-gray-300 bg-white text-black"
+            className="border border-gray-300 bg-white text-black transition-colors duration-300 hover:bg-black/5"
             onClick={handleNoThanks}
           >
             <Textt variant="span2-satoshi">No Thanks</Textt>

@@ -57,9 +57,12 @@ function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
               {product.name}
             </Textt>
 
-            <div className="mt-[10px] flex items-end justify-between">
+            <div className="mt-[3px] flex items-end justify-between">
               <span className="flex items-end justify-start gap-1">
-                <Textt variant="span2-satoshi" className="blocks text-start">
+                <Textt
+                  variant="span2-satoshi"
+                  className="blocks text-start text-xs"
+                >
                   Valid for unknown days
                   {/* Valid for {product?.validityPeriod} days */}
                 </Textt>
@@ -67,7 +70,7 @@ function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
 
               <button
                 onClick={() => onProductSelection(product.id)}
-                className="h-full min-h-[38px] w-[120px] rounded-full bg-[#04A94D] text-white "
+                className="h-full min-h-[35px] w-[120px] rounded-full bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]"
               >
                 <Textt variant="span1-satoshi" className="text-white">
                   Buy {product.price.amount} USD
@@ -77,7 +80,10 @@ function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
 
             <div className="mt-[10px] flex items-center justify-start gap-2">
               <div className="h-2 w-2 rounded-full bg-[#808080]"></div>
-              <Textt variant="span2-satoshi" className="blocks text-start">
+              <Textt
+                variant="span2-satoshi"
+                className="blocks text-start text-xs"
+              >
                 {product.description}
               </Textt>
             </div>

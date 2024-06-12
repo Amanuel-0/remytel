@@ -10,14 +10,15 @@ import { useRouter } from "next/navigation";
 import SaveContactModal from "@/components/save-contact-modal";
 import authContext from "@/states/auth-context";
 import withAuth from "@/components/protected-route";
+import Link from "next/link";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);
   const { user } = useContext(userContext);
   //
-  const [noActivity, setNoActivity] = React.useState(true);
-  const [noContact, setNoContact] = React.useState(true);
-  const [noAutoTopup, setNoAutoTopup] = React.useState(true);
+  const [noActivity, setNoActivity] = React.useState(false);
+  const [noContact, setNoContact] = React.useState(false);
+  const [noAutoTopup, setNoAutoTopup] = React.useState(false);
   const router = useRouter();
   //
   const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
@@ -155,7 +156,7 @@ function AccountHome() {
                 <>
                   {/* row */}
                   <div
-                    className={`align-content-between grid w-full grid-cols-12 gap-2 py-5 ${index !== 2 ? "border-b" : ""}`}
+                    className={`align-content-between grid w-full grid-cols-12 gap-2 py-3 ${index !== 2 ? "border-b" : ""}`}
                   >
                     {/* cell 1 */}
                     <div className="col-span-6 flex items-center md:col-span-3 md:w-full">
@@ -215,7 +216,7 @@ function AccountHome() {
                     <div className="col-span-6 flex justify-end md:col-span-3 md:w-full">
                       <MyButton
                         variant="primary-normal"
-                        className="max-w-[110px]"
+                        className="h-14 max-w-[110px]"
                       >
                         <Textt variant="span1-satoshi" className="text-white">
                           Resend
@@ -237,7 +238,10 @@ function AccountHome() {
               </Textt>
 
               {!noContact && (
-                <button className="flex items-center justify-center gap-[10px]">
+                <Link
+                  href={"/account/contacts"}
+                  className="flex items-center justify-center gap-[10px]"
+                >
                   <Textt variant="span1-satoshi">All Contacts</Textt>
                   <Image
                     src={"/assets/icons/arrow-right-thin-black.svg"}
@@ -245,7 +249,7 @@ function AccountHome() {
                     width={12}
                     height={12}
                   />
-                </button>
+                </Link>
               )}
             </div>
 
@@ -330,7 +334,10 @@ function AccountHome() {
               </Textt>
 
               {!noAutoTopup && (
-                <button className="flex items-center justify-center gap-[10px]">
+                <Link
+                  href={"/account/auto-topups"}
+                  className="flex items-center justify-center gap-[10px]"
+                >
                   <Textt variant="span1-satoshi">View All</Textt>
                   <Image
                     src={"/assets/icons/arrow-right-thin-black.svg"}
@@ -338,7 +345,7 @@ function AccountHome() {
                     width={12}
                     height={12}
                   />
-                </button>
+                </Link>
               )}
             </div>
 
