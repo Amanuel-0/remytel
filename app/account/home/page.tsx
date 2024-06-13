@@ -11,11 +11,22 @@ import SaveContactModal from "@/components/save-contact-modal";
 import authContext from "@/states/auth-context";
 import withAuth from "@/components/protected-route";
 import Link from "next/link";
+import historyContext from "@/states/history-context";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { Product } from "@/models";
+import SetAutoTopupModal from "@/components/set-auto-topup-modal";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);
   const { user } = useContext(userContext);
-  //
+  const {
+    loading,
+    orderHistory,
+    refetch,
+    subscriptionHistory,
+    orderError,
+    subscriptionError,
+  } = useContext(historyContext);
   const [noActivity, setNoActivity] = React.useState(false);
   const [noContact, setNoContact] = React.useState(false);
   const [noAutoTopup, setNoAutoTopup] = React.useState(false);
@@ -34,7 +45,8 @@ function AccountHome() {
   const navigateToSendTopupTo = () => {
     router.push("/send-topup/to");
   };
-
+  if (loading) return <LoadingSpinner />;
+  if (orderError || subscriptionError) return <p>Error</p>;
   return (
     <div>
       {/* save contact modal */}
@@ -57,11 +69,19 @@ function AccountHome() {
             </div>
             <div>
               <Textt variant="h3-satoshi" className="text-start">
-                {user.user
-                  ? user.user.firstName + " " + user.user.lastName
-                  : "no name"}
+                {user.user?.firstName
+                  ? user.user.firstName + " " + user.user.lastName || ""
+                  : ""}
                 {/* Oumer Sualih */}
               </Textt>
+              {!user.user?.firstName && (
+                <Link
+                  href={"/account/settings/edit"}
+                  className="text-xs text-slate-500 underline"
+                >
+                  Complete Your Profile
+                </Link>
+              )}
               <Textt variant="span2-satoshi" className="mt-1 text-start">
                 {user.user ? user.user.phoneNumber : "no phone"}
                 {/* +251 93 542 5899 */}
@@ -126,13 +146,13 @@ function AccountHome() {
       {/*  */}
       <section className="my-[10px] flex w-full flex-col gap-[10px] md:flex-row">
         {/* send your fist topup banner */}
-        {noActivity && (
+        {orderHistory?.length === 0 && subscriptionHistory?.length === 0 && (
           <div className="w-full md:max-w-[65%]">
             <SendYourFirstTopupBanner />
           </div>
         )}
 
-        {!noActivity && (
+        {orderHistory?.length !== 0 && subscriptionHistory?.length !== 0 && (
           <Card className="w-full md:max-w-[65%]">
             <div className="mt-2 flex items-center justify-between">
               <Textt variant="h4-craftwork" className="text-start">
@@ -152,79 +172,24 @@ function AccountHome() {
 
             {/* table */}
             <div className="">
-              {[1, 2, 3].map((item, index) => (
-                <>
-                  {/* row */}
-                  <div
-                    className={`align-content-between grid w-full grid-cols-12 gap-2 py-3 ${index !== 2 ? "border-b" : ""}`}
-                  >
-                    {/* cell 1 */}
-                    <div className="col-span-6 flex items-center md:col-span-3 md:w-full">
-                      <Textt
-                        variant="span1-satoshi"
-                        className={`text-start ${index !== 1 ? "visible" : "hidden"}`}
-                      >
-                        +251 91 252 1249
-                      </Textt>
-
-                      {/* showed if contact is saved */}
-                      <div
-                        className={`flex items-center justify-start gap-2 ${index === 1 ? "visible" : "hidden"}`}
-                      >
-                        <div
-                          className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
-                        >
-                          <Image
-                            src={"/assets/icons/account-white.svg"}
-                            alt={"account-white"}
-                            width={12}
-                            height={15}
-                          />
-                        </div>
-                        <Textt variant="span1-satoshi">Brook</Textt>
-                      </div>
-                    </div>
-
-                    {/* cell 2 */}
-                    <div className="col-span-6 flex items-center justify-end gap-2 md:col-span-3 md:w-full md:justify-start">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                        <Image
-                          src={"/assets/icons/arrow-wraped-back-arrow.svg"}
-                          alt={"account-white"}
-                          width={10}
-                          height={8}
-                        />
-                      </div>
-                      <Textt variant="span1-satoshi" className="text-start">
-                        Every 30 days
-                      </Textt>
-                    </div>
-
-                    {/* cell 3 */}
-                    <div className="col-span-6 md:col-span-3 md:w-full">
-                      <div className="flex flex-col gap-2">
-                        <Textt variant="span1-satoshi" className="text-start">
-                          Weekly IAT Voice+SMS
-                        </Textt>
-                        <Textt variant="span1-satoshi" className="text-start">
-                          13.45 USD
-                        </Textt>
-                      </div>
-                    </div>
-
-                    {/* cell 4 */}
-                    <div className="col-span-6 flex justify-end md:col-span-3 md:w-full">
-                      <MyButton
-                        variant="primary-normal"
-                        className="h-14 max-w-[110px]"
-                      >
-                        <Textt variant="span1-satoshi" className="text-white">
-                          Resend
-                        </Textt>
-                      </MyButton>
-                    </div>
-                  </div>
-                </>
+              {subscriptionHistory.map((item, index) => (
+                <RecentActivity
+                  key={item.id}
+                  index={index}
+                  receiver={item.receiver}
+                  type={item.type}
+                  product={item.product}
+                  activityType="subscriptionSent"
+                />
+              ))}
+              {orderHistory.map((item, index) => (
+                <RecentActivity
+                  key={item.id}
+                  index={index}
+                  receiver={item.receiver}
+                  product={item.product}
+                  activityType="orderSent"
+                />
               ))}
             </div>
           </Card>
@@ -371,5 +336,102 @@ function AccountHome() {
     </div>
   );
 }
+
+export interface RecentActivityProps {
+  index: number;
+  receiver: string;
+  type?: string;
+  product?: Product;
+  activityType: "subscriptionSent" | "orderSent";
+}
+export const RecentActivity = ({
+  index,
+  receiver,
+  type,
+  product,
+  activityType,
+}: RecentActivityProps) => {
+  return (
+    <>
+      {/* row */}
+      <div
+        className={`align-content-between grid w-full grid-cols-12 gap-2 py-3 ${index !== 2 ? "border-b" : ""}`}
+      >
+        {/* cell 1 */}
+        <div className="col-span-6 flex items-center md:col-span-3 md:w-full">
+          <Textt
+            variant="span1-satoshi"
+            className={`text-start ${index !== 1 ? "visible" : "hidden"}`}
+          >
+            {receiver}
+          </Textt>
+
+          {/* showed if contact is saved */}
+          <div
+            className={`flex items-center justify-start gap-2 ${index === 1 ? "visible" : "hidden"}`}
+          >
+            <div
+              className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
+            >
+              <Image
+                src={"/assets/icons/account-white.svg"}
+                alt={"account-white"}
+                width={12}
+                height={15}
+              />
+            </div>
+            <Textt variant="span1-satoshi">Brook</Textt>
+          </div>
+        </div>
+        {/* cell 2 */}
+        {type ? (
+          <div className="col-span-6 flex items-center justify-end gap-2 md:col-span-3 md:w-full md:justify-start">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+              <Image
+                src={"/assets/icons/arrow-wraped-back-arrow.svg"}
+                alt={"account-white"}
+                width={10}
+                height={8}
+              />
+            </div>
+
+            <Textt variant="span1-satoshi" className="text-start">
+              Every{" "}
+              {type === "MONTHLY"
+                ? "30"
+                : type === "WEEKLY"
+                  ? "7"
+                  : type === "BIWEEKLY"
+                    ? "14"
+                    : "-"}{" "}
+              days
+            </Textt>
+          </div>
+        ) : (
+          <span className="col-span-6 md:col-span-3">One Time</span>
+        )}
+        {/* cell 3 */}
+        <div className="col-span-6 md:col-span-3 md:w-full">
+          <div className="flex flex-col gap-2">
+            <Textt variant="span1-satoshi" className="text-start">
+              {product?.name || "-"}
+            </Textt>
+            <Textt variant="span1-satoshi" className="text-start">
+              {product?.price?.amount || "-"} {product?.price?.currency || "-"}
+            </Textt>
+          </div>
+        </div>
+        {/* cell 4 */}
+        <div className="col-span-6 flex justify-end md:col-span-3 md:w-full">
+          <MyButton variant="primary-normal" className="h-14 max-w-[110px]">
+            <Textt variant="span1-satoshi" className="text-white">
+              Resend
+            </Textt>
+          </MyButton>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default withAuth(AccountHome);

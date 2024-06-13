@@ -10,7 +10,7 @@ import {
 
 //get order history
 export const getOrderHistory = async (
-  pageOption: IPageMetadata,
+  pageOption: { page: number; size: number },
   token: string,
 ): Promise<IPageResponse<Transaction>> => {
   const response = await axios.get(

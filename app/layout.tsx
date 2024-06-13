@@ -10,6 +10,7 @@ import OneSignalWrapper from "./onesignal-wrapper";
 import { SendTopupContextProvider } from "@/states/send-topup-context";
 import { TopupRequestContextProvider } from "@/states/request-topup-context";
 import { Toaster } from "@/components/ui/sonner";
+import { HistoryContextProvider } from "@/states/history-context";
 
 // const fontSans = FontSans({
 //   subsets: ["latin"],
@@ -37,7 +38,9 @@ export default function RootLayout({
             <ProductContextProvider>
               <SendTopupContextProvider>
                 <TopupRequestContextProvider>
-                  <OneSignalWrapper>{children}</OneSignalWrapper>
+                  <HistoryContextProvider>
+                    <OneSignalWrapper>{children}</OneSignalWrapper>
+                  </HistoryContextProvider>
                 </TopupRequestContextProvider>
               </SendTopupContextProvider>
             </ProductContextProvider>
