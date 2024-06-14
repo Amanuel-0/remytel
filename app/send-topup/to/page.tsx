@@ -7,8 +7,12 @@ import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import { useRouter } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
+import userContext from "@/states/user-context";
 
 function To() {
+  const {
+    user: { user },
+  } = useContext(userContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [toPhone, setToPhone] = React.useState("");
   const [isValidPhone, setIsValidPhone] = React.useState(false);
@@ -37,6 +41,17 @@ function To() {
     setSendTopup({ ...sendTopup, to: toPhone });
     router.push(`/send-topup/options`);
   };
+  const navigateToCompletePofile = () => {
+    setSendTopup({ ...sendTopup, to: toPhone });
+    router.push(`/send-topup/complete-profile`);
+  };
+  const handleStartTopUp = () => {
+    if (user?.firstName && user?.lastName && user?.email) {
+      navigateToTopUpOptions();
+    } else {
+      navigateToCompletePofile();
+    }
+  };
 
   return (
     <section className="relative my-10 flex h-[264px] flex-col items-center sm:my-20">
@@ -56,7 +71,7 @@ function To() {
           {/* <Button variant="primary-normal">Start top-up</Button> */}
           <MyButton
             variant="primary-normal"
-            onClick={navigateToTopUpOptions}
+            onClick={handleStartTopUp}
             className="mt-4"
             disabled={!isValidPhone}
             key={toPhone}
