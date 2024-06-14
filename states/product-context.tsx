@@ -1,7 +1,7 @@
 "use client";
 import { Product, Price } from "@/models";
 import { LocalStorageUtil } from "@/utils";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 const productContext = createContext<{
   product: Product;
@@ -49,10 +49,10 @@ export const ProductContextProvider = (props: any) => {
     product.type,
   ]);
 
-  const productHandler = (product: Product) => {
+  const productHandler = useCallback(() => {
     setProduct(product);
     LocalStorageUtil.setItem("product", product);
-  };
+  }, [product]);
 
   const contextValue = {
     product: {

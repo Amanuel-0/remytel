@@ -18,9 +18,7 @@ function TopUpAndPlans() {
   const [products, setProducts] = React.useState<Product[]>([]);
   // const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
   //   React.useState(false);
-  const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(
-    product && true,
-  );
+  const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(false);
 
   useEffect(() => {
     console.log("window location", window.location.pathname);

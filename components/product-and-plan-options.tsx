@@ -7,13 +7,13 @@ import Textt from "./text";
 import TopupToDetailCard from "./topup-to-detail-card";
 import TopupOptions from "./topups-options";
 import { Product } from "@/models";
-import { getProducts } from "@/services";
+import { getProducts, updateProfile } from "@/services";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
 import { toast } from "sonner";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type MenuType = "topup" | "plans";
 
@@ -22,6 +22,8 @@ interface OptionsProps {
 }
 
 function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
+  const searchParams = useSearchParams();
+  const selectedOption = searchParams.get("selectedOption");
   const {
     user: { user },
   } = useContext(userContext);
@@ -42,7 +44,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
     if (product) {
       setLoading(false);
     }
-  }, [products]);
+  }, [product]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -72,13 +74,54 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
         handleAutoTopupModal && handleAutoTopupModal(true);
         // setOpenAutoTopupModal(true);
       } else {
-        router.push(`/send-topup/signup`);
+        router.push(`/send-topup/signup?selectedOption=${productId}`);
       }
     } else {
       toast.error("Something went wrong, please try again later");
     }
   };
+  useEffect(() => {
+    if (
+      selectedOption &&
+      sendTopup &&
+      handleAutoTopupModal &&
+      products &&
+      products?.length !== 0 &&
+      setSendTopup
+    ) {
+      const productId = parseInt(selectedOption);
+      if (productId) {
+        const selectedProduct: Product | undefined = products?.find(
+          (product) => {
+            return product.id === productId;
+          },
+        );
+        if (selectedProduct) {
+          onProductChange(selectedProduct);
+          setSendTopup({ ...sendTopup, product: selectedProduct });
 
+          // navigate to login if user is not logged in
+          if (user) {
+            console.log("product selected: product id is: ", productId);
+            handleAutoTopupModal && handleAutoTopupModal(true);
+            // setOpenAutoTopupModal(true);
+          } else {
+            router.push(`/send-topup/signup?selectedOption=${productId}`);
+          }
+        } else {
+          toast.error("Something went wrong, please try again later");
+        }
+      }
+    }
+  }, [
+    selectedOption,
+    user,
+    handleAutoTopupModal,
+    router,
+    onProductChange,
+    products,
+    setSendTopup,
+  ]);
   const handleMenuSelectionChange = (menu: MenuType) => {
     setSelectedMenu(menu);
   };

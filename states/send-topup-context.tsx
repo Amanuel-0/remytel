@@ -1,7 +1,7 @@
 "use client";
 import { Product } from "@/models";
 import { LocalStorageUtil } from "@/utils";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export interface ISendTopup {
   to: string;
@@ -52,10 +52,10 @@ export const SendTopupContextProvider = (props: any) => {
     sendTopup.product,
   ]);
 
-  const sendTopupHandler = (sendTopup: ISendTopup) => {
+  const sendTopupHandler = useCallback((sendTopup: ISendTopup) => {
     setSendTopUp(sendTopup);
     LocalStorageUtil.setItem("sendtopup", sendTopup);
-  };
+  }, []);
 
   const contextValue = {
     sendTopup: { ...sendTopup, to, from, fromCountryCode, product },
