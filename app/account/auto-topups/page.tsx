@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Textt from "@/components/text";
@@ -7,8 +7,41 @@ import MyButton from "@/components/ui/my-button";
 import withAuth from "@/components/protected-route";
 import AccountNav from "../account-nav";
 import CancelAutoTopupModal from "@/components/cancel-auto-topup-modal";
+import { SubscriptionT } from "@/services/type";
+import userContext from "@/states/user-context";
+import { getSubscriptionHistory } from "@/services/profile.service";
+import { toast } from "sonner";
 
 function AutoTopups() {
+  const {
+    user: { token },
+  } = useContext(userContext);
+  const [autoTopups, setAutoTopups] = useState<SubscriptionT[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+  const size = 10;
+  useEffect(() => {
+    async function getNextSubscriptionsPage() {
+      try {
+        const res = await getSubscriptionHistory(
+          { page: currentPage, size },
+          token,
+        );
+        if (res.items) {
+          setAutoTopups((currentAutoTopups) => [
+            ...currentAutoTopups,
+            ...res.items,
+          ]);
+        }
+        setHasNext(res?.metadata?.hasNext);
+      } catch (e) {
+        toast.error("Error happened while trying to fetch auto topups");
+      }
+    }
+    if (token) {
+      getNextSubscriptionsPage();
+    }
+  }, [currentPage, token]);
   const [openCancelAutoTopupModal, setOpenCancelAutoTopupModal] =
     React.useState(false);
 
@@ -26,7 +59,7 @@ function AutoTopups() {
       {/*  */}
       <section className="my-[10px]">
         <Card className="flex w-full flex-col justify-between gap-5 md:flex-row md:flex-wrap md:gap-5">
-          {[1, 2].map((item, index) => (
+          {autoTopups.map((item, index) => (
             <div
               key={index}
               className="w-full rounded-[20px] border p-5 xl:w-[49%]"
@@ -46,10 +79,10 @@ function AutoTopups() {
 
                 <div>
                   <Textt variant="h6-satoshi" className="text-start">
-                    Brook
+                    {item.receiverName}
                   </Textt>
                   <Textt variant="span1-satoshi" className="mt-2 text-start">
-                    +251938649359
+                    {item.receiver}
                   </Textt>
                 </div>
               </div>
@@ -61,7 +94,8 @@ function AutoTopups() {
                     Receives
                   </Textt>
                   <Textt variant="h6-satoshi" className="mt-2 block text-start">
-                    138 ETB
+                    {item.product?.price?.amount}{" "}
+                    {item.product?.price?.currency}
                   </Textt>
                 </div>
 
@@ -73,7 +107,15 @@ function AutoTopups() {
                     variant="h6-satoshi"
                     className="mt-2 block text-start text-primary"
                   >
-                    Every 30 days
+                    Every{" "}
+                    {item?.type === "MONTHLY"
+                      ? "30"
+                      : item?.type === "WEEKLY"
+                        ? "7"
+                        : item?.type === "BIWEEKLY"
+                          ? "14"
+                          : "-"}{" "}
+                    days
                   </Textt>
                 </div>
               </div>
@@ -90,7 +132,8 @@ function AutoTopups() {
                     variant="span1-satoshi"
                     className="whitespace-nowrap text-start"
                   >
-                    Next billing date 21/4/2024
+                    {/* TODO */}
+                    Next billing date 21 / 4 / 2024
                   </Textt>
                 </div>
 
@@ -105,6 +148,19 @@ function AutoTopups() {
             </div>
           ))}
         </Card>
+        {hasNext && (
+          <div className="my-5 flex w-full justify-center">
+            <MyButton
+              variant="primary-normal"
+              className="mx-auto w-max px-6"
+              onClick={() => {
+                setCurrentPage((p) => p + 1);
+              }}
+            >
+              Load More
+            </MyButton>
+          </div>
+        )}
       </section>
     </div>
   );
