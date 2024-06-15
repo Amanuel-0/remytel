@@ -12,8 +12,12 @@ import FooterAlt from "@/components/footer-alt";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import { useRouter, useSearchParams } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
+import userContext from "@/states/user-context";
 
 function LandingPage() {
+  const {
+    user: { user },
+  } = useContext(userContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
   const router = useRouter();
@@ -26,7 +30,17 @@ function LandingPage() {
   const navigateToTopUpOptions = () => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
     router.push("/send-topup/options");
-    console.log("window location", window.location.pathname);
+  };
+  const navigateToCompletePofile = () => {
+    setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
+    router.push(`/send-topup/complete-profile`);
+  };
+  const handleStartTopUp = () => {
+    if (user?.firstName && user?.lastName && user?.email) {
+      navigateToTopUpOptions();
+    } else {
+      navigateToCompletePofile();
+    }
   };
 
   return (
@@ -60,7 +74,7 @@ function LandingPage() {
               {/* <Button variant="primary-normal">Start top-up</Button> */}
               <MyButton
                 variant="primary-gradient-top-left"
-                onClick={navigateToTopUpOptions}
+                onClick={handleStartTopUp}
                 className=""
               >
                 <Textt variant="h6-satoshi" className="text-white">

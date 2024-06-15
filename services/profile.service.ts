@@ -7,6 +7,7 @@ import {
   UpdateProfilePayload,
   UserProfile,
 } from "@/models";
+import { SubscriptionT } from "./type";
 
 //get order history
 export const getOrderHistory = async (
@@ -36,12 +37,18 @@ export const getOrderDetails = async (orderId: string, token: string) => {
 };
 
 // subscription history
-export const getSubscriptionHistory = async (token: string) => {
-  const response = await axios.get(`${API_URL}profile/subscriptions`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+export const getSubscriptionHistory = async (
+  pageOption: { page: number; size: number },
+  token: string,
+): Promise<IPageResponse<SubscriptionT>> => {
+  const response = await axios.get(
+    `${API_URL}profile/subscriptions?page=${pageOption.page}&size=${pageOption.size}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   return response.data;
 };
 

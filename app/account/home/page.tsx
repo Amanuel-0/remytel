@@ -13,8 +13,10 @@ import withAuth from "@/components/protected-route";
 import Link from "next/link";
 import historyContext from "@/states/history-context";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { Product } from "@/models";
+import { Product, Transaction } from "@/models";
 import SetAutoTopupModal from "@/components/set-auto-topup-modal";
+import topupRequestContext from "@/states/request-topup-context";
+import sendTopupContext from "@/states/send-topup-context";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);
@@ -146,54 +148,56 @@ function AccountHome() {
       {/*  */}
       <section className="my-[10px] flex w-full flex-col gap-[10px] md:flex-row">
         {/* send your fist topup banner */}
-        {orderHistory?.length === 0 && subscriptionHistory?.length === 0 && (
-          <div className="w-full md:max-w-[65%]">
-            <SendYourFirstTopupBanner />
-          </div>
-        )}
-
-        {orderHistory?.length !== 0 && subscriptionHistory?.length !== 0 && (
-          <Card className="w-full md:max-w-[65%]">
-            <div className="mt-2 flex items-center justify-between">
-              <Textt variant="h4-craftwork" className="text-start">
-                Recent Activities
-              </Textt>
-
-              <button className="flex items-center justify-center gap-[10px]">
-                <Textt variant="span1-satoshi">History</Textt>
-                <Image
-                  src={"/assets/icons/arrow-right-thin-black.svg"}
-                  alt={"arrow-right-black-icon"}
-                  width={12}
-                  height={12}
-                />
-              </button>
+        {orderHistory?.items?.length === 0 &&
+          subscriptionHistory?.items?.length === 0 && (
+            <div className="w-full md:max-w-[65%]">
+              <SendYourFirstTopupBanner />
             </div>
+          )}
 
-            {/* table */}
-            <div className="">
-              {subscriptionHistory.map((item, index) => (
-                <RecentActivity
-                  key={item.id}
-                  index={index}
-                  receiver={item.receiver}
-                  type={item.type}
-                  product={item.product}
-                  activityType="subscriptionSent"
-                />
-              ))}
-              {orderHistory.map((item, index) => (
-                <RecentActivity
-                  key={item.id}
-                  index={index}
-                  receiver={item.receiver}
-                  product={item.product}
-                  activityType="orderSent"
-                />
-              ))}
-            </div>
-          </Card>
-        )}
+        {orderHistory?.items?.length !== 0 &&
+          subscriptionHistory?.items?.length !== 0 && (
+            <Card className="w-full md:max-w-[65%]">
+              <div className="mt-2 flex items-center justify-between">
+                <Textt variant="h4-craftwork" className="text-start">
+                  Recent Activities
+                </Textt>
+
+                <button className="flex items-center justify-center gap-[10px]">
+                  <Textt variant="span1-satoshi">History</Textt>
+                  <Image
+                    src={"/assets/icons/arrow-right-thin-black.svg"}
+                    alt={"arrow-right-black-icon"}
+                    width={12}
+                    height={12}
+                  />
+                </button>
+              </div>
+
+              {/* table */}
+              <div className="">
+                {subscriptionHistory?.items.map((item, index) => (
+                  <RecentActivity
+                    key={item.id}
+                    index={index}
+                    receiver={item.receiver}
+                    type={item.type}
+                    product={item.product}
+                    activityType="subscriptionSent"
+                  />
+                ))}
+                {orderHistory?.items.map((item, index) => (
+                  <RecentActivity
+                    key={item.id}
+                    index={index}
+                    receiver={item.receiver}
+                    product={item.product}
+                    activityType="orderSent"
+                  />
+                ))}
+              </div>
+            </Card>
+          )}
 
         <div className="w-full md:max-w-[35%]">
           <Card className="mb-[10px] w-full">
@@ -343,6 +347,7 @@ export interface RecentActivityProps {
   type?: string;
   product?: Product;
   activityType: "subscriptionSent" | "orderSent";
+  oneTime?: Transaction;
 }
 export const RecentActivity = ({
   index,
@@ -350,7 +355,12 @@ export const RecentActivity = ({
   type,
   product,
   activityType,
+  oneTime,
 }: RecentActivityProps) => {
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const {
+    user: { user },
+  } = useContext(userContext);
   return (
     <>
       {/* row */}
@@ -423,7 +433,20 @@ export const RecentActivity = ({
         </div>
         {/* cell 4 */}
         <div className="col-span-6 flex justify-end md:col-span-3 md:w-full">
-          <MyButton variant="primary-normal" className="h-14 max-w-[110px]">
+          <MyButton
+            variant="primary-normal"
+            className="h-14 max-w-[110px]"
+            onClick={() => {
+              if (activityType === "orderSent" && oneTime) {
+                // setSendTopup({
+                //   from:user.phoneNumber,
+                //   product:oneTime.product,
+                //   to:receiver,
+                //   topupFrequency:u,
+                // });
+              }
+            }}
+          >
             <Textt variant="span1-satoshi" className="text-white">
               Resend
             </Textt>
