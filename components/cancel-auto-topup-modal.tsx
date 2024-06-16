@@ -7,17 +7,18 @@ import { useRouter } from "next/navigation";
 function CancelAutoTopupModal({
   open,
   onClose,
+  handleConfirm,
 }: {
   open: boolean;
   onClose: () => void;
+  handleConfirm: () => void;
 }) {
   const router = useRouter();
 
-  const handleAutoTopupCancel = () => {
-    console.log("Auto top-up cancelled");
+  function onConfirm() {
+    handleConfirm();
     onClose();
-  };
-
+  }
   return (
     <ModalWrapper open={open} onClose={onClose}>
       <div className="w-full max-w-[466px]">
@@ -42,7 +43,7 @@ function CancelAutoTopupModal({
 
             <button
               type="button"
-              onClick={handleAutoTopupCancel}
+              onClick={onConfirm}
               className="h-full max-h-[54px] min-h-[44px] w-full max-w-[140px] rounded-full border border-[#C7C7C7] bg-[#D72626]"
             >
               <Textt variant="span1-satoshi" className="text-white">

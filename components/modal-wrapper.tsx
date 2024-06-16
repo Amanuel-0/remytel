@@ -13,10 +13,9 @@ function ModalWrapper({
   return (
     <div
       onClick={() => {
-        console.log("clicked from modal");
         onClose();
       }}
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-colors ${open ? "visible bg-black/25" : "invisible"}`}
+      className={`left-0 top-0 z-50 flex h-screen w-screen items-center justify-center transition-colors ${open ? "visible bg-black/25" : "invisible"} fixed`}
     >
       <div
         onClick={(e) => e.stopPropagation()}

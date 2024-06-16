@@ -64,6 +64,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
     const selectedProduct: Product | undefined = products?.find((product) => {
       return product.id === productId;
     });
+    console.log(selectedProduct);
     if (selectedProduct) {
       onProductChange(selectedProduct);
       setSendTopup({ ...sendTopup, product: selectedProduct });
@@ -91,6 +92,10 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
     ) {
       const productId = parseInt(selectedOption);
       if (productId) {
+        if (productId === product.id) {
+          handleAutoTopupModal(true);
+          return;
+        }
         const selectedProduct: Product | undefined = products?.find(
           (product) => {
             return product.id === productId;
@@ -113,15 +118,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
         }
       }
     }
-  }, [
-    selectedOption,
-    user,
-    handleAutoTopupModal,
-    router,
-    onProductChange,
-    products,
-    setSendTopup,
-  ]);
+  }, [selectedOption, user, router, products, sendTopup]);
   const handleMenuSelectionChange = (menu: MenuType) => {
     setSelectedMenu(menu);
   };

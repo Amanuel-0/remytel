@@ -49,10 +49,10 @@ export const ProductContextProvider = (props: any) => {
     product.type,
   ]);
 
-  const productHandler = useCallback(() => {
+  const productHandler = useCallback((product: Product) => {
     setProduct(product);
     LocalStorageUtil.setItem("product", product);
-  }, [product]);
+  }, []);
 
   const contextValue = {
     product: {
