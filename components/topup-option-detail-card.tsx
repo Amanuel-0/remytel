@@ -17,7 +17,7 @@ function TopupOptionDetailCard({
     <>
       <Card className="flex items-center justify-between">
         <span className="flex items-center justify-center gap-3">
-          <Textt variant="h6-satoshi">{`You're senRemytel`}</Textt>
+          <Textt variant="h6-satoshi">{`You're sending Remytel`}</Textt>
           <Textt variant="h6-satoshi" className="text-primary">
             {product.amount} ETB
           </Textt>

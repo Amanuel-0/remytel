@@ -19,9 +19,13 @@ type MenuType = "topup" | "plans";
 
 interface OptionsProps {
   handleAutoTopupModal?: (value: boolean) => void;
+  className?: string;
 }
 
-function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
+function ProductAndPlanOptions({
+  handleAutoTopupModal,
+  className,
+}: OptionsProps) {
   const searchParams = useSearchParams();
   const selectedOption = searchParams.get("selectedOption");
   const {
@@ -124,7 +128,7 @@ function ProductAndPlanOptions({ handleAutoTopupModal }: OptionsProps) {
   };
 
   return (
-    <Card className="mt-5">
+    <Card className={`mt-5 ${className}`}>
       <div>
         <Textt variant="p1-satoshi" className="text-start">
           Select a top-up

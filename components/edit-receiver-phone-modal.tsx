@@ -49,23 +49,27 @@ function EditReceiverPhoneModal({
 
         {product.amount && (
           <>
-            <Textt variant="span2-satoshi" className="text-start">
-              Receiver Gets:
-            </Textt>
+            <div className="flex items-start justify-between">
+              <div>
+                <Textt variant="span2-satoshi" className="text-start">
+                  Receiver Gets:
+                </Textt>
 
-            <div className="mt-2 flex items-center justify-between">
-              <Textt variant="h3-satoshi" className="text-start">
-                {product.amount} ETB
-              </Textt>
-
-              {/* <IconButton className="h-8 w-8" onClick={handleProductEdit}>
+                <Textt variant="h3-satoshi" className="mt-2 text-start">
+                  {product.amount} ETB
+                </Textt>
+              </div>
+              <IconButton
+                className="h-8 w-8 border-none transition-all duration-300"
+                onClick={onClose}
+              >
                 <Image
-                  src={"/assets/icons/edit-icon.svg"}
-                  alt={"edit-icon"}
-                  width={14}
-                  height={14}
+                  src={"/assets/icons/outline-circled-cancel.svg"}
+                  alt={"cose-icon"}
+                  width={23}
+                  height={23}
                 />
-              </IconButton> */}
+              </IconButton>
             </div>
           </>
         )}

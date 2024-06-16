@@ -1,6 +1,8 @@
 import React from "react";
 import ModalWrapper from "./modal-wrapper";
 import ProductAndPlanOptions from "./product-and-plan-options";
+import IconButton from "./ui/icon-button";
+import Image from "next/image";
 
 function ProductAndPlanOptionsModal({
   open,
@@ -25,10 +27,24 @@ function ProductAndPlanOptionsModal({
         // onClick={(e) => e.stopPropagation()}
         onClick={() => console.log("clicked")}
       >
+        <IconButton
+          className="ml-auto h-8 w-8 border-none transition-all duration-300"
+          onClick={onClose}
+        >
+          <Image
+            src={"/assets/icons/outline-circled-cancel.svg"}
+            alt={"cose-icon"}
+            width={23}
+            height={23}
+          />
+        </IconButton>
         {handleAutoTopupModal ? (
-          <ProductAndPlanOptions handleAutoTopupModal={handleAutoTopupModal} />
+          <ProductAndPlanOptions
+            handleAutoTopupModal={handleAutoTopupModal}
+            className="mt-0 pt-0"
+          />
         ) : (
-          <ProductAndPlanOptions />
+          <ProductAndPlanOptions className="mt-0 pt-0" />
         )}
       </div>
     </ModalWrapper>
