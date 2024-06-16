@@ -31,7 +31,7 @@ export interface HistoryContextI {
 const defaultPageMetaData: IPageMetadata = {
   hasNext: false,
   hasPrev: false,
-  page: 1,
+  page: 0,
   size: 10,
   total: 0,
 };

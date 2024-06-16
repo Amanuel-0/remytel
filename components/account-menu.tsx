@@ -13,7 +13,7 @@ import sendTopupContext from "@/states/send-topup-context";
 import topupRequestContext from "@/states/request-topup-context";
 import Image from "next/image";
 
-function AccountMenu() {
+function AccountMenu({ ref }: { ref?: React.MutableRefObject<null> }) {
   const { onLogin } = useContext(authContext);
   const { user, onUser } = useContext(userContext);
   const { setSendTopup } = useContext(sendTopupContext);
@@ -43,6 +43,7 @@ function AccountMenu() {
         animate={{ opacity: 1, translateY: 0 }}
         exit={{ opacity: 0, x: 0, translateY: -10 }}
         className=" absolute right-0 top-[100%] z-50 min-h-[156px] w-[207px] drop-shadow-sm"
+        ref={ref}
       >
         {/* mobile menu */}
         <Card className="relative shadow-xl">
@@ -54,7 +55,7 @@ function AccountMenu() {
             className="absolute right-10 top-[-10px]"
           />
 
-          <Link href={"/account/home"}>
+          <Link href={"/account/home"} className="">
             <div className="flex justify-between gap-2">
               <div>
                 <Textt variant="h4-satoshi" className="text-start">

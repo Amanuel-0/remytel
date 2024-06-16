@@ -186,7 +186,7 @@ function AccountHome() {
                     activityType="subscriptionSent"
                   />
                 ))}
-                {orderHistory?.items.map((item, index) => (
+                {/* {orderHistory?.items.map((item, index) => (
                   <RecentActivity
                     key={item.id}
                     index={index}
@@ -194,7 +194,7 @@ function AccountHome() {
                     product={item.product}
                     activityType="orderSent"
                   />
-                ))}
+                ))} */}
               </div>
             </Card>
           )}
@@ -369,29 +369,29 @@ export const RecentActivity = ({
       >
         {/* cell 1 */}
         <div className="col-span-6 flex items-center md:col-span-3 md:w-full">
-          <Textt
-            variant="span1-satoshi"
-            className={`text-start ${index !== 1 ? "visible" : "hidden"}`}
-          >
-            {receiver}
-          </Textt>
+          {/* showed if contact is NOT saved */}
+          {true && (
+            <Textt variant="span1-satoshi" className={`text-start`}>
+              {receiver}
+            </Textt>
+          )}
 
           {/* showed if contact is saved */}
-          <div
-            className={`flex items-center justify-start gap-2 ${index === 1 ? "visible" : "hidden"}`}
-          >
-            <div
-              className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
-            >
-              <Image
-                src={"/assets/icons/account-white.svg"}
-                alt={"account-white"}
-                width={12}
-                height={15}
-              />
+          {false && (
+            <div className={`flex items-center justify-start gap-2`}>
+              <div
+                className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
+              >
+                <Image
+                  src={"/assets/icons/account-white.svg"}
+                  alt={"account-white"}
+                  width={12}
+                  height={15}
+                />
+              </div>
+              <Textt variant="span1-satoshi">Brook</Textt>
             </div>
-            <Textt variant="span1-satoshi">Brook</Textt>
-          </div>
+          )}
         </div>
         {/* cell 2 */}
         {type ? (

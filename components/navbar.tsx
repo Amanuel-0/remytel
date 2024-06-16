@@ -1,15 +1,16 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MyButton from "./ui/my-button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./mobile-menu";
 import authContext from "@/states/auth-context";
 import Textt from "./text";
 import AccountMenu from "./account-menu";
 import "./navbar.css";
 import LanguageSelector from "./Language";
+import { useOutsideClickListner } from "@/hooks/useOutsideClickListner";
 
 function Navbar() {
   const { isLoggedIn, onLogin } = useContext(authContext);
@@ -38,6 +39,23 @@ function Navbar() {
   const toggleAccountMenu = () => {
     setIsAccountMenuOpen(!isAccountMenuOpen);
   };
+  const path = usePathname();
+  const ref = useRef(null);
+  const { clickedOutside, setClickedOutside } = useOutsideClickListner(
+    ref,
+    [],
+    true,
+  );
+  useEffect(() => {
+    if (path) {
+      setClickedOutside(true);
+    }
+  }, [path, setClickedOutside]);
+  useEffect(() => {
+    if (clickedOutside) {
+      setIsAccountMenuOpen(false);
+    }
+  }, [clickedOutside]);
 
   return (
     <nav className="flex  w-full flex-row justify-between font-satoshi text-sm font-medium">
@@ -75,12 +93,15 @@ function Navbar() {
         <div className="hidden h-full flex-row justify-end gap-10 xl:flex">
           <LanguageSelector />
 
-          <div className="relative flex min-w-[173px] flex-row items-center gap-3">
+          <div
+            className="relative flex min-w-[173px] flex-row items-center gap-3"
+            ref={ref}
+          >
             {isLoggedIn ? (
               <>
                 <button
                   onClick={toggleAccountMenu}
-                  className="flex items-center justify-between gap-2"
+                  className="gap- flex items-center justify-between"
                 >
                   <Image
                     src={"/assets/icons/person-black-icon.svg"}
