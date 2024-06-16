@@ -17,6 +17,8 @@ import { Product, Transaction } from "@/models";
 import SetAutoTopupModal from "@/components/set-auto-topup-modal";
 import topupRequestContext from "@/states/request-topup-context";
 import sendTopupContext from "@/states/send-topup-context";
+import { SubscriptionT } from "@/services/type";
+import productContext from "@/states/product-context";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);
@@ -184,6 +186,7 @@ function AccountHome() {
                     type={item.type}
                     product={item.product}
                     activityType="subscriptionSent"
+                    subscription={item}
                   />
                 ))}
                 {/* {orderHistory?.items.map((item, index) => (
@@ -348,6 +351,7 @@ export interface RecentActivityProps {
   product?: Product;
   activityType: "subscriptionSent" | "orderSent";
   oneTime?: Transaction;
+  subscription?: SubscriptionT;
 }
 export const RecentActivity = ({
   index,
@@ -356,8 +360,11 @@ export const RecentActivity = ({
   product,
   activityType,
   oneTime,
+  subscription,
 }: RecentActivityProps) => {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const router = useRouter();
+  const { onProductChange } = useContext(productContext);
   const {
     user: { user },
   } = useContext(userContext);
@@ -442,8 +449,22 @@ export const RecentActivity = ({
                 //   from:user.phoneNumber,
                 //   product:oneTime.product,
                 //   to:receiver,
-                //   topupFrequency:u,
+                //   topupFrequency:,
                 // });
+              } else if (activityType === "subscriptionSent" && subscription) {
+                setSendTopup({
+                  from: user.phoneNumber,
+                  product: product,
+                  to: subscription?.receiver,
+                  topupFrequency: subscription.interval,
+                  fromCountryCode: "US",
+                });
+                if (product) {
+                  onProductChange(product);
+                }
+                router.push(
+                  `/send-topup/options?selectedOption=${subscription.planId}`,
+                );
               }
             }}
           >
