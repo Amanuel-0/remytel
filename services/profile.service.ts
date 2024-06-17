@@ -60,7 +60,7 @@ export const cancelSubscription = async (
   subscriptionId: string,
 ) => {
   const response = await axios.delete(
-    `${API_URL}profile/subscription/${subscriptionId}`,
+    `${API_URL}profile/subscriptions/${subscriptionId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

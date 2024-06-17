@@ -25,8 +25,8 @@ function SetAutoTopupModal({
 }) {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [selectedFrequency, setSelectedFrequency] = React.useState<
-    "7" | "14" | "30"
-  >((sendTopup.topupFrequency as any) || "30"); // ["7", "14", "30"]
+    "7" | "14" | "30" | undefined
+  >(sendTopup.topupFrequency as any); // ["7", "14", "30"]
   const { product } = useContext(productContext);
   const router = useRouter();
 
@@ -49,12 +49,12 @@ function SetAutoTopupModal({
     }
   };
   const handleNoThanks = () => {
+    setSendTopup({ ...sendTopup, topupFrequency: undefined });
     if (window.location.pathname === "/send-topup/bill") {
       handleCloseAllModal && handleCloseAllModal();
     } else {
       router.push(`/send-topup/bill`);
     }
-    setSendTopup({ ...sendTopup, topupFrequency: undefined });
   };
 
   return (

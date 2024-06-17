@@ -178,7 +178,7 @@ function AccountHome() {
 
               {/* table */}
               <div className="">
-                {subscriptionHistory?.items.map((item, index) => (
+                {/* {subscriptionHistory?.items.map((item, index) => (
                   <RecentActivity
                     key={item.id}
                     index={index}
@@ -188,16 +188,16 @@ function AccountHome() {
                     activityType="subscriptionSent"
                     subscription={item}
                   />
-                ))}
-                {/* {orderHistory?.items.map((item, index) => (
+                ))} */}
+                {orderHistory?.items.map((item, index) => (
                   <RecentActivity
                     key={item.id}
                     index={index}
                     receiver={item.receiver}
                     product={item.product}
-                    activityType="orderSent"
+                    order={item}
                   />
-                ))} */}
+                ))}
               </div>
             </Card>
           )}
@@ -347,20 +347,14 @@ function AccountHome() {
 export interface RecentActivityProps {
   index: number;
   receiver: string;
-  type?: string;
   product?: Product;
-  activityType: "subscriptionSent" | "orderSent";
-  oneTime?: Transaction;
-  subscription?: SubscriptionT;
+  order: Transaction;
 }
 export const RecentActivity = ({
   index,
   receiver,
-  type,
   product,
-  activityType,
-  oneTime,
-  subscription,
+  order,
 }: RecentActivityProps) => {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const router = useRouter();
@@ -401,7 +395,7 @@ export const RecentActivity = ({
           )}
         </div>
         {/* cell 2 */}
-        {type ? (
+        {order.subscription ? (
           <div className="col-span-6 flex items-center justify-end gap-2 md:col-span-3 md:w-full md:justify-start">
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
               <Image
@@ -414,18 +408,23 @@ export const RecentActivity = ({
 
             <Textt variant="span1-satoshi" className="text-start">
               Every{" "}
-              {type === "MONTHLY"
+              {order?.subscription?.type === "MONTHLY"
                 ? "30"
-                : type === "WEEKLY"
+                : order?.subscription?.type === "WEEKLY"
                   ? "7"
-                  : type === "BIWEEKLY"
+                  : order?.subscription?.type === "BIWEEKLY"
                     ? "14"
                     : "-"}{" "}
               days
             </Textt>
           </div>
         ) : (
-          <span className="col-span-6 md:col-span-3">One Time</span>
+          <Textt
+            variant="span1-satoshi"
+            className="col-span-6 self-center text-start md:col-span-3 md:w-full md:justify-start"
+          >
+            One Time
+          </Textt>
         )}
         {/* cell 3 */}
         <div className="col-span-6 md:col-span-3 md:w-full">
@@ -439,36 +438,41 @@ export const RecentActivity = ({
           </div>
         </div>
         {/* cell 4 */}
-        <div className="col-span-6 flex justify-end md:col-span-3 md:w-full">
+        <div className="col-span-6 flex h-max items-center justify-end md:col-span-3 md:w-full">
           <MyButton
             variant="primary-normal"
             className="h-14 max-w-[110px]"
             onClick={() => {
-              if (activityType === "orderSent" && oneTime) {
-                // setSendTopup({
-                //   from:user.phoneNumber,
-                //   product:oneTime.product,
-                //   to:receiver,
-                //   topupFrequency:,
-                // });
-              } else if (activityType === "subscriptionSent" && subscription) {
+              if (!order.subscription?.type) {
                 setSendTopup({
                   from: user.phoneNumber,
                   product: product,
-                  to: subscription?.receiver,
-                  topupFrequency: subscription.interval,
+                  to: receiver,
+                  topupFrequency: undefined,
+                  fromCountryCode: "US",
+                });
+                if (product) {
+                  onProductChange(product);
+                }
+                router.push(`/send-topup/bill`);
+              } else {
+                setSendTopup({
+                  from: user.phoneNumber,
+                  product: product,
+                  to: order?.receiver,
+                  topupFrequency: order.subscription?.type,
                   fromCountryCode: "US",
                 });
                 if (product) {
                   onProductChange(product);
                 }
                 router.push(
-                  `/send-topup/options?selectedOption=${subscription.planId}`,
+                  `/send-topup/options?selectedOption=${order.planId}`,
                 );
               }
             }}
           >
-            <Textt variant="span1-satoshi" className="text-white">
+            <Textt variant="span1-satoshi" className="h-max py-0 text-white">
               Resend
             </Textt>
           </MyButton>

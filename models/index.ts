@@ -1,3 +1,5 @@
+import { SubscriptionT } from "@/services/type";
+
 export * from "./page-options";
 
 // auth related models
@@ -158,7 +160,7 @@ export interface Transaction {
   month: number;
   createdAt: string;
   updatedAt: string;
-  subscription: any;
+  subscription?: SubscriptionT;
   product: Product;
 }
 

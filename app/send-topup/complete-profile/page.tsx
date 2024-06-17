@@ -6,11 +6,13 @@ import MyButton from "@/components/ui/my-button";
 import { editProfile } from "@/services/profile.service";
 import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function CompleteProfilePage() {
+  const searchParams = useSearchParams();
+  const selectedOption = searchParams.get("selectedOption");
   const { sendTopup } = useContext(sendTopupContext);
   const {
     user: { user, token },
@@ -20,7 +22,11 @@ export default function CompleteProfilePage() {
   const [lastName, setLastName] = useState("");
   const router = useRouter();
   const navigateToTopUpOptions = () => {
-    router.push(`/send-topup/options`);
+    if (selectedOption) {
+      router.push(`/send-topup/options?selectedOption=${selectedOption}`);
+    } else {
+      router.push(`/send-topup/options`);
+    }
   };
   const updateUserInfo = useCallback(() => {
     if (token) {

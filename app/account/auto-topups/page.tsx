@@ -31,7 +31,7 @@ function AutoTopups() {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-  const size = 10;
+  const size = 2;
   useEffect(() => {
     async function getNextSubscriptionsPage() {
       setLoading(true);
@@ -91,7 +91,6 @@ function AutoTopups() {
         {/*  */}
         <section className="my-[10px]">
           <Card className="flex w-full flex-col justify-between gap-5 md:flex-row md:flex-wrap md:gap-5">
-            {loading && <LoadingSpinner />}
             {autoTopups.map((item, index) => (
               <AutoTopup
                 key={item.id}
@@ -102,6 +101,7 @@ function AutoTopups() {
                 }}
               />
             ))}
+            {loading && <LoadingSpinner className="w-full" />}
           </Card>
           {hasNext && (
             <div className="my-5 flex w-full justify-center">
@@ -204,7 +204,7 @@ const AutoTopup = ({ item, setOpenCancelAutoTopupModal }: AutoTopupProps) => {
           <MyButton
             type="button"
             onClick={() => setOpenCancelAutoTopupModal(true)}
-            className="max-w-[164px] border border-[#C7C7C7]"
+            className="max-w-[164px] border border-[#C7C7C7] transition-colors duration-300 hover:bg-red-800/15"
           >
             <Textt variant="span1-satoshi">Cancel auto top-up</Textt>
           </MyButton>

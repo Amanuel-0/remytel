@@ -28,6 +28,7 @@ function ProductAndPlanOptions({
 }: OptionsProps) {
   const searchParams = useSearchParams();
   const selectedOption = searchParams.get("selectedOption");
+  const newUser = searchParams.get("newUser");
   const {
     user: { user },
   } = useContext(userContext);
@@ -79,7 +80,9 @@ function ProductAndPlanOptions({
         handleAutoTopupModal && handleAutoTopupModal(true);
         // setOpenAutoTopupModal(true);
       } else {
-        router.push(`/send-topup/signup?selectedOption=${productId}`);
+        router.push(
+          `/send-topup/signup?selectedOption=${productId}${newUser === "true" && "&newUser=true"}`,
+        );
       }
     } else {
       toast.error("Something went wrong, please try again later");

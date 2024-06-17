@@ -29,7 +29,7 @@ function TopUpAndPlans() {
     if (product) {
       setLoading(false);
     }
-  }, [products]);
+  }, [product]);
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -15,15 +15,19 @@ import withOutAuth from "@/components/public-route";
 function Verify() {
   const searchParams = useSearchParams();
   const selectedOption = searchParams.get("selectedOption");
+  const newUser = searchParams.get("newUser");
+
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const router = useRouter();
 
   const handleEditSenderPhone = () => {
-    router.push(`/send-topup/signup?selectedOption=${selectedOption}`);
+    router.push(
+      `/send-topup/signup?selectedOption=${selectedOption}${newUser === "true" && "&newUser=true"}`,
+    );
   };
   const handleProductEdit = () => {
-    router.push(`/send-topup/options`);
+    router.push(`/send-topup/options${newUser === "true" && "&newUser=true"}`);
   };
 
   const handleNavigateBack = () => {
@@ -84,7 +88,11 @@ function Verify() {
 
         {/* verify opt form */}
         <VerifyOtp
-          redirectUrl={`/send-topup/options?selectedOption=${selectedOption}`}
+          redirectUrl={
+            newUser === "true"
+              ? `/send-topup/complete-profile?selectedOption=${selectedOption}`
+              : `/send-topup/options?selectedOption=${selectedOption}`
+          }
           // redirectUrl={`/send-topup/auto-topup`}
           phoneNumber={sendTopup.from}
           code={sendTopup.fromCountryCode}

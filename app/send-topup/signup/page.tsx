@@ -18,6 +18,7 @@ import withOutAuth from "@/components/public-route";
 function SignupSendTopup() {
   const searchParams = useSearchParams();
   const selectedOption = searchParams.get("selectedOption");
+  const newUser = searchParams.get("newUser");
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
   const [fromCountryCode, setFromCountryCode] = React.useState("US"); // ["US", "ET", ...]
@@ -49,8 +50,14 @@ function SignupSendTopup() {
     console.log("login reponse data: ", userData);
 
     if (userData) {
-      setSendTopup({ ...sendTopup, from: senderPhoneNumber, fromCountryCode });
-      router.push(`/send-topup/verify?selectedOption=${selectedOption}`);
+      setSendTopup({
+        ...sendTopup,
+        from: senderPhoneNumber,
+        fromCountryCode,
+      });
+      router.push(
+        `/send-topup/verify?selectedOption=${selectedOption}${newUser === "true" && "&newUser=true"}`,
+      );
     }
   };
 

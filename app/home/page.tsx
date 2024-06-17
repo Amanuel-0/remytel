@@ -16,7 +16,7 @@ import userContext from "@/states/user-context";
 
 function LandingPage() {
   const {
-    user: { user },
+    user: { user, token },
   } = useContext(userContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
@@ -27,9 +27,9 @@ function LandingPage() {
     setReceiverPhoneNumber(phone);
   }, [sendTopup.to]);
 
-  const navigateToTopUpOptions = () => {
+  const navigateToTopUpOptions = (newUser?: boolean) => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
-    router.push("/send-topup/options");
+    router.push(`/send-topup/options${newUser && "?newUser=true"}`);
   };
   const navigateToCompletePofile = () => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
@@ -38,6 +38,8 @@ function LandingPage() {
   const handleStartTopUp = () => {
     if (user?.firstName && user?.lastName && user?.email) {
       navigateToTopUpOptions();
+    } else if (!token) {
+      navigateToTopUpOptions(true);
     } else {
       navigateToCompletePofile();
     }
