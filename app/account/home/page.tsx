@@ -344,13 +344,13 @@ function AccountHome() {
   );
 }
 
-export interface RecentActivityProps {
+interface RecentActivityProps {
   index: number;
   receiver: string;
   product?: Product;
   order: Transaction;
 }
-export const RecentActivity = ({
+const RecentActivity = ({
   index,
   receiver,
   product,

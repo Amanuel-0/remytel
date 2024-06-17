@@ -121,7 +121,7 @@ function AutoTopups() {
     </>
   );
 }
-export interface AutoTopupProps {
+interface AutoTopupProps {
   item: SubscriptionT;
   setOpenCancelAutoTopupModal: (open: boolean) => void;
 }
