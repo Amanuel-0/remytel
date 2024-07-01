@@ -61,8 +61,8 @@ function LandingPage() {
           />
 
           <div className="absolute top-0 z-30 flex w-full flex-col items-center">
-            <Card className="flex h-[210px] w-full flex-col justify-between px-4 py-2 sm:h-[225px] sm:w-[427px]">
-              <Textt variant="h4-craftwork" className="mb-7 mt-3">
+            <Card className="flex h-[210px] w-full flex-col justify-between px-4 py-2 shadow-[0_17px_37px_rgba(0,0,0,0.1)] sm:h-[225px] sm:w-[427px]">
+              <Textt variant="h4-craftwork" className="mb-7 mt-3 font-bold">
                 Ready To Send a top-up?
               </Textt>
 
@@ -79,13 +79,13 @@ function LandingPage() {
                 onClick={handleStartTopUp}
                 className=""
               >
-                <Textt variant="h6-satoshi" className="text-white">
+                <Textt variant="h6-satoshi" className="font-[500] text-white">
                   Start top-up
                 </Textt>
               </MyButton>
             </Card>
 
-            <span className="my-5 flex h-[36px] w-[163px] flex-row items-center justify-center gap-[10px] rounded-full border border-[#E1E1E1] bg-white text-sm leading-[18.4px]">
+            <span className="my-5 flex h-[36px] w-[163px] flex-row items-center justify-center gap-[10px] rounded-full border border-[#E1E1E1] bg-white text-sm leading-[18.4px] shadow-[0_1px_10px_rgba(0,0,0,0.25)]">
               <span>With in 5 seconds</span>
               <Image
                 src={"/assets/icons/lighting-bolt-icon.svg"}
@@ -104,7 +104,10 @@ function LandingPage() {
               <Textt variant="h3-craftwork" className="sm:text-start">
                 Top-up wherever, whenever
               </Textt>
-              <Textt variant="p1-satoshi" className="mt-2 w-72 sm:text-start">
+              <Textt
+                variant="p1-satoshi"
+                className="mt-2 w-72 font-semibold sm:text-start"
+              >
                 Get the Topup.et App for the fastest, easiest way to top-up any
                 phone.
               </Textt>
@@ -174,8 +177,8 @@ function LandingPage() {
             className="block h-[274px] w-full object-none object-center"
           />
 
-          <div className="absolute left-0 top-1/3  m-auto w-full">
-            <div className="flex w-full flex-col items-center justify-center gap-5">
+          <div className="absolute left-0 top-0 m-auto h-full w-full">
+            <div className="flex h-full w-full flex-col items-center justify-center gap-5">
               <Textt variant="h3-craftwork" className="max-w-[237px]">
                 Trusted by 1M+ Ethiopians.
               </Textt>
@@ -189,8 +192,11 @@ function LandingPage() {
 
         <section className="m-auto mt-10 w-full max-w-[835px] py-12 sm:mt-16">
           <div className="mb-10 flex w-full flex-col items-center">
-            <Textt variant="h3-craftwork" className="w-full max-w-[458px]">
-              Have a question about senRemytel mobile recharge with Topup.et?
+            <Textt
+              variant="h3-craftwork"
+              className="w-full max-w-[458px] font-bold"
+            >
+              Have a question about sending topup with Remytel?
             </Textt>
           </div>
 

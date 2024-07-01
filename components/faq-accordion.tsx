@@ -60,7 +60,7 @@ export default function FaqAccordion() {
       {faqAccordion.map((faq) => (
         <>
           <AccordionItem value={`item-${faq.id}`} key={faq.id}>
-            <AccordionTrigger className="font-satoshi text-lg font-bold leading-[18.3px] text-black sm:py-7 md:py-9">
+            <AccordionTrigger className="font-satoshi text-[16px] font-bold leading-[18.3px] text-black sm:py-7 md:py-9">
               {faq.question}
             </AccordionTrigger>
             <AccordionContent className="font-satoshi text-sm font-medium leading-[18.4px] text-[#808080]">

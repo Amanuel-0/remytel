@@ -9,9 +9,9 @@ function FooterAlt() {
   return (
     <footer className="w-full">
       <Container>
-        <Card>
+        <Card className="px-12">
           {/* 1 */}
-          <div className="flex flex-col gap-5 pt-7 xl:flex-row xl:justify-between xl:gap-0">
+          <div className="flex flex-col items-start gap-5 pt-7 xl:flex-row xl:justify-between xl:gap-0">
             <Image
               src="/assets/images/logo.svg"
               alt="logo"
@@ -21,11 +21,11 @@ function FooterAlt() {
 
             <div className="flex flex-row justify-between gap-4 sm:whitespace-nowrap md:gap-[92px]">
               <div>
-                <Textt variant="h6-satoshi" className="text mb-3 text-start">
+                <Textt variant="h6-satoshi" className="text mb-7 text-start">
                   Company
                 </Textt>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-5">
                   <Link href="/about-us">
                     <Textt variant="span2-satoshi" className="text-start">
                       About us
@@ -40,11 +40,11 @@ function FooterAlt() {
               </div>
 
               <div>
-                <Textt variant="h6-satoshi" className="mb-3 text-start ">
+                <Textt variant="h6-satoshi" className="mb-7 text-start ">
                   Legal
                 </Textt>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-5">
                   <a href="#">
                     <Textt variant="span2-satoshi" className="text-start">
                       Privacy notice
@@ -64,11 +64,11 @@ function FooterAlt() {
               </div>
 
               <div>
-                <Textt variant="h6-satoshi" className="mb-3 text-start ">
+                <Textt variant="h6-satoshi" className="mb-7 text-start ">
                   Help
                 </Textt>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-5">
                   <a href="#">
                     <Textt variant="span2-satoshi" className="text-start">
                       Support center
@@ -85,7 +85,7 @@ function FooterAlt() {
           </div>
 
           {/* 2 */}
-          <div className="flex flex-col gap-1 py-8 md:flex-row md:justify-between">
+          <div className="mt-12 flex flex-col gap-1 py-8 md:flex-row md:justify-between">
             <Textt variant="span2-satoshi" className="text-start">
               Gift your Friends & Families back home.
             </Textt>
