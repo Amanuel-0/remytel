@@ -125,7 +125,7 @@ function Navbar() {
                 <MyButton
                   variant="light-normal"
                   onClick={handleLogin}
-                  className="h-max bg-transparent"
+                  className="h-max bg-[#0000]"
                 >
                   Login
                 </MyButton>

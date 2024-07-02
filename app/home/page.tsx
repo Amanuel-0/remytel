@@ -29,7 +29,7 @@ function LandingPage() {
 
   const navigateToTopUpOptions = (newUser?: boolean) => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });
-    router.push(`/send-topup/options${newUser && "?newUser=true"}`);
+    router.push(`/send-topup/options${newUser ? "?newUser=true" : ""}`);
   };
   const navigateToCompletePofile = () => {
     setSendTopup({ ...sendTopup, to: receiverPhoneNumber });

@@ -19,7 +19,7 @@ export const createTopupRequest = async (
 };
 
 export const getRequest = async (id: string, token: string) => {
-  const response = await axios.get(`${API_URL}service/request/${id}`, {
+  const response = await axios.get(`${API_URL}service/request/?id=${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

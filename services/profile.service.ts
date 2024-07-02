@@ -25,6 +25,20 @@ export const getOrderHistory = async (
 
   return response.data as IPageResponse<Transaction>;
 };
+export const geteReceivedOrders = async (
+  pageOption: { page: number; size: number },
+  token: string,
+): Promise<IPageResponse<Transaction>> => {
+  const response = await axios.get(
+    `${API_URL}profile/profile/received-orders?page=${pageOption.page}&size=${pageOption.size}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data as IPageResponse<Transaction>;
+};
 
 // get order details
 export const getOrderDetails = async (orderId: string, token: string) => {
@@ -40,7 +54,7 @@ export const getOrderDetails = async (orderId: string, token: string) => {
 export const getSubscriptionHistory = async (
   pageOption: { page: number; size: number },
   token: string,
-): Promise<IPageResponse<SubscriptionT>> => {
+): Promise<IPageResponse<SubscriptionT> & { activeSubscriptions: number }> => {
   const response = await axios.get(
     `${API_URL}profile/subscriptions?page=${pageOption.page}&size=${pageOption.size}`,
     {

@@ -27,6 +27,7 @@ export interface HistoryContextI {
   loading: boolean;
   orderError?: string | null;
   subscriptionError?: string | null;
+  activeSubscriptions: number;
 }
 const defaultPageMetaData: IPageMetadata = {
   hasNext: false,
@@ -42,6 +43,7 @@ const historyContext = createContext<HistoryContextI>({
   loading: true,
   orderError: null,
   subscriptionError: null,
+  activeSubscriptions: 0,
 });
 
 // create a provider that can change the value of the context
@@ -61,6 +63,7 @@ export const HistoryContextProvider = (props: any) => {
   const [subscriptionError, setSubscriptionError] = useState<
     string | undefined | null
   >(null);
+  const [activeSubscriptions, setActiveSubscriptions] = useState(0);
   const fetchHistoy = useCallback(() => {
     if (token) {
       setLoading(true);
@@ -69,14 +72,15 @@ export const HistoryContextProvider = (props: any) => {
           setOrders(d);
         })
         .catch((err) => {
-          setOrderError(err.message);
+          setOrderError(err?.response?.data?.message);
         });
       getSubscriptionHistory({ page: 0, size: 10 }, token)
         .then((d) => {
           setSubscriptions(d);
+          setActiveSubscriptions(d.activeSubscriptions);
         })
         .catch((err) => {
-          setSubscriptionError(err.message);
+          setSubscriptionError(err?.response?.data?.message);
         });
       setLoading(false);
     }
@@ -96,6 +100,7 @@ export const HistoryContextProvider = (props: any) => {
     refetch,
     orderError,
     subscriptionError,
+    activeSubscriptions,
   };
 
   return (

@@ -30,6 +30,7 @@ function AccountHome() {
     subscriptionHistory,
     orderError,
     subscriptionError,
+    activeSubscriptions,
   } = useContext(historyContext);
   const [noActivity, setNoActivity] = React.useState(false);
   const [noContact, setNoContact] = React.useState(false);
@@ -50,7 +51,7 @@ function AccountHome() {
     router.push("/send-topup/to");
   };
   if (loading) return <LoadingSpinner />;
-  if (orderError || subscriptionError) return <p>Error</p>;
+  // if (orderError || subscriptionError) return <p>{orderError}</p>;
   return (
     <div>
       {/* save contact modal */}
@@ -159,7 +160,7 @@ function AccountHome() {
 
         {orderHistory?.items?.length !== 0 &&
           subscriptionHistory?.items?.length !== 0 && (
-            <Card className="w-full md:max-w-[65%]">
+            <Card className="md:max-w-[65%]">
               <div className="mt-2 flex items-center justify-between">
                 <Textt variant="h4-craftwork" className="text-start">
                   Recent Activities
@@ -333,7 +334,7 @@ function AccountHome() {
 
               {!noAutoTopup && (
                 <Textt variant="h6-satoshi" className="text-start text-primary">
-                  2 active
+                  {activeSubscriptions} active
                 </Textt>
               )}
             </div>

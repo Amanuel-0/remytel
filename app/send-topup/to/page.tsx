@@ -11,7 +11,7 @@ import userContext from "@/states/user-context";
 
 function To() {
   const {
-    user: { user },
+    user: { user, token },
   } = useContext(userContext);
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [toPhone, setToPhone] = React.useState("");
@@ -37,17 +37,22 @@ function To() {
     setIsValidPhone(ethiopianPhoneNumberRegex.test(toPhone));
   };
 
-  const navigateToTopUpOptions = () => {
+  const navigateToTopUpOptions = (newUser?: boolean) => {
     setSendTopup({ ...sendTopup, to: toPhone });
-    router.push(`/send-topup/options`);
+    router.push(`/send-topup/options${newUser ? "?newUser=true" : ""}`);
   };
   const navigateToCompletePofile = () => {
     setSendTopup({ ...sendTopup, to: toPhone });
     router.push(`/send-topup/complete-profile`);
   };
   const handleStartTopUp = () => {
+    //if user exists and did complete his profile
     if (user?.firstName && user?.lastName && user?.email) {
       navigateToTopUpOptions();
+    }
+    //if user is not logged in
+    else if (!token) {
+      navigateToTopUpOptions(true);
     } else {
       navigateToCompletePofile();
     }
