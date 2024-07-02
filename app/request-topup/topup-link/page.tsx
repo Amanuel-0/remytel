@@ -1,7 +1,7 @@
 "use client";
 import Card from "@/components/card";
 import Textt from "@/components/text";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import CopyToClipboardBtn from "@/components/ui/copy-to-clipboard-btn";
 import ModalWrapper from "@/components/modal-wrapper";
@@ -9,13 +9,19 @@ import userContext from "@/states/user-context";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/protected-route";
+import { GetRequestResponse } from "@/models";
+import { getRequest } from "@/services/request.service";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 function TopupLink() {
   const { user, onUser } = useContext(userContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const topupLinkURL = searchParams.get("topup-link");
-
+  const [requestLinkData, setRequestLinkData] =
+    useState<Partial<GetRequestResponse> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const onCopyLinkCopied = () => {
     // console.log("Link copied");
     setTimeout(() => {
@@ -23,7 +29,25 @@ function TopupLink() {
       router.push("/request-topup/success");
     }, 1000);
   };
+  useEffect(() => {
+    if (user.token && topupLinkURL) {
+      getRequest(topupLinkURL, user.token)
+        .then((d) => {
+          setRequestLinkData(d);
+        })
+        .catch((error) => {
+          setError(error?.response?.data?.message);
+        });
+      setLoading(false);
+    }
+  }, [user, topupLinkURL]);
 
+  if (loading)
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   return (
     <>
       <Card>
@@ -43,10 +67,13 @@ function TopupLink() {
         <div className="my-8 flex flex-col items-center gap-2">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
             <Textt variant="h3-satoshi" className="text-white">
-              O
+              {requestLinkData?.senderProfile?.firstName?.charAt?.(0)}
             </Textt>
           </div>
-          <Textt variant="h3-satoshi">Oumer Sualih</Textt>
+          <Textt variant="h3-satoshi">
+            {requestLinkData?.senderProfile?.firstName}{" "}
+            {requestLinkData?.senderProfile?.lastName}
+          </Textt>
         </div>
 
         <div>
@@ -58,7 +85,7 @@ function TopupLink() {
               height={30}
             />
             <Textt variant="span1-satoshi">
-              {user.user.phoneNumber}
+              {requestLinkData?.senderPhoneNumber}
               {/* +251 93 542 5899 */}
             </Textt>
 
@@ -78,19 +105,19 @@ function TopupLink() {
         <div className="my-8 flex items-center justify-center gap-2">
           <div className="rounded-lg border border-[#ECECEC] p-2">
             <Textt variant="span2-satoshi" className="underline">
-              {topupLinkURL}
+              {requestLinkData?.url}
             </Textt>
           </div>
 
           <CopyToClipboardBtn
             onClick={onCopyLinkCopied}
             variant="icon-btn"
-            textToCopy={topupLinkURL}
+            textToCopy={requestLinkData?.url}
           ></CopyToClipboardBtn>
         </div>
 
         <CopyToClipboardBtn
-          textToCopy={topupLinkURL}
+          textToCopy={requestLinkData?.url}
           onClick={onCopyLinkCopied}
         >
           Copy Link

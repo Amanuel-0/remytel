@@ -13,6 +13,9 @@ export interface IPageResponse<T> {
   metadata: IPageMetadata;
   // error: IError;
 }
+export interface IListResponse<T> {
+  items: T[];
+}
 
 export interface IPageMetadata {
   total: number;

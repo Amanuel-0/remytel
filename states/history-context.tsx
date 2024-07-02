@@ -2,6 +2,7 @@
 import { IPageMetadata, IPageResponse, Transaction } from "@/models";
 import {
   getOrderHistory,
+  getReceivedOrders,
   getSubscriptionHistory,
 } from "@/services/profile.service";
 import {
@@ -23,10 +24,12 @@ import userContext from "./user-context";
 export interface HistoryContextI {
   subscriptionHistory: IPageResponse<SubscriptionT>;
   orderHistory: IPageResponse<Transaction>;
+  receivedOrderHistory: IPageResponse<Transaction>;
   refetch: () => void;
   loading: boolean;
   orderError?: string | null;
   subscriptionError?: string | null;
+  receivedOrderError?: string | null;
   activeSubscriptions: number;
 }
 const defaultPageMetaData: IPageMetadata = {
@@ -39,10 +42,12 @@ const defaultPageMetaData: IPageMetadata = {
 const historyContext = createContext<HistoryContextI>({
   subscriptionHistory: { items: [], metadata: defaultPageMetaData },
   orderHistory: { items: [], metadata: defaultPageMetaData },
+  receivedOrderHistory: { items: [], metadata: defaultPageMetaData },
   refetch: () => {},
   loading: true,
   orderError: null,
   subscriptionError: null,
+  receivedOrderError: null,
   activeSubscriptions: 0,
 });
 
@@ -58,9 +63,18 @@ export const HistoryContextProvider = (props: any) => {
     items: [],
     metadata: defaultPageMetaData,
   });
+  const [receivedOrderHistory, setReceivedOrderHistory] = useState<
+    IPageResponse<Transaction>
+  >({
+    items: [],
+    metadata: defaultPageMetaData,
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [orderError, setOrderError] = useState<string | undefined | null>(null);
   const [subscriptionError, setSubscriptionError] = useState<
+    string | undefined | null
+  >(null);
+  const [receivedOrderError, setReceivedOrderError] = useState<
     string | undefined | null
   >(null);
   const [activeSubscriptions, setActiveSubscriptions] = useState(0);
@@ -82,6 +96,13 @@ export const HistoryContextProvider = (props: any) => {
         .catch((err) => {
           setSubscriptionError(err?.response?.data?.message);
         });
+      getReceivedOrders({ page: 0, size: 10 }, token)
+        .then((d) => {
+          setReceivedOrderHistory(d);
+        })
+        .catch((err) => {
+          setReceivedOrderError(err?.response?.data?.message);
+        });
       setLoading(false);
     }
   }, [token]);
@@ -101,6 +122,8 @@ export const HistoryContextProvider = (props: any) => {
     orderError,
     subscriptionError,
     activeSubscriptions,
+    receivedOrderError,
+    receivedOrderHistory,
   };
 
   return (

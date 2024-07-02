@@ -116,6 +116,7 @@ export interface TopupRequestRequestPayload {
 }
 export interface TopupRequestResponse {
   url: string;
+  id: string;
 }
 export interface GetRequestResponse {
   id: string;
@@ -171,4 +172,13 @@ export interface CheckoutPayload {
   productId: number;
   successRoute: string;
   failureRoute: string;
+}
+
+export interface Contact {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  createdAt: Date;
+  updatedAt: Date;
+  profileId: string;
 }

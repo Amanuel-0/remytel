@@ -11,6 +11,7 @@ import { SendTopupContextProvider } from "@/states/send-topup-context";
 import { TopupRequestContextProvider } from "@/states/request-topup-context";
 import { Toaster } from "@/components/ui/sonner";
 import { HistoryContextProvider } from "@/states/history-context";
+import { ContactsContextProvider } from "@/states/contacts-context";
 
 // const fontSans = FontSans({
 //   subsets: ["latin"],
@@ -34,17 +35,19 @@ export default function RootLayout({
       <body className={`${cn("font-sans")} bg-[#F9F9F9]`}>
         {/* <body className={`${inter.className} bg-[#DDE1E9]`}> */}
         <AuthContextProvider>
-          <UserContextProvider>
-            <ProductContextProvider>
-              <SendTopupContextProvider>
-                <TopupRequestContextProvider>
-                  <HistoryContextProvider>
-                    <OneSignalWrapper>{children}</OneSignalWrapper>
-                  </HistoryContextProvider>
-                </TopupRequestContextProvider>
-              </SendTopupContextProvider>
-            </ProductContextProvider>
-          </UserContextProvider>
+          <ContactsContextProvider>
+            <UserContextProvider>
+              <ProductContextProvider>
+                <SendTopupContextProvider>
+                  <TopupRequestContextProvider>
+                    <HistoryContextProvider>
+                      <OneSignalWrapper>{children}</OneSignalWrapper>
+                    </HistoryContextProvider>
+                  </TopupRequestContextProvider>
+                </SendTopupContextProvider>
+              </ProductContextProvider>
+            </UserContextProvider>
+          </ContactsContextProvider>
         </AuthContextProvider>
 
         <Toaster />

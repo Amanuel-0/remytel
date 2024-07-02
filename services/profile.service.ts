@@ -25,12 +25,12 @@ export const getOrderHistory = async (
 
   return response.data as IPageResponse<Transaction>;
 };
-export const geteReceivedOrders = async (
+export const getReceivedOrders = async (
   pageOption: { page: number; size: number },
   token: string,
 ): Promise<IPageResponse<Transaction>> => {
   const response = await axios.get(
-    `${API_URL}profile/profile/received-orders?page=${pageOption.page}&size=${pageOption.size}`,
+    `${API_URL}profile/received-orders?page=${pageOption.page}&size=${pageOption.size}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

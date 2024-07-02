@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
@@ -7,8 +7,31 @@ import Card from "@/components/card";
 import IconButton from "@/components/ui/icon-button";
 import withAuth from "@/components/protected-route";
 import AccountNav from "../account-nav";
+import contactsContext from "@/states/contacts-context";
+import stc from "string-to-color";
+import sendTopupContext from "@/states/send-topup-context";
+import { useRouter } from "next/navigation";
+import userContext from "@/states/user-context";
 
 function Contacts() {
+  const { contacts } = useContext(contactsContext);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const router = useRouter();
+  const {
+    user: { user },
+  } = useContext(userContext);
+  const onResend = (id: string) => {
+    setSendTopup({
+      from: user.phoneNumber,
+      product: undefined,
+      to: contacts?.items?.filter((c) => c.id == id)?.[0]?.phoneNumber,
+      topupFrequency: undefined,
+      fromCountryCode: "US",
+    });
+    router.push(`/send-topup/options?selectedOption`);
+  };
+
   return (
     <div>
       <AccountNav />
@@ -36,6 +59,10 @@ function Contacts() {
                 placeholder="Search contact"
                 name="searchContact"
                 className="mt-4 block h-[54px] w-full rounded-full border border-[#DBDBDB] p-3 pl-10  font-satoshi text-sm font-medium leading-[18.116px] text-[#808080] outline-none placeholder:font-satoshi placeholder:text-sm placeholder:font-medium placeholder:leading-[18.116px] placeholder:text-[#C7C7C7] focus:border-[#808080]"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.currentTarget.value);
+                }}
               />
             </div>
           </div>
@@ -54,47 +81,58 @@ function Contacts() {
             </div>
 
             {/* body */}
-            {[1, 2].map((_, index) => (
-              <div
-                key={index}
-                className="my-5 flex flex-wrap items-center justify-between gap-4 md:flex-nowrap"
-              >
-                <div className="flex w-1/2 items-center justify-start gap-5 md:w-full">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
-                  >
-                    <Image
-                      src={"/assets/icons/account-white.svg"}
-                      alt={"account-white"}
-                      width={16}
-                      height={19}
-                    />
+            {contacts?.items
+              ?.filter((c) => c.name.includes(searchQuery))
+              ?.map?.((contact, index) => (
+                <div
+                  key={contact.id}
+                  className="my-5 flex flex-wrap items-center justify-between gap-4 md:flex-nowrap"
+                >
+                  <div className="flex w-1/2 items-center justify-start gap-5 md:w-full">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br text-white `}
+                      style={{
+                        background: stc(contact?.name?.split(" ")?.[0]),
+                      }}
+                    >
+                      <Image
+                        src={"/assets/icons/account-white.svg"}
+                        alt={"account-white"}
+                        width={16}
+                        height={19}
+                      />
+                    </div>
+
+                    <Textt variant="h6-satoshi" className="text-start">
+                      {contact.name}
+                    </Textt>
                   </div>
 
-                  <Textt variant="h6-satoshi" className="text-start">
-                    Brook
-                  </Textt>
-                </div>
-
-                {/* phone */}
-                <div>
-                  <Textt
-                    variant="span1-satoshi"
-                    className="w-1/2 text-start md:w-full"
-                  >
-                    +251938649359
-                  </Textt>
-                </div>
-
-                <div className="flex w-full md:justify-end">
-                  <MyButton variant="primary-normal" className="max-w-[145px]">
-                    <Textt variant="span1-satoshi" className="text-white">
-                      Send top-up
+                  {/* phone */}
+                  <div>
+                    <Textt
+                      variant="span1-satoshi"
+                      className="w-1/2 text-start md:w-full"
+                    >
+                      {contact.phoneNumber}
                     </Textt>
-                  </MyButton>
+                  </div>
+
+                  <div className="flex w-full md:justify-end">
+                    <MyButton
+                      variant="primary-normal"
+                      className="max-w-[145px]"
+                      onClick={() => {
+                        onResend(contact.id);
+                      }}
+                    >
+                      <Textt variant="span1-satoshi" className="text-white">
+                        Send top-up
+                      </Textt>
+                    </MyButton>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </Card>
       </section>

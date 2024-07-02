@@ -84,7 +84,7 @@ function CreateTopupLink() {
 
     if (topupLinkData) {
       router.push(
-        `/request-topup/topup-link?${createQueryString([{ name: "topup-link", value: topupLinkData.url }])}`,
+        `/request-topup/topup-link?${createQueryString([{ name: "topup-link", value: topupLinkData.id }])}`,
       );
     }
   };

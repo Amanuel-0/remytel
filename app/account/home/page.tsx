@@ -19,6 +19,8 @@ import topupRequestContext from "@/states/request-topup-context";
 import sendTopupContext from "@/states/send-topup-context";
 import { SubscriptionT } from "@/services/type";
 import productContext from "@/states/product-context";
+import contactsContext from "@/states/contacts-context";
+import stc from "string-to-color";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);
@@ -26,6 +28,8 @@ function AccountHome() {
   const {
     loading,
     orderHistory,
+    receivedOrderError,
+    receivedOrderHistory,
     refetch,
     subscriptionHistory,
     orderError,
@@ -37,7 +41,6 @@ function AccountHome() {
   const [noAutoTopup, setNoAutoTopup] = React.useState(false);
   const router = useRouter();
   //
-  const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
 
   // useEffect(() => {
   //   if (!isLoggedIn) {
@@ -47,6 +50,7 @@ function AccountHome() {
 
   const navigateToHelpPage = () => router.push("/help");
   const navigateToAccountSettingsPage = () => router.push("/account/settings");
+  const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
   const navigateToSendTopupTo = () => {
     router.push("/send-topup/to");
   };
@@ -59,7 +63,6 @@ function AccountHome() {
         open={openSaveContactModal}
         onClose={() => setOpenSaveContactModal(false)}
       />
-
       {/*  */}
       <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">
         <div className="flex w-full items-center justify-between">
@@ -160,7 +163,7 @@ function AccountHome() {
 
         {orderHistory?.items?.length !== 0 &&
           subscriptionHistory?.items?.length !== 0 && (
-            <Card className="md:max-w-[65%]">
+            <Card className="w-full md:max-w-[65%]">
               <div className="mt-2 flex items-center justify-between">
                 <Textt variant="h4-craftwork" className="text-start">
                   Recent Activities
@@ -199,106 +202,22 @@ function AccountHome() {
                     order={item}
                   />
                 ))}
+                {receivedOrderHistory?.items.map((item, index) => (
+                  <RecentActivity
+                    key={item.id}
+                    index={index}
+                    receiver={item.receiver}
+                    product={item.product}
+                    order={item}
+                    received
+                  />
+                ))}
               </div>
             </Card>
           )}
 
         <div className="w-full md:max-w-[35%]">
-          <Card className="mb-[10px] w-full">
-            <div className="mt-2 flex items-center justify-between">
-              <Textt variant="h4-craftwork" className="text-start">
-                Contacts
-              </Textt>
-
-              {!noContact && (
-                <Link
-                  href={"/account/contacts"}
-                  className="flex items-center justify-center gap-[10px]"
-                >
-                  <Textt variant="span1-satoshi">All Contacts</Textt>
-                  <Image
-                    src={"/assets/icons/arrow-right-thin-black.svg"}
-                    alt={"arrow-right-black-icon"}
-                    width={12}
-                    height={12}
-                  />
-                </Link>
-              )}
-            </div>
-
-            <div className="mt-5 flex items-center justify-start gap-2">
-              {noContact && (
-                <div>
-                  <Textt
-                    variant="span1-craftwork"
-                    className="mt-3 text-start font-medium text-[#1D3462]"
-                  >
-                    Send a little happiness easily to your loved ones
-                  </Textt>
-
-                  <button
-                    type="button"
-                    onClick={() => setOpenSaveContactModal(true)}
-                    className="mt-5 flex items-center justify-center gap-2"
-                  >
-                    <Textt variant="span1-satoshi" className="text-primary">
-                      Add Contact
-                    </Textt>
-
-                    <Image
-                      src={"/assets/icons/add-green-icon.svg"}
-                      alt={"contacts-icon"}
-                      width={11}
-                      height={11}
-                    />
-                  </button>
-                </div>
-              )}
-
-              {!noContact && (
-                <>
-                  <div className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2">
-                    <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#80C03F] text-white ">
-                      <Image
-                        src={"/assets/icons/account-white.svg"}
-                        alt={"account-white"}
-                        width={16}
-                        height={19}
-                      />
-                    </div>
-
-                    <Textt variant="span1-satoshi">Brook</Textt>
-                  </div>
-
-                  <div className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2">
-                    <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#3FC0B8] text-white ">
-                      <Image
-                        src={"/assets/icons/account-white.svg"}
-                        alt={"account-white"}
-                        width={16}
-                        height={19}
-                      />
-                    </div>
-
-                    <Textt variant="span1-satoshi">Adnam</Textt>
-                  </div>
-
-                  <div className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2">
-                    <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#C0753F] text-white ">
-                      <Image
-                        src={"/assets/icons/account-white.svg"}
-                        alt={"account-white"}
-                        width={16}
-                        height={19}
-                      />
-                    </div>
-
-                    <Textt variant="span1-satoshi">Alamin</Textt>
-                  </div>
-                </>
-              )}
-            </div>
-          </Card>
+          <ContactsCard setOpenSaveContactModal={setOpenSaveContactModal} />
 
           <Card className="w-full">
             <div className="mt-2 flex items-center justify-between">
@@ -350,12 +269,14 @@ interface RecentActivityProps {
   receiver: string;
   product?: Product;
   order: Transaction;
+  received?: boolean;
 }
 const RecentActivity = ({
   index,
   receiver,
   product,
   order,
+  received = false,
 }: RecentActivityProps) => {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const router = useRouter();
@@ -363,6 +284,36 @@ const RecentActivity = ({
   const {
     user: { user },
   } = useContext(userContext);
+  const onResend = () => {
+    if (!order.subscription?.type) {
+      setSendTopup({
+        from: user.phoneNumber,
+        product: product,
+        to: receiver,
+        topupFrequency: undefined,
+        fromCountryCode: "US",
+      });
+      if (product) {
+        onProductChange(product);
+      }
+      router.push(`/send-topup/bill`);
+    } else {
+      setSendTopup({
+        from: user.phoneNumber,
+        product: product,
+        to: order?.receiver,
+        topupFrequency: order.subscription?.type,
+        fromCountryCode: "US",
+      });
+      if (product) {
+        onProductChange(product);
+      }
+      router.push(`/send-topup/options?selectedOption=${order.planId}`);
+    }
+  };
+  const onRequest = () => {
+    router.push(`/request-topup/create-topup-link`);
+  };
   return (
     <>
       {/* row */}
@@ -440,46 +391,126 @@ const RecentActivity = ({
         </div>
         {/* cell 4 */}
         <div className="col-span-6 flex h-max items-center justify-end md:col-span-3 md:w-full">
-          <MyButton
-            variant="primary-normal"
-            className="h-14 max-w-[110px]"
-            onClick={() => {
-              if (!order.subscription?.type) {
-                setSendTopup({
-                  from: user.phoneNumber,
-                  product: product,
-                  to: receiver,
-                  topupFrequency: undefined,
-                  fromCountryCode: "US",
-                });
-                if (product) {
-                  onProductChange(product);
-                }
-                router.push(`/send-topup/bill`);
-              } else {
-                setSendTopup({
-                  from: user.phoneNumber,
-                  product: product,
-                  to: order?.receiver,
-                  topupFrequency: order.subscription?.type,
-                  fromCountryCode: "US",
-                });
-                if (product) {
-                  onProductChange(product);
-                }
-                router.push(
-                  `/send-topup/options?selectedOption=${order.planId}`,
-                );
-              }
-            }}
-          >
-            <Textt variant="span1-satoshi" className="h-max py-0 text-white">
-              Resend
-            </Textt>
-          </MyButton>
+          {received ? (
+            <MyButton
+              variant="light-normal"
+              className="h-14 max-w-[110px]"
+              onClick={onRequest}
+            >
+              <Textt variant="span1-satoshi" className="h-max py-0 ">
+                Request
+              </Textt>
+            </MyButton>
+          ) : (
+            <MyButton
+              variant="primary-normal"
+              className="h-14 max-w-[110px]"
+              onClick={onResend}
+            >
+              <Textt variant="span1-satoshi" className="h-max py-0 text-white">
+                Resend
+              </Textt>
+            </MyButton>
+          )}
         </div>
       </div>
     </>
+  );
+};
+
+export const ContactsCard = ({
+  setOpenSaveContactModal,
+}: {
+  setOpenSaveContactModal: (opern: boolean) => void;
+}) => {
+  const { contacts, loading } = useContext(contactsContext);
+  if (loading)
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  return (
+    <Card className="mb-[10px] w-full">
+      <div className="mt-2 flex items-center justify-between">
+        <Textt variant="h4-craftwork" className="text-start">
+          Contacts
+        </Textt>
+
+        {contacts?.items?.length > 0 && (
+          <Link
+            href={"/account/contacts"}
+            className="flex items-center justify-center gap-[10px]"
+          >
+            <Textt variant="span1-satoshi">All Contacts</Textt>
+            <Image
+              src={"/assets/icons/arrow-right-thin-black.svg"}
+              alt={"arrow-right-black-icon"}
+              width={12}
+              height={12}
+            />
+          </Link>
+        )}
+      </div>
+
+      <div className="mt-5 flex items-center justify-start gap-2">
+        {contacts?.items?.length === 0 && (
+          <div>
+            <Textt
+              variant="span1-craftwork"
+              className="mt-3 text-start font-medium text-[#1D3462]"
+            >
+              Send a little happiness easily to your loved ones
+            </Textt>
+
+            <button
+              type="button"
+              onClick={() => setOpenSaveContactModal(true)}
+              className="mt-5 flex items-center justify-center gap-2"
+            >
+              <Textt variant="span1-satoshi" className=" text-primary">
+                Add Contact
+              </Textt>
+
+              <Image
+                src={"/assets/icons/add-green-icon.svg"}
+                className="-red-500"
+                alt={"contacts-icon"}
+                width={11}
+                height={11}
+              />
+            </button>
+          </div>
+        )}
+
+        {contacts?.items?.length > 0 &&
+          contacts?.items?.map?.((contact) => (
+            <div
+              className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2"
+              key={contact.id}
+            >
+              <div
+                className={`flex h-[40px] w-[40px] items-center justify-center rounded-full  text-white`}
+                style={{ background: stc(contact.name?.split?.(" ")?.[0]) }}
+              >
+                <Image
+                  src={"/assets/icons/account-white.svg"}
+                  alt={"account-white"}
+                  width={16}
+                  height={19}
+                />
+              </div>
+
+              <Textt
+                variant="span1-satoshi"
+                className="w-full overflow-hidden overflow-ellipsis text-nowrap"
+              >
+                {contact.name?.split?.(" ")?.[0] || "-"}
+              </Textt>
+            </div>
+          ))}
+      </div>
+    </Card>
   );
 };
 
