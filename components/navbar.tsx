@@ -19,9 +19,6 @@ function Navbar() {
 
   const router = useRouter();
 
-  const handleLogin = () => router.push("/login");
-  const handleSignup = () => router.push("/signup");
-
   const onRequestTopupMenuClicked = () => {
     if (isLoggedIn) {
       return "/request-topup/create-topup-link";
@@ -123,16 +120,18 @@ function Navbar() {
             ) : (
               <>
                 <MyButton
+                  type="link"
+                  href={"/login"}
                   variant="light-normal"
-                  onClick={handleLogin}
-                  className="h-max bg-[#0000]"
+                  className="h-max"
                 >
                   Login
                 </MyButton>
                 <MyButton
+                  type="link"
+                  href={"/signup"}
                   variant="primary-gradient-top-left"
                   className="h-max"
-                  onClick={handleSignup}
                 >
                   Signup
                 </MyButton>

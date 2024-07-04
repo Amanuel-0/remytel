@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface ButtonProps {
@@ -8,96 +9,60 @@ interface ButtonProps {
     | "primary-gradient-top-right"
     | "primary-gradient-bottom-right"
     | "light-normal";
-  type?: "button" | "submit";
+  type?: "button" | "submit" | "link";
   className?: string;
   onClick?: (param?: any) => void;
   disabled?: boolean;
   reff?: any;
+  href?: string;
 }
 
 function MyButton({
   variant,
   children,
   type,
-  className,
+  className: cn,
   onClick,
-  disabled,
+  disabled = false,
   reff,
+  href = "#",
 }: ButtonProps) {
-  const BaseButton = ({ children, type, className }: ButtonProps) => {
-    return (
-      <button
-        ref={reff}
-        onClick={onClick}
-        type={type ?? "button"}
-        className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full bg-200%  ${className}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
-        disabled={disabled}
-      >
-        {children}
-      </button>
-    );
-  };
-
+  let className = "";
   if (variant === "primary-normal") {
-    return (
-      <BaseButton
-        type={type}
-        className={`bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)] ${className}`}
-      >
-        {/* <BaseButton type={type} className={`bg-[#80C03F] text-white ${className}`}> */}
-        {children}
-      </BaseButton>
-    );
+    className =
+      "bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]";
+  } else if (variant === "primary-gradient-top-left") {
+    className =
+      "bg-gradient-to-tl from-[#80C03F] to-[#2CA342] text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md";
+  } else if (variant === "primary-gradient-top-right") {
+    className = "bg-gradient-to-tr from-[#80C03F] to-[#2CA342] text-white";
+  } else if (variant === "primary-gradient-bottom-right") {
+    className =
+      "bg-gradient-to-tr from-[#2CA342] to-[#80C03F] bg-200% text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md";
+  } else if (variant === "light-normal") {
+    className =
+      "border border-black bg-white text-black transition-all duration-300 hover:bg-primary/5";
   }
-
-  if (variant === "primary-gradient-top-left") {
+  if (type === "link") {
     return (
-      <BaseButton
-        type={type}
-        className={`bg-gradient-to-tl from-[#80C03F] to-[#2CA342] text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md ${className}`}
-      >
-        {children}
-      </BaseButton>
-    );
-  }
-
-  if (variant === "primary-gradient-top-right") {
-    return (
-      <BaseButton
-        type={type}
-        className={`bg-gradient-to-tr from-[#80C03F] to-[#2CA342] text-white ${className}`}
+      <Link
+        href={href}
+        className={`flex h-full max-h-[54px] min-h-[44px] w-full items-center justify-center rounded-full bg-200%  ${className} ${cn}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
       >
         {children}
-      </BaseButton>
+      </Link>
     );
   }
-
-  if (variant === "primary-gradient-bottom-right") {
-    return (
-      <BaseButton
-        type={type}
-        className={`bg-gradient-to-tr from-[#2CA342] to-[#80C03F] bg-200% text-white shadow-primary transition-all duration-300 hover:bg-right hover:shadow-md ${className}`}
-      >
-        {children}
-      </BaseButton>
-    );
-  }
-
-  if (variant === "light-normal") {
-    return (
-      <BaseButton
-        type={type}
-        className={`border border-black bg-white text-black transition-all duration-300 hover:bg-primary/5 ${className}`}
-      >
-        {children}
-      </BaseButton>
-    );
-  }
-
   return (
-    <BaseButton type={type} className={className}>
+    <button
+      ref={reff}
+      onClick={onClick}
+      type={type ?? "button"}
+      className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full bg-200%  ${className} ${cn}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      disabled={disabled}
+    >
       {children}
-    </BaseButton>
+    </button>
   );
 }
 

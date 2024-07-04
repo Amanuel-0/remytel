@@ -78,7 +78,7 @@ function AccountHome() {
             <div>
               <Textt variant="h3-satoshi" className="text-start">
                 {user.user?.firstName
-                  ? user.user.firstName + " " + user.user.lastName || ""
+                  ? user.user.firstName + " " + (user.user.lastName || "")
                   : ""}
                 {/* Oumer Sualih */}
               </Textt>

@@ -14,10 +14,23 @@ import { login } from "@/services";
 import { isPhoneValid } from "@/utils";
 import useCreateQueryString from "@/hooks/use-create-query-params";
 import withOutAuth from "@/components/public-route";
+import { getUserIpInfo } from "@/services/util";
 
 function Signup() {
   const [phone, setPhone] = React.useState("");
-  const [countryCode, setCountryCode] = React.useState("US"); // ["US", "ET", ...]
+  const [defaultCountryCode, setDefaultCountryCode] = React.useState<
+    string | undefined
+  >(); // ["US", "ET", ...]
+  const [countryCode, setCountryCode] = React.useState(
+    defaultCountryCode || "us",
+  );
+  useEffect(() => {
+    getUserIpInfo()
+      .then((d) => {
+        setDefaultCountryCode(d.country);
+      })
+      .catch(() => {});
+  }, []);
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
   const { createQueryString } = useCreateQueryString();
@@ -108,7 +121,7 @@ function Signup() {
 
               <div className="my-[10px]">
                 <PhoneInputLib
-                  defaultCountry="US"
+                  defaultCountry={defaultCountryCode}
                   name="phone"
                   value={phone}
                   onChange={(

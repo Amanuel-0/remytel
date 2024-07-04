@@ -14,10 +14,16 @@ import useCreateQueryString from "@/hooks/use-create-query-params";
 import { login } from "@/services";
 import { isPhoneValid } from "@/utils";
 import withOutAuth from "@/components/public-route";
+import { getUserIpInfo } from "@/services/util";
 
 function Login() {
   const [phone, setPhone] = React.useState("");
-  const [countryCode, setCountryCode] = React.useState("US"); // ["US", "ET", ...]
+  const [defaultCountryCode, setDefaultCountryCode] = React.useState<
+    string | undefined
+  >(); // ["US", "ET", ...]
+  const [countryCode, setCountryCode] = React.useState(
+    defaultCountryCode || "us",
+  ); // ["US", "ET", ...]
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
   const { createQueryString } = useCreateQueryString();
@@ -25,9 +31,12 @@ function Login() {
   const isSenderPhoneValid = isPhoneValid(phone);
 
   useEffect(() => {
-    console.log(phone);
-  }, [phone]);
-
+    getUserIpInfo()
+      .then((d) => {
+        setDefaultCountryCode(d.country);
+      })
+      .catch(() => {});
+  }, []);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -60,13 +69,13 @@ function Login() {
       <section className="my-10 flex min-h-[95%] flex-col gap-6 md:my-[60px] xl:flex-row xl:justify-between xl:gap-0">
         {/* hero left section */}
         <div className="xl:w-[50%]">
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-2xl">
             <Image
               src="/assets/images/hero-background-vector.svg"
               alt="logo"
               width={269}
               height={443}
-              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
+              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px]  sm:block md:max-h-[300px] 2xl:max-h-[600px]"
             />
 
             <div className="absolute left-0 top-0 z-10 h-full w-full bg-gradient-to-r from-black opacity-80"></div>
@@ -76,7 +85,7 @@ function Login() {
               alt="logo"
               width={1280}
               height={853}
-              className="rounded-2xl"
+              className="rounded-2xl contrast-50 saturate-[2.5]"
             />
 
             <div className="absolute bottom-0 z-20 m-auto w-full">
@@ -108,7 +117,7 @@ function Login() {
 
               <div className="my-[10px]">
                 <PhoneInputLib
-                  defaultCountry="US"
+                  defaultCountry={defaultCountryCode}
                   name="phone"
                   value={phone}
                   onChange={(
