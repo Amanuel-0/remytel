@@ -8,28 +8,16 @@ import withAuth from "@/components/protected-route";
 import AccountNav from "../account-nav";
 import { getOrderHistory } from "@/services/profile.service";
 import userContext from "@/states/user-context";
-import {
-  IPageMetadata,
-  IPageResponse,
-  Transaction,
-  defaultPageMetadata,
-} from "@/models";
+import { Transaction } from "@/models";
 import Link from "next/link";
 import { buyProduct } from "@/services";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { toast } from "sonner";
-import { OrderT } from "@/services/type";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
+import topupRequestContext from "@/states/request-topup-context";
+import sendTopupContext from "@/states/send-topup-context";
+import { useRouter } from "next/navigation";
 
 function History() {
   const {
@@ -94,6 +82,29 @@ function History() {
       );
 
       console.log("buy product response", response);
+    }
+  };
+  const { sendTopup, setSendTopup } = useContext(sendTopupContext);
+  const router = useRouter();
+  const onResend = (order: Transaction) => {
+    if (!order.subscription?.type) {
+      setSendTopup({
+        from: user.phoneNumber,
+        product: order?.product,
+        to: order?.receiver,
+        topupFrequency: undefined,
+        fromCountryCode: "US",
+      });
+      router.push(`/send-topup/bill`);
+    } else {
+      setSendTopup({
+        from: user.phoneNumber,
+        product: order?.product,
+        to: order?.receiver,
+        topupFrequency: order.subscription?.type,
+        fromCountryCode: "US",
+      });
+      router.push(`/send-topup/options?selectedOption=${order.planId}`);
     }
   };
   const groupedItems = Object.groupBy(orders, ({ createdAt }) => {
@@ -185,7 +196,7 @@ function History() {
                       <div className="flex items-center justify-start  gap-5">
                         <MyButton
                           type="button"
-                          onClick={() => handleResendTopup(item.id)}
+                          onClick={() => onResend(item)}
                           variant="primary-normal"
                           className="h-max max-w-[99px] md:min-w-[110px]"
                         >
