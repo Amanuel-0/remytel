@@ -169,7 +169,10 @@ function AccountHome() {
                   Recent Activities
                 </Textt>
 
-                <button className="flex items-center justify-center gap-[10px]">
+                <button
+                  className="flex items-center justify-center gap-[10px]"
+                  onClick={() => router.push("/account/history")}
+                >
                   <Textt variant="span1-satoshi">History</Textt>
                   <Image
                     src={"/assets/icons/arrow-right-thin-black.svg"}
