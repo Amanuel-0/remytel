@@ -62,28 +62,6 @@ function History() {
       setLoading(false);
     }
   };
-  // handle resend topup
-  const handleResendTopup = async (id: string) => {
-    const selectedOrder = orders.find((item) => item.id === id);
-    console.log("resend topup", selectedOrder);
-    if (selectedOrder) {
-      // todo: not implemented completely
-      // buy product
-      const response = await buyProduct(
-        {
-          senderFirstName: user.firstName,
-          senderLastName: user.lastName,
-          senderPhoneNumber: user.phoneNumber,
-          senderEmail: user.email,
-          productId: selectedOrder?.product.id,
-          optinForMarketing: false,
-        },
-        token,
-      );
-
-      console.log("buy product response", response);
-    }
-  };
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const router = useRouter();
   const onResend = (order: Transaction) => {

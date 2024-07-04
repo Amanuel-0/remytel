@@ -37,8 +37,10 @@ function TopupLink() {
         })
         .catch((error) => {
           setError(error?.response?.data?.message);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      setLoading(false);
     }
   }, [user, topupLinkURL]);
 

@@ -61,7 +61,7 @@ export default function CompleteProfilePage() {
 
   return (
     <>
-      <Textt variant="h4-craftwork">You’re senRemytel top-up to</Textt>
+      <Textt variant="h4-craftwork">You’re sennding Remytel top-up to</Textt>
       <div className="mt-5">
         <TopupToDetailCard phone={sendTopup.to} />
       </div>

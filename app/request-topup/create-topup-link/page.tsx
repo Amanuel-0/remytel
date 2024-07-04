@@ -10,6 +10,7 @@ import { validateEmail } from "@/utils";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect } from "react";
 import withAuth from "@/components/protected-route";
+import { toast } from "sonner";
 
 function CreateTopupLink() {
   const { user, onUser } = useContext(userContext);
@@ -21,6 +22,7 @@ function CreateTopupLink() {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
   const [emailTouched, setEmailTouched] = React.useState(false);
+  const [creatingLink, setCreatingLink] = React.useState(false);
   //
   const [link, setLink] = React.useState("");
   //
@@ -47,45 +49,56 @@ function CreateTopupLink() {
   };
 
   const handleSubmit = async () => {
-    if (!nameValid || !emailValid) {
-      setNameTouched(true);
-      setEmailTouched(true);
-      return;
-    }
-    // console.log("name", name, "email", email);
-
-    // update profile
-    const profile = await updateProfile(
-      {
-        first_name: name,
-        email,
-      },
-      user.token,
-    );
-    // update the user context
-    if (profile) {
-      onUser({ ...user, ...profile });
-    }
-
+    setCreatingLink(true);
     // create topup link
-    const topupLinkData = await createTopupRequest(
-      {
-        senderPhoneNumber: user.user.phoneNumber,
-        code: "et",
-      },
-      user.token,
-    );
+    try {
+      if (!nameValid || !emailValid) {
+        setNameTouched(true);
+        setEmailTouched(true);
+        return;
+      }
+      // console.log("name", name, "email", email);
 
-    console.log("topupLinkData", topupLinkData);
-    // get the topup link
-    if (topupLinkData) {
-      setLink(topupLinkData.url);
-    }
-
-    if (topupLinkData) {
-      router.push(
-        `/request-topup/topup-link?${createQueryString([{ name: "topup-link", value: topupLinkData.id }])}`,
+      // update profile
+      const profile = await updateProfile(
+        {
+          first_name: name,
+          email,
+        },
+        user.token,
       );
+      // update the user context
+      if (profile) {
+        onUser({ ...user, ...profile });
+      }
+
+      const topupLinkData = await createTopupRequest(
+        {
+          senderPhoneNumber: user.user.phoneNumber,
+          code: "et",
+        },
+        user.token,
+      );
+
+      // get the topup link
+      if (topupLinkData) {
+        setLink(topupLinkData.url);
+      }
+
+      if (topupLinkData) {
+        router.push(
+          `/request-topup/topup-link?${createQueryString([{ name: "topup-link", value: topupLinkData.id }])}`,
+        );
+      }
+    } catch (err: any) {
+      toast.error(
+        <p className="text-red-700">
+          {err?.response?.data?.message ||
+            "Unknown Error while trying to create the request"}
+        </p>,
+      );
+    } finally {
+      setCreatingLink(false);
     }
   };
 
@@ -211,7 +224,7 @@ function CreateTopupLink() {
         variant="primary-normal"
         className="my-4"
         onClick={handleSubmit}
-        disabled={!nameValid || !emailValid}
+        disabled={!nameValid || !emailValid || creatingLink}
       >
         <Textt variant="h5-satoshi" className="text-white">
           Create My Top-Up link

@@ -63,7 +63,7 @@ function SignupSendTopup() {
 
   return (
     <>
-      <Textt variant="h4-craftwork">You’re senRemytel top-up to</Textt>
+      <Textt variant="h4-craftwork">You’re sending Remytel top-up to</Textt>
 
       <div className="mt-5">
         <TopupToDetailCard phone={sendTopup.to} />

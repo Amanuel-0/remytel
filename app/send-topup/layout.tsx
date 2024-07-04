@@ -10,9 +10,9 @@ function SendTopupLayout({ children }: { children: React.ReactNode }) {
       <Image
         src="/assets/images/hero-background-vector.svg"
         alt="logo"
-        width={495}
-        height={352}
-        className="absolute bottom-0 right-0 mx-[340px] mb-20 hidden sm:block"
+        width={400}
+        height={400}
+        className="absolute bottom-[10%] right-[10%] mb-20 hidden h-[45%] w-[45%] sm:block"
       />
 
       <Navbar />
