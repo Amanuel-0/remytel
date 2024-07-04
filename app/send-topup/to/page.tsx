@@ -47,7 +47,7 @@ function To() {
   };
   const handleStartTopUp = () => {
     //if user exists and did complete his profile
-    if (user?.firstName && user?.lastName && user?.email) {
+    if (user?.firstName) {
       navigateToTopUpOptions();
     }
     //if user is not logged in

@@ -36,7 +36,7 @@ function LandingPage() {
     router.push(`/send-topup/complete-profile`);
   };
   const handleStartTopUp = () => {
-    if (user?.firstName && user?.lastName && user?.email) {
+    if (user?.firstName) {
       navigateToTopUpOptions();
     } else if (!token) {
       navigateToTopUpOptions(true);
