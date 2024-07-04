@@ -68,7 +68,7 @@ function SaveContactModal({
       );
       toast.success(
         <p className="text-green-700">
-          "{contactRes.name}" saved successfully
+          &quot;{contactRes.name}&quot; saved successfully
         </p>,
       );
       onClose();
