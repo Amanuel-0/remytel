@@ -314,6 +314,13 @@ const RecentActivity = ({
   const onRequest = () => {
     router.push(`/request-topup/create-topup-link`);
   };
+  const { contacts } = useContext(contactsContext);
+  const receiverContact = contacts?.items?.filter?.(
+    (c) => c.phoneNumber === receiver,
+  )?.[0];
+  const senderContact = contacts?.items?.filter?.(
+    (c) => c.phoneNumber === order.profile?.phoneNumber,
+  )?.[0];
   return (
     <>
       {/* row */}
@@ -323,14 +330,15 @@ const RecentActivity = ({
         {/* cell 1 */}
         <div className="col-span-6 flex items-center md:col-span-3 md:w-full">
           {/* showed if contact is NOT saved */}
-          {true && (
+          {((!received && !receiverContact) ||
+            (received && !senderContact)) && (
             <Textt variant="span1-satoshi" className={`text-start`}>
-              {receiver}
+              {received ? order.profile?.phoneNumber : receiver}
             </Textt>
           )}
 
           {/* showed if contact is saved */}
-          {false && (
+          {((!received && receiverContact) || (received && senderContact)) && (
             <div className={`flex items-center justify-start gap-2`}>
               <div
                 className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
@@ -342,7 +350,13 @@ const RecentActivity = ({
                   height={15}
                 />
               </div>
-              <Textt variant="span1-satoshi">Brook</Textt>
+              <Textt variant="span1-satoshi">
+                {
+                  (received ? senderContact : receiverContact).name?.split?.(
+                    " ",
+                  )?.[0]
+                }
+              </Textt>
             </div>
           )}
         </div>
@@ -453,7 +467,7 @@ export const ContactsCard = ({
         )}
       </div>
 
-      <div className="mt-5 flex items-center justify-start gap-2">
+      <div className="mt-5 flex items-center justify-start gap-2 overflow-auto">
         {contacts?.items?.length === 0 && (
           <div>
             <Textt
@@ -484,7 +498,7 @@ export const ContactsCard = ({
         )}
 
         {contacts?.items?.length > 0 &&
-          contacts?.items?.map?.((contact) => (
+          contacts?.items?.slice(0, 4)?.map?.((contact) => (
             <div
               className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2"
               key={contact.id}

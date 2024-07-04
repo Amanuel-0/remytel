@@ -13,9 +13,10 @@ import { SubscriptionT } from "./type";
 export const getOrderHistory = async (
   pageOption: { page: number; size: number },
   token: string,
+  phoneNumber?: string,
 ): Promise<IPageResponse<Transaction>> => {
   const response = await axios.get(
-    `${API_URL}profile/history?page=${pageOption.page}&size=${pageOption.size}`,
+    `${API_URL}profile/history?page=${pageOption.page}&size=${pageOption.size}${phoneNumber ? `&filter=${JSON.stringify({ receiver: phoneNumber.replace("+", "%2B") })}` : ""}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

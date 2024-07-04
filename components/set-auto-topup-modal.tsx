@@ -10,6 +10,10 @@ import withAuth from "./protected-route";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import Card from "./card";
+import TopupOptions from "./topups-options";
+import { getOrderHistory } from "@/services/profile.service";
+import userContext from "@/states/user-context";
+import { SubscriptionTypeMap } from "@/services/type";
 
 /**
  * a modal to set auto topup
@@ -57,6 +61,28 @@ function SetAutoTopupModal({
     }
   };
 
+  //mark previously sent frequences unavaliable
+  const {
+    user: { token },
+  } = useContext(userContext);
+  const [unavaliableProducts, setUnavaliableProducts] = useState<string[]>([]);
+  useEffect(() => {
+    if (sendTopup?.to) {
+      console.log("tooooooooooo", sendTopup?.to);
+      getOrderHistory({ page: 0, size: 10 }, token, sendTopup.to).then((d) => {
+        d.items?.forEach((sent) => {
+          if (sent?.subscription?.type) {
+            setUnavaliableProducts((prev) => [
+              ...prev,
+              SubscriptionTypeMap[sent?.subscription?.type || "BIWEEKLY"],
+            ]);
+            console.log(unavaliableProducts);
+          }
+        });
+      });
+    }
+  }, [sendTopup]);
+
   return (
     <ModalWrapper open={open} onClose={onClose}>
       <Card className="my-8">
@@ -99,6 +125,7 @@ function SetAutoTopupModal({
                   variant="primary-normal"
                   className="mt-[10px]"
                   onClick={() => handleSelectedFrequency(option)}
+                  disabled={unavaliableProducts.includes(option)}
                 >
                   <Textt variant="h6-satoshi" className="text-white">
                     {option} Days
@@ -112,6 +139,7 @@ function SetAutoTopupModal({
                 key={option}
                 className={`mt-[10px] border border-black bg-white text-black transition-colors duration-300 hover:bg-primary/5`}
                 onClick={() => handleSelectedFrequency(option)}
+                disabled={unavaliableProducts.includes(option)}
               >
                 <Textt variant="h6-satoshi">{option} Days</Textt>
               </MyButton>

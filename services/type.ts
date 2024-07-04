@@ -4,7 +4,7 @@ export type SubscriptionT = {
   id: string;
   profileId: string;
   planId: string;
-  type: string;
+  type: "WEEKLY" | "MONTHLY" | "BIWEEKLY";
   receiver: string;
   receiverName: string;
   interval: string;
@@ -37,4 +37,10 @@ export type OrderHistoryResT = {
     hasPrev: number;
   };
   items: OrderT[];
+};
+
+export const SubscriptionTypeMap = {
+  WEEKLY: "7",
+  BIWEEKLY: "14",
+  MONTHLY: "30",
 };

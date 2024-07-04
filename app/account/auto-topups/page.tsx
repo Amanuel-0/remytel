@@ -22,29 +22,24 @@ import {
 } from "@/services/profile.service";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function AutoTopups() {
   const {
     user: { token },
   } = useContext(userContext);
   const [autoTopups, setAutoTopups] = useState<SubscriptionT[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-  const size = 2;
+  const size = 24;
   useEffect(() => {
     async function getNextSubscriptionsPage() {
       setLoading(true);
       try {
-        const res = await getSubscriptionHistory(
-          { page: currentPage, size },
-          token,
-        );
+        const res = await getSubscriptionHistory({ page: 0, size }, token);
         if (res.items) {
-          setAutoTopups((currentAutoTopups) => [
-            ...currentAutoTopups,
-            ...res.items,
-          ]);
+          setAutoTopups(res.items);
         }
         setHasNext(res?.metadata?.hasNext);
       } catch (e) {
@@ -56,7 +51,28 @@ function AutoTopups() {
     if (token) {
       getNextSubscriptionsPage();
     }
-  }, [currentPage, token]);
+  }, []);
+
+  const fetchMoreAutoTopup = async () => {
+    try {
+      const res = await getSubscriptionHistory(
+        { page: currentPage, size },
+        token,
+      );
+      if (res.items) {
+        setAutoTopups((currentAutoTopups) => [
+          ...currentAutoTopups,
+          ...res.items,
+        ]);
+      }
+      setCurrentPage((prevPage) => prevPage + 1);
+      setHasNext(res?.metadata?.hasNext);
+    } catch (e) {
+      toast.error("Error happened while trying to fetch auto topups");
+    } finally {
+      setLoading(false);
+    }
+  };
   const [openCancelAutoTopupModal, setOpenCancelAutoTopupModal] =
     React.useState<boolean>(false);
   const [selectedTopupId, setSelectedTopupId] = useState<string | null>(null);
@@ -90,32 +106,26 @@ function AutoTopups() {
 
         {/*  */}
         <section className="my-[10px]">
-          <Card className="flex w-full flex-col justify-between gap-5 md:flex-row md:flex-wrap md:gap-5">
-            {autoTopups.map((item, index) => (
-              <AutoTopup
-                key={item.id}
-                item={item}
-                setOpenCancelAutoTopupModal={(open) => {
-                  setOpenCancelAutoTopupModal(open);
-                  setSelectedTopupId(item.id);
-                }}
-              />
-            ))}
-            {loading && <LoadingSpinner className="w-full" />}
+          <Card className="">
+            <InfiniteScroll
+              dataLength={autoTopups.length}
+              next={fetchMoreAutoTopup}
+              hasMore={hasNext}
+              loader={<LoadingSpinner className="w-full" />}
+              className="grid w-full grid-cols-1 gap-5 lg:grid-cols-2"
+            >
+              {autoTopups.map((item, index) => (
+                <AutoTopup
+                  key={item.id}
+                  item={item}
+                  setOpenCancelAutoTopupModal={(open) => {
+                    setOpenCancelAutoTopupModal(open);
+                    setSelectedTopupId(item.id);
+                  }}
+                />
+              ))}
+            </InfiniteScroll>
           </Card>
-          {hasNext && (
-            <div className="my-5 flex w-full justify-center">
-              <MyButton
-                variant="primary-normal"
-                className="mx-auto w-max px-6"
-                onClick={() => {
-                  setCurrentPage((p) => p + 1);
-                }}
-              >
-                Load More
-              </MyButton>
-            </div>
-          )}
         </section>
       </div>
     </>
@@ -128,7 +138,7 @@ interface AutoTopupProps {
 const AutoTopup = ({ item, setOpenCancelAutoTopupModal }: AutoTopupProps) => {
   return (
     <>
-      <div className="w-full rounded-[20px] border p-5 xl:w-[49%]">
+      <div className="w-full rounded-[20px] border p-5 ">
         {/*  */}
         <div className={`flex items-center justify-start gap-5`}>
           <div

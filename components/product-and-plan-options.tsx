@@ -5,7 +5,7 @@ import { LoadingSpinner } from "./loading-spinner";
 import PlansOptions from "./plans-options";
 import Textt from "./text";
 import TopupToDetailCard from "./topup-to-detail-card";
-import TopupOptions from "./topups-options";
+import TopupOptions, { TopupOptionsSkeleton } from "./topups-options";
 import { Product } from "@/models";
 import { getProducts, updateProfile } from "@/services";
 import productContext from "@/states/product-context";
@@ -14,6 +14,8 @@ import userContext from "@/states/user-context";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 type MenuType = "topup" | "plans";
 
@@ -46,16 +48,15 @@ function ProductAndPlanOptions({
 
   useEffect(() => {
     setLoading(true);
-    if (product) {
+    if (products) {
       setLoading(false);
     }
-  }, [product]);
+  }, [products]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       const products = await getProducts();
-      if (!!products) {
-        console.log("products: ", product);
+      if (products) {
         setProducts(products);
       }
     };
@@ -108,6 +109,7 @@ function ProductAndPlanOptions({
             return product.id === productId;
           },
         );
+        console.log(products);
         if (selectedProduct) {
           onProductChange(selectedProduct);
           setSendTopup({ ...sendTopup, product: selectedProduct });
@@ -168,7 +170,7 @@ function ProductAndPlanOptions({
         <div className="mt-5">
           <>
             {loading ? (
-              <LoadingSpinner className="" />
+              <TopupOptionsSkeleton />
             ) : (
               <>
                 {selectedMenu === "topup" ? (

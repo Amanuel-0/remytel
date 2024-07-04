@@ -1,11 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Image from "next/image";
 import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
 import MyButton from "./ui/my-button";
 import { useSearchParams } from "next/navigation";
 import { isPhoneValid } from "@/utils";
+import { createContact } from "@/services/contact.service";
+import userContext from "@/states/user-context";
+import { toast } from "sonner";
 
 function SaveContactModal({
   open,
@@ -14,6 +17,7 @@ function SaveContactModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const { user } = useContext(userContext);
   const [contactName, setContactName] = useState<string>("");
   const [contactNameValid, setContactNameValid] = useState<boolean>(false);
   const [contactNameTouched, setContactNameTouched] = useState<boolean>(false);
@@ -24,6 +28,7 @@ function SaveContactModal({
     useState<boolean>(false);
 
   const searchParams = useSearchParams();
+  const [saving, setSaving] = useState(false);
 
   // const receiverPhone = searchParams.get("to") || "";
   // const [receiverName, setReceiverName] = useState<string>("");
@@ -53,12 +58,27 @@ function SaveContactModal({
       setContactPhoneNumberTouched(true);
       return;
     }
+    setSaving(true);
 
     // todo: save contact
-    // const contactRes = await saveContact({})
+    try {
+      const contactRes = await createContact(
+        { name: contactName, phoneNumber: contactPhoneNumber },
+        user.token,
+      );
+      toast.success(
+        <p className="text-green-700">
+          "{contactRes.name}" saved successfully
+        </p>,
+      );
+      onClose();
+    } catch (err: any) {
+      toast.error(<p className="text-red-700">{err?.response?.data?.error}</p>);
+    } finally {
+      setSaving(false);
+    }
 
     // console.log("Save Contact/Receiver", receiverName, receiverPhone);
-    onClose();
   };
 
   return (
@@ -126,6 +146,7 @@ function SaveContactModal({
             variant="primary-normal"
             className="mt-2"
             onClick={saveContact}
+            disabled={saving}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Save Contact

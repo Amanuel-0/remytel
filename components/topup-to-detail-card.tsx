@@ -10,8 +10,13 @@ import EditReceiverPhoneModal from "./edit-receiver-phone-modal";
 interface TopupToDetailCardProps {
   phone: string;
   onPhoneEdit?: () => void;
+  name?: string;
 }
-function TopupToDetailCard({ phone, onPhoneEdit }: TopupToDetailCardProps) {
+function TopupToDetailCard({
+  name,
+  phone,
+  onPhoneEdit,
+}: TopupToDetailCardProps) {
   const [openEditPhoneModal, setOpenEditPhoneModal] = React.useState(false);
 
   return (
@@ -25,15 +30,22 @@ function TopupToDetailCard({ phone, onPhoneEdit }: TopupToDetailCardProps) {
               width={30}
               height={30}
             />
-            <Textt variant="h6-satoshi">{phone}</Textt>
-            {/* <Textt variant="h6-satoshi">+251 93 542 5899</Textt> */}
-
-            <Image
-              src={"/assets/images/ethiotel-logo.svg"}
-              alt="ethiotel-logo"
-              width={55}
-              height={14}
-            />
+            <div className="flex flex-col items-start">
+              {name && (
+                <Textt variant="p1-satoshi" className="text-slate-500">
+                  {name}
+                </Textt>
+              )}
+              <div className="flex gap-3">
+                <Textt variant="h6-satoshi">{phone}</Textt>
+                <Image
+                  src={"/assets/images/ethiotel-logo.svg"}
+                  alt="ethiotel-logo"
+                  width={55}
+                  height={14}
+                />
+              </div>
+            </div>
           </span>
         </div>
 

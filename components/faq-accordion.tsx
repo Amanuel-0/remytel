@@ -58,16 +58,14 @@ export default function FaqAccordion() {
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqAccordion.map((faq) => (
-        <>
-          <AccordionItem value={`item-${faq.id}`} key={faq.id}>
-            <AccordionTrigger className="font-satoshi text-[16px] font-bold leading-[18.3px] text-black sm:py-7 md:py-9">
-              {faq.question}
-            </AccordionTrigger>
-            <AccordionContent className="font-satoshi text-sm font-medium leading-[18.4px] text-[#808080]">
-              {faq.answer}
-            </AccordionContent>
-          </AccordionItem>
-        </>
+        <AccordionItem value={`item-${faq.id}`} key={faq.id}>
+          <AccordionTrigger className="font-satoshi text-[16px] font-bold leading-[18.3px] text-black sm:py-7 md:py-9">
+            {faq.question}
+          </AccordionTrigger>
+          <AccordionContent className="font-satoshi text-sm font-medium leading-[18.4px] text-[#808080]">
+            {faq.answer}
+          </AccordionContent>
+        </AccordionItem>
       ))}
     </Accordion>
   );

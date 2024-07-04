@@ -21,10 +21,6 @@ function TopUpAndPlans() {
   const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(false);
 
   useEffect(() => {
-    console.log("window location", window.location.pathname);
-  }, []);
-
-  useEffect(() => {
     setLoading(true);
     if (product) {
       setLoading(false);

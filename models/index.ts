@@ -143,6 +143,7 @@ export interface Transaction {
   id: string;
   hId: any;
   profileId: string;
+  profile: UserProfile;
   planId: string;
   amount: number;
   currency: string;

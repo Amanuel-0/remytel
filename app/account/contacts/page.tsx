@@ -12,9 +12,10 @@ import stc from "string-to-color";
 import sendTopupContext from "@/states/send-topup-context";
 import { useRouter } from "next/navigation";
 import userContext from "@/states/user-context";
+import SaveContactModal from "@/components/save-contact-modal";
 
 function Contacts() {
-  const { contacts } = useContext(contactsContext);
+  const { contacts, refetch } = useContext(contactsContext);
   const [searchQuery, setSearchQuery] = useState("");
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const router = useRouter();
@@ -31,9 +32,17 @@ function Contacts() {
     });
     router.push(`/send-topup/options?selectedOption`);
   };
+  const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
 
   return (
     <div>
+      <SaveContactModal
+        open={openSaveContactModal}
+        onClose={() => {
+          setOpenSaveContactModal(false);
+          refetch();
+        }}
+      />
       <AccountNav />
 
       <section className="my-[10px] flex h-full w-full flex-col gap-[10px] md:flex-row">
@@ -42,6 +51,19 @@ function Contacts() {
             Contacts
           </Textt>
 
+          <MyButton
+            variant="primary-normal"
+            className="mt-4 flex h-max w-max items-center justify-center gap-2 px-4"
+            onClick={() => setOpenSaveContactModal(true)}
+          >
+            <Image
+              src="/assets/icons/person-icon.svg"
+              alt="search-icon"
+              width={16}
+              height={16}
+            />
+            Add Contact
+          </MyButton>
           {/* search */}
           <div className="mt-5">
             <div className="relative ">

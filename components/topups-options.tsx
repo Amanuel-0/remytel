@@ -3,6 +3,7 @@ import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
 import { Product } from "@/models";
+import Skeleton from "react-loading-skeleton";
 
 interface TopupOptionsProps {
   products: Product[]; // product are type of 'Airtime'
@@ -69,6 +70,40 @@ function TopupOptions({ products, onProductSelection }: TopupOptionsProps) {
         </div>
       ))}
     </>
+  );
+}
+export function TopupOptionsSkeleton() {
+  return (
+    <div className="flex w-full flex-col gap-3">
+      {[1, 2, 3, 4].map((_, idx) => (
+        <Card
+          key={idx}
+          className={`relative ${false ? "border-2 border-black" : "border border-[#DBDBDB]"}`}
+          // className={`relative ${topup.isPopular ? "border-2 border-black" : "border border-[#DBDBDB]"}`}
+        >
+          <Textt
+            variant={false ? "p1-satoshi" : "p2-satoshi"}
+            // variant={topup.isPopular ? "p1-satoshi" : "p2-satoshi"}
+            className="blocks text-x  w-full max-w-72 text-start"
+          >
+            <Skeleton height={20} />
+          </Textt>
+
+          <div className="mt-[5px] flex items-end justify-between">
+            <span className="flex items-end justify-start gap-2">
+              <Textt
+                variant="h2-satoshi"
+                className="blocks text-md w-24 text-start font-bold"
+              >
+                <Skeleton height={30} />
+              </Textt>
+            </span>
+
+            <Skeleton width={120} height={35} borderRadius={40} />
+          </div>
+        </Card>
+      ))}
+    </div>
   );
 }
 

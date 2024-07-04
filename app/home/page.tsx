@@ -211,7 +211,10 @@ function LandingPage() {
               </Textt>
 
               <div className="w-36">
-                <MyButton variant="primary-gradient-bottom-right">
+                <MyButton
+                  variant="primary-gradient-bottom-right"
+                  onClick={() => router.push("/send-topup/to")}
+                >
                   Start top-up
                 </MyButton>
               </div>
