@@ -3,7 +3,7 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import MyButton from "@/components/ui/my-button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
@@ -14,6 +14,7 @@ import sendTopupContext from "@/states/send-topup-context";
 import { ParsedCountry } from "react-international-phone";
 // import {parsePhoneNumber} from 'google-libphonenumber'
 import withOutAuth from "@/components/public-route";
+import { getUserIpInfo } from "@/services/util";
 
 function SignupSendTopup() {
   const searchParams = useSearchParams();
@@ -21,12 +22,25 @@ function SignupSendTopup() {
   const newUser = searchParams.get("newUser");
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [senderPhoneNumber, setSenderPhoneNumber] = React.useState("");
-  const [fromCountryCode, setFromCountryCode] = React.useState("US"); // ["US", "ET", ...]
   // const { createQueryString } = useCreateQueryString();
   const [subscription, setSubscription] = React.useState<"yes" | "no">("yes"); // ["yes", "no"]
   const [senderPhoneTouched, setSenderPhoneTouched] = React.useState(false);
   const router = useRouter();
   const { product } = useContext(productContext);
+  const [defaultCountryCode, setDefaultCountryCode] = React.useState<
+    string | undefined
+  >(); // ["US", "ET", ...]
+  const [fromCountryCode, setFromCountryCode] = React.useState(
+    defaultCountryCode || "US",
+  ); // ["US", "ET", ...]
+
+  useEffect(() => {
+    getUserIpInfo()
+      .then((d) => {
+        setDefaultCountryCode(d.country);
+      })
+      .catch(() => {});
+  }, []);
 
   const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
 
@@ -88,7 +102,7 @@ function SignupSendTopup() {
 
           <div className="my-[10px]">
             <PhoneInputLib
-              defaultCountry="US"
+              defaultCountry={defaultCountryCode}
               name="phoneNumber"
               value={senderPhoneNumber}
               // setFromCountryCode(val)

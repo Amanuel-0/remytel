@@ -70,15 +70,11 @@ function SetAutoTopupModal({
     if (sendTopup?.to) {
       console.log("tooooooooooo", sendTopup?.to);
       getOrderHistory({ page: 0, size: 10 }, token, sendTopup.to).then((d) => {
-        d.items?.forEach((sent) => {
-          if (sent?.subscription?.type) {
-            setUnavaliableProducts((prev) => [
-              ...prev,
-              SubscriptionTypeMap[sent?.subscription?.type || "BIWEEKLY"],
-            ]);
-            console.log(unavaliableProducts);
-          }
-        });
+        setUnavaliableProducts(
+          d.items?.map(
+            (i) => SubscriptionTypeMap[i?.subscription?.type || "BIWEEKLY"],
+          ),
+        );
       });
     }
   }, [sendTopup]);
