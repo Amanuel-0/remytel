@@ -49,17 +49,19 @@ function History() {
   }, []);
 
   const getMoreOrders = async () => {
-    try {
-      const res = await getOrderHistory({ page: currentPage, size }, token);
-      if (res.items) {
-        setOrders((prevOrders) => [...prevOrders, ...res.items]);
+    if (token) {
+      try {
+        const res = await getOrderHistory({ page: currentPage, size }, token);
+        if (res.items) {
+          setOrders((prevOrders) => [...prevOrders, ...res.items]);
+        }
+        setCurrentPage((prevPage) => prevPage + 1);
+        setHasNext(res?.metadata?.hasNext);
+      } catch (e) {
+        toast.error("Error happened while trying to fetch history");
+      } finally {
+        setLoading(false);
       }
-      setCurrentPage((prevPage) => prevPage + 1);
-      setHasNext(res?.metadata?.hasNext);
-    } catch (e) {
-      toast.error("Error happened while trying to fetch history");
-    } finally {
-      setLoading(false);
     }
   };
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);

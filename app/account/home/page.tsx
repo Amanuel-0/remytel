@@ -162,11 +162,26 @@ function AccountHome() {
             </div>
           )}
         {(orderError || receivedOrderError) && (
-          <Card className="w-full md:max-w-[65%]">{orderError}</Card>
+          <Card className="flex w-full flex-col items-center justify-center md:max-w-[65%]">
+            <p className="text-red-700">{orderError}</p>
+            <p className="text-red-700">{receivedOrderError}</p>
+            <MyButton
+              type="button"
+              onClick={refetch}
+              className="mt-3 flex h-max w-max items-center justify-center gap-2 "
+            >
+              <Textt
+                variant="span1-craftwork"
+                className="mt-1 text-start font-medium text-yellow-700"
+              >
+                Retry
+              </Textt>
+            </MyButton>
+          </Card>
         )}
 
-        {(orderHistory?.items?.length || 0) !== 0 &&
-          (receivedOrderHistory?.items?.length || 0) !== 0 && (
+        {(orderHistory?.items?.length || 0) > 0 &&
+          (receivedOrderHistory?.items?.length || 0) > 0 && (
             <Card className="w-full md:max-w-[65%]">
               <div className="mt-2 flex items-center justify-between">
                 <Textt variant="h4-craftwork" className="text-start">

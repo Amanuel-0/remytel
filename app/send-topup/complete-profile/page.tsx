@@ -16,6 +16,7 @@ export default function CompleteProfilePage() {
   const { sendTopup } = useContext(sendTopupContext);
   const {
     user: { user, token },
+    onUser,
   } = useContext(userContext);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -42,6 +43,7 @@ export default function CompleteProfilePage() {
           promoOptIn: user?.notificationsEnabled,
         })
           .then((d) => {
+            onUser({ token, user: d });
             console.log(d);
           })
           .catch(() => {

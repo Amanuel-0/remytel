@@ -88,11 +88,8 @@ function Verify() {
 
         {/* verify opt form */}
         <VerifyOtp
-          redirectUrl={
-            newUser === "true"
-              ? `/send-topup/complete-profile?selectedOption=${selectedOption}`
-              : `/send-topup/options?selectedOption=${selectedOption}`
-          }
+          redirectUrl={`/send-topup/options?selectedOption=${selectedOption}`}
+          redirectUrlIncompleteProfile={`/send-topup/complete-profile?selectedOption=${selectedOption}`}
           // redirectUrl={`/send-topup/auto-topup`}
           phoneNumber={sendTopup.from}
           code={sendTopup.fromCountryCode}

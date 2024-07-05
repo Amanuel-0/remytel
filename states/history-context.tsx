@@ -22,9 +22,9 @@ import {
 import userContext from "./user-context";
 
 export interface HistoryContextI {
-  subscriptionHistory: IPageResponse<SubscriptionT>;
-  orderHistory: IPageResponse<Transaction>;
-  receivedOrderHistory: IPageResponse<Transaction>;
+  subscriptionHistory?: IPageResponse<SubscriptionT>;
+  orderHistory?: IPageResponse<Transaction>;
+  receivedOrderHistory?: IPageResponse<Transaction>;
   refetch: () => void;
   loading: boolean;
   orderError?: string | null;
@@ -40,9 +40,9 @@ const defaultPageMetaData: IPageMetadata = {
   total: 0,
 };
 const historyContext = createContext<HistoryContextI>({
-  subscriptionHistory: { items: [], metadata: defaultPageMetaData },
-  orderHistory: { items: [], metadata: defaultPageMetaData },
-  receivedOrderHistory: { items: [], metadata: defaultPageMetaData },
+  // subscriptionHistory: { items: [], metadata: defaultPageMetaData },
+  // orderHistory: { items: [], metadata: defaultPageMetaData },
+  // receivedOrderHistory: { items: [], metadata: defaultPageMetaData },
   refetch: () => {},
   loading: true,
   orderError: null,
@@ -57,18 +57,14 @@ export const HistoryContextProvider = (props: any) => {
     user: { token },
   } = useContext(userContext);
   const [subscriptions, setSubscriptions] = useState<
-    IPageResponse<SubscriptionT>
-  >({ items: [], metadata: defaultPageMetaData });
-  const [orders, setOrders] = useState<IPageResponse<Transaction>>({
-    items: [],
-    metadata: defaultPageMetaData,
-  });
+    IPageResponse<SubscriptionT> | undefined
+  >();
+  const [orders, setOrders] = useState<
+    IPageResponse<Transaction> | undefined
+  >();
   const [receivedOrderHistory, setReceivedOrderHistory] = useState<
-    IPageResponse<Transaction>
-  >({
-    items: [],
-    metadata: defaultPageMetaData,
-  });
+    IPageResponse<Transaction> | undefined
+  >();
   const [loading, setLoading] = useState<boolean>(true);
   const [orderError, setOrderError] = useState<string | undefined | null>(null);
   const [subscriptionError, setSubscriptionError] = useState<

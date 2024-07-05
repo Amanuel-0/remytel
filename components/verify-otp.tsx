@@ -11,8 +11,15 @@ interface VerifyOtpProps {
   redirectUrl: string;
   phoneNumber: string;
   code: string;
+  redirectUrlIncompleteProfile?: string;
 }
-function VerifyOtp({ redirectUrl, phoneNumber, code }: VerifyOtpProps) {
+function VerifyOtp({
+  redirectUrl,
+  phoneNumber,
+  code,
+  redirectUrlIncompleteProfile,
+}: VerifyOtpProps) {
+  if (!redirectUrlIncompleteProfile) redirectUrlIncompleteProfile = redirectUrl;
   const { onLogin } = useContext(authContext);
   const { onUser } = useContext(userContext);
   const navigate = useRouter();
@@ -31,7 +38,15 @@ function VerifyOtp({ redirectUrl, phoneNumber, code }: VerifyOtpProps) {
     }
 
     console.log("returning to", redirectUrl);
-    navigate.push(redirectUrl);
+    if (
+      otpResponse?.user?.firstName ||
+      otpResponse?.user?.lastName ||
+      otpResponse?.user?.email
+    ) {
+      navigate.push(redirectUrl);
+    } else {
+      navigate.push(redirectUrlIncompleteProfile);
+    }
   };
 
   return (

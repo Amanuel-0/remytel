@@ -54,23 +54,25 @@ function AutoTopups() {
   }, []);
 
   const fetchMoreAutoTopup = async () => {
-    try {
-      const res = await getSubscriptionHistory(
-        { page: currentPage, size },
-        token,
-      );
-      if (res.items) {
-        setAutoTopups((currentAutoTopups) => [
-          ...currentAutoTopups,
-          ...res.items,
-        ]);
+    if (token) {
+      try {
+        const res = await getSubscriptionHistory(
+          { page: currentPage, size },
+          token,
+        );
+        if (res.items) {
+          setAutoTopups((currentAutoTopups) => [
+            ...currentAutoTopups,
+            ...res.items,
+          ]);
+        }
+        setCurrentPage((prevPage) => prevPage + 1);
+        setHasNext(res?.metadata?.hasNext);
+      } catch (e) {
+        toast.error("Error happened while trying to fetch auto topups");
+      } finally {
+        setLoading(false);
       }
-      setCurrentPage((prevPage) => prevPage + 1);
-      setHasNext(res?.metadata?.hasNext);
-    } catch (e) {
-      toast.error("Error happened while trying to fetch auto topups");
-    } finally {
-      setLoading(false);
     }
   };
   const [openCancelAutoTopupModal, setOpenCancelAutoTopupModal] =
