@@ -43,9 +43,9 @@ function VerifyOtp({
       otpResponse?.user?.lastName ||
       otpResponse?.user?.email
     ) {
-      navigate.push(redirectUrl);
+      navigate.replace(redirectUrl);
     } else {
-      navigate.push(redirectUrlIncompleteProfile);
+      navigate.replace(redirectUrlIncompleteProfile);
     }
   };
 

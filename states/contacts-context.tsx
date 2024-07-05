@@ -51,15 +51,13 @@ export const ContactsContextProvider = (props: any) => {
               "Unknown error while trying to fetch contacts",
           );
           setContacts(null);
-        })
-        .finally(() => {
-          setLoading(false);
         });
+      setLoading(false);
     }
   }, [token]);
   useEffect(() => {
     fetchContact();
-  }, [fetchContact]);
+  }, [fetchContact, token]);
 
   const contextValue: ContactsContextI = {
     contacts,

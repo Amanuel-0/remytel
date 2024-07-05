@@ -7,7 +7,7 @@ import Image from "next/image";
 import Textt from "@/components/text";
 import Card from "@/components/card";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
 import { login } from "@/services";
@@ -61,10 +61,13 @@ function Signup() {
         `/verify-signup?${createQueryString([
           { name: "phone", value: phone },
           { name: "code", value: countryCode },
+          ...(requestId ? [{ name: "requestId", value: requestId }] : []),
         ])}`,
       );
     }
   };
+  const searchParam = useSearchParams();
+  const requestId = searchParam.get("requestId");
 
   return (
     <Container>
@@ -214,7 +217,7 @@ function Signup() {
 
             <div className="flex w-full items-center justify-center gap-2">
               <Textt variant="span1-satoshi">Already have an account?</Textt>
-              <Link href={"/login"}>
+              <Link href={`/login${requestId && `?requestId=${requestId}`}`}>
                 <Textt variant="span1-satoshi" className="text-primary">
                   Log in
                 </Textt>

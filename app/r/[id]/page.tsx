@@ -17,7 +17,7 @@ export default function Request() {
   useEffect(() => {
     if (params.id) {
       if (!token) {
-        router.push("/signup");
+        router.push(`/signup?requestId=${params.id}`);
       } else {
         getRequest(params.id as string, token).then((d) => {
           setSendTopup({

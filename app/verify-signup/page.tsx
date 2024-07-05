@@ -14,6 +14,7 @@ function VerifySignup() {
   const searchParams = useSearchParams();
   const phone = searchParams.get("phone") || "";
   const code = searchParams.get("code") || "";
+  const requestId = searchParams.get("requestId");
 
   return (
     <Container>
@@ -83,7 +84,11 @@ function VerifySignup() {
 
             {/* verify opt form */}
             <VerifyOtp
-              redirectUrl={"/account/home"}
+              redirectUrl={
+                requestId
+                  ? `send-topup/options?requestId=${requestId}`
+                  : "/account/home"
+              }
               phoneNumber={phone}
               code={code}
             />
