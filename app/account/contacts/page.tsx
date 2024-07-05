@@ -26,7 +26,8 @@ function Contacts() {
     setSendTopup({
       from: user.phoneNumber,
       product: undefined,
-      to: contacts?.items?.filter((c) => c.id == id)?.[0]?.phoneNumber,
+      to: contacts?.items?.filter((c) => c.id == id)?.[0]
+        ?.phoneNumber as string,
       topupFrequency: undefined,
       fromCountryCode: "US",
     });

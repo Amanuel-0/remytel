@@ -1,6 +1,7 @@
 import Card from "@/components/card";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import Textt from "@/components/text";
+import MyButton from "@/components/ui/my-button";
 import contactsContext from "@/states/contacts-context";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,12 +13,14 @@ export const ContactsCard = ({
 }: {
   setOpenSaveContactModal: (opern: boolean) => void;
 }) => {
-  const { contacts, loading } = useContext(contactsContext);
+  const { contacts, loading, error, refetch } = useContext(contactsContext);
   if (loading)
     return (
-      <div className="flex h-full w-full items-center justify-center">
-        <LoadingSpinner />
-      </div>
+      <Card className="mb-[10px] w-full py-14">
+        <div className="flex h-full w-full items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </Card>
     );
   return (
     <Card className="mb-[10px] w-full">
@@ -26,7 +29,7 @@ export const ContactsCard = ({
           Contacts
         </Textt>
 
-        {contacts?.items?.length > 0 && (
+        {contacts?.items && contacts?.items?.length > 0 && (
           <Link
             href={"/account/contacts"}
             className="flex items-center justify-center gap-[10px]"
@@ -42,7 +45,29 @@ export const ContactsCard = ({
         )}
       </div>
 
-      <div className="mt-5 flex items-center justify-start gap-2 overflow-auto">
+      <div className="mt-3 flex items-center justify-start gap-2 overflow-auto">
+        {error && (
+          <div>
+            <Textt
+              variant="span1-craftwork"
+              className="mt-3 text-start font-medium text-red-700"
+            >
+              {error}
+            </Textt>
+            <MyButton
+              type="button"
+              onClick={() => refetch()}
+              className="mt-3 flex h-max w-max items-center justify-center gap-2 "
+            >
+              <Textt
+                variant="span1-craftwork"
+                className="mt-1 text-start font-medium text-yellow-700"
+              >
+                Retry
+              </Textt>
+            </MyButton>
+          </div>
+        )}
         {contacts?.items?.length === 0 && (
           <div>
             <Textt
@@ -72,7 +97,8 @@ export const ContactsCard = ({
           </div>
         )}
 
-        {contacts?.items?.length > 0 &&
+        {contacts?.items &&
+          contacts?.items?.length > 0 &&
           contacts?.items?.slice(0, 4)?.map?.((contact) => (
             <div
               className="flex h-[80px] w-[70px] flex-col items-center justify-between rounded-[15px] border border-[#F0F0F0] p-2"

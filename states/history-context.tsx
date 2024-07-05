@@ -78,7 +78,7 @@ export const HistoryContextProvider = (props: any) => {
     string | undefined | null
   >(null);
   const [activeSubscriptions, setActiveSubscriptions] = useState(0);
-  const fetchHistoy = useCallback(() => {
+  const fetchHistory = useCallback(() => {
     if (token) {
       setLoading(true);
       getOrderHistory({ page: 0, size: 10 }, token)
@@ -86,39 +86,45 @@ export const HistoryContextProvider = (props: any) => {
           setOrders(d);
         })
         .catch((err) => {
-          setOrderError(err?.response?.data?.message);
+          setOrderError(
+            err?.response?.data?.message ||
+              "Unknown error while trying to fetch history",
+          );
         });
       getSubscriptionHistory({ page: 0, size: 10 }, token)
         .then((d) => {
           setSubscriptions(d);
           setActiveSubscriptions(d.activeSubscriptions);
+          setSubscriptionError(null);
         })
         .catch((err) => {
-          setSubscriptionError(err?.response?.data?.message);
+          setSubscriptionError(
+            err?.response?.data?.message ||
+              "Unknown error while trying to fetch history",
+          );
         });
       getReceivedOrders({ page: 0, size: 10 }, token)
         .then((d) => {
           setReceivedOrderHistory(d);
+          setOrderError(null);
         })
         .catch((err) => {
-          setReceivedOrderError(err?.response?.data?.message);
+          setReceivedOrderError(
+            err?.response?.data?.message ||
+              "Unknown error while trying to fetch history",
+          );
         });
       setLoading(false);
     }
   }, [token]);
   useEffect(() => {
-    fetchHistoy();
-  }, [fetchHistoy]);
-
-  const refetch = () => {
-    fetchHistoy();
-  };
-
+    fetchHistory();
+  }, [fetchHistory]);
   const contextValue: HistoryContextI = {
     orderHistory: orders,
     subscriptionHistory: subscriptions,
     loading,
-    refetch,
+    refetch: fetchHistory,
     orderError,
     subscriptionError,
     activeSubscriptions,

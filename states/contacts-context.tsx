@@ -12,14 +12,14 @@ import userContext from "./user-context";
 import { getContacts } from "@/services/contact.service";
 
 export interface ContactsContextI {
-  contacts: IListResponse<Contact>;
+  contacts: IListResponse<Contact> | null;
   refetch: () => void;
   loading: boolean;
   error?: string | null;
 }
 
 const contactsContext = createContext<ContactsContextI>({
-  contacts: { items: [] },
+  contacts: null,
   refetch: () => {},
   loading: true,
   error: null,
@@ -30,7 +30,7 @@ export const ContactsContextProvider = (props: any) => {
   const {
     user: { token },
   } = useContext(userContext);
-  const [contacts, setContacts] = useState<IListResponse<Contact>>({
+  const [contacts, setContacts] = useState<IListResponse<Contact> | null>({
     items: [],
   });
 
@@ -42,13 +42,19 @@ export const ContactsContextProvider = (props: any) => {
       setLoading(true);
       getContacts(token)
         .then((d) => {
+          setError(null);
           setContacts(d);
         })
         .catch((err) => {
-          setError(err?.response?.data?.message);
+          setError(
+            err?.response?.data?.message ||
+              "Unknown error while trying to fetch contacts",
+          );
+          setContacts(null);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-
-      setLoading(false);
     }
   }, [token]);
   useEffect(() => {

@@ -13,7 +13,7 @@ import withAuth from "@/components/protected-route";
 import Link from "next/link";
 import historyContext from "@/states/history-context";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { Product, Transaction } from "@/models";
+import { Contact, Product, Transaction } from "@/models";
 import SetAutoTopupModal from "@/components/set-auto-topup-modal";
 import topupRequestContext from "@/states/request-topup-context";
 import sendTopupContext from "@/states/send-topup-context";
@@ -156,14 +156,17 @@ function AccountHome() {
       <section className="my-[10px] flex w-full flex-col gap-[10px] md:flex-row">
         {/* send your fist topup banner */}
         {orderHistory?.items?.length === 0 &&
-          subscriptionHistory?.items?.length === 0 && (
+          receivedOrderHistory?.items?.length === 0 && (
             <div className="w-full md:max-w-[65%]">
               <SendYourFirstTopupBanner />
             </div>
           )}
+        {(orderError || receivedOrderError) && (
+          <Card className="w-full md:max-w-[65%]">{orderError}</Card>
+        )}
 
-        {orderHistory?.items?.length !== 0 &&
-          subscriptionHistory?.items?.length !== 0 && (
+        {(orderHistory?.items?.length || 0) !== 0 &&
+          (receivedOrderHistory?.items?.length || 0) !== 0 && (
             <Card className="w-full md:max-w-[65%]">
               <div className="mt-2 flex items-center justify-between">
                 <Textt variant="h4-craftwork" className="text-start">
@@ -255,10 +258,32 @@ function AccountHome() {
                 </Textt>
               )}
 
-              {!noAutoTopup && (
+              {!subscriptionError && !noAutoTopup && (
                 <Textt variant="h6-satoshi" className="text-start text-primary">
                   {activeSubscriptions} active
                 </Textt>
+              )}
+              {subscriptionError && (
+                <div>
+                  <Textt
+                    variant="span1-craftwork"
+                    className="mt-3 text-start font-medium text-red-700"
+                  >
+                    {subscriptionError}
+                  </Textt>
+                  <MyButton
+                    type="button"
+                    onClick={refetch}
+                    className="mt-3 flex h-max w-max items-center justify-center gap-2 "
+                  >
+                    <Textt
+                      variant="span1-craftwork"
+                      className="mt-1 text-start font-medium text-yellow-700"
+                    >
+                      Retry
+                    </Textt>
+                  </MyButton>
+                </div>
               )}
             </div>
           </Card>
@@ -356,7 +381,7 @@ const RecentActivity = ({
               </div>
               <Textt variant="span1-satoshi">
                 {
-                  (received ? senderContact : receiverContact).name?.split?.(
+                  (received ? senderContact : receiverContact)?.name?.split?.(
                     " ",
                   )?.[0]
                 }
