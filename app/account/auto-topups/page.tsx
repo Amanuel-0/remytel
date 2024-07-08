@@ -14,7 +14,7 @@ import MyButton from "@/components/ui/my-button";
 import withAuth from "@/components/protected-route";
 import AccountNav from "../account-nav";
 import CancelAutoTopupModal from "@/components/cancel-auto-topup-modal";
-import { SubscriptionT } from "@/services/type";
+import { SubscriptionT, SubscriptionTypeMap } from "@/services/type";
 import userContext from "@/states/user-context";
 import {
   cancelSubscription,
@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import InfiniteScroll from "react-infinite-scroll-component";
+import moment from "moment";
 
 function AutoTopups() {
   const {
@@ -137,6 +138,19 @@ interface AutoTopupProps {
   item: SubscriptionT;
   setOpenCancelAutoTopupModal: (open: boolean) => void;
 }
+const nextBIllingDate = (
+  createdAt: Date,
+  type: "MONTHLY" | "WEEKLY" | "BIWEEKLY",
+) => {
+  const startDate = moment(createdAt);
+  const datesPassed = moment().diff(startDate, "days");
+  let daysRemainingForNextBill = 0;
+  let daysPassedAfterLastBill = 0;
+  const freq = parseInt(SubscriptionTypeMap[type]) || 0;
+  daysPassedAfterLastBill = datesPassed % freq;
+  daysRemainingForNextBill = freq - daysPassedAfterLastBill;
+  return moment().add(daysRemainingForNextBill, "days").format("D / M / YYYY");
+};
 const AutoTopup = ({ item, setOpenCancelAutoTopupModal }: AutoTopupProps) => {
   return (
     <>
@@ -208,8 +222,7 @@ const AutoTopup = ({ item, setOpenCancelAutoTopupModal }: AutoTopupProps) => {
               variant="span1-satoshi"
               className="whitespace-nowrap text-start"
             >
-              {/* TODO */}
-              Next billing date 21 / 4 / 2024
+              Next billing date {nextBIllingDate(item.createdAt, item.type)}
             </Textt>
           </div>
 
