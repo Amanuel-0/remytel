@@ -55,6 +55,7 @@ function AccountHome() {
   const navigateToSendTopupTo = () => {
     router.push("/send-topup/to");
   };
+  const { refetch: refetchContacts } = useContext(contactsContext);
   if (loading) return <LoadingSpinner />;
   // if (orderError || subscriptionError) return <p>{orderError}</p>;
   return (
@@ -62,7 +63,10 @@ function AccountHome() {
       {/* save contact modal */}
       <SaveContactModal
         open={openSaveContactModal}
-        onClose={() => setOpenSaveContactModal(false)}
+        onClose={() => {
+          setOpenSaveContactModal(false);
+          refetchContacts();
+        }}
       />
       {/*  */}
       <section className="my-5 flex w-full flex-col gap-5 md:flex-row md:justify-between">

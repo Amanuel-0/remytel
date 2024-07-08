@@ -35,8 +35,8 @@ export default function RootLayout({
       <body className={`${cn("font-sans")} bg-[#F9F9F9]`}>
         {/* <body className={`${inter.className} bg-[#DDE1E9]`}> */}
         <AuthContextProvider>
-          <ContactsContextProvider>
-            <UserContextProvider>
+          <UserContextProvider>
+            <ContactsContextProvider>
               <ProductContextProvider>
                 <SendTopupContextProvider>
                   <TopupRequestContextProvider>
@@ -46,8 +46,8 @@ export default function RootLayout({
                   </TopupRequestContextProvider>
                 </SendTopupContextProvider>
               </ProductContextProvider>
-            </UserContextProvider>
-          </ContactsContextProvider>
+            </ContactsContextProvider>
+          </UserContextProvider>
         </AuthContextProvider>
 
         <Toaster />

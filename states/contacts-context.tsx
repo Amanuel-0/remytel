@@ -55,9 +55,10 @@ export const ContactsContextProvider = (props: any) => {
       setLoading(false);
     }
   }, [token]);
+
   useEffect(() => {
     fetchContact();
-  }, [fetchContact, token]);
+  }, [fetchContact]);
 
   const contextValue: ContactsContextI = {
     contacts,
