@@ -18,7 +18,6 @@ function TopUpAndPlans() {
   const { product } = useContext(productContext);
   const { sendTopup } = useContext(sendTopupContext);
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = React.useState<Product[]>([]);
   // const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
   //   React.useState(false);
   const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(false);
@@ -48,18 +47,6 @@ function TopUpAndPlans() {
       setLoading(false);
     }
   }, [product]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const products = await getProducts();
-      if (!!products) {
-        console.log("products: ", product);
-        setProducts(products);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   return (
     <>

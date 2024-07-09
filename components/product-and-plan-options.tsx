@@ -48,7 +48,7 @@ function ProductAndPlanOptions({
 
   useEffect(() => {
     setLoading(true);
-    if (products) {
+    if (products?.length !== 0) {
       setLoading(false);
     }
   }, [products]);
