@@ -15,9 +15,7 @@ import userContext from "@/states/user-context";
 type MenuType = "topup" | "plans";
 
 function TopUpAndPlans() {
-  const { product } = useContext(productContext);
   const { sendTopup } = useContext(sendTopupContext);
-  const [loading, setLoading] = useState(true);
   // const [openEditSenderPhoneModal, setOpenEditSenderPhoneModal] =
   //   React.useState(false);
   const [openAutoTopupModal, setOpenAutoTopupModal] = React.useState(false);
@@ -40,13 +38,6 @@ function TopUpAndPlans() {
       });
     }
   }, [requestId]);
-
-  useEffect(() => {
-    setLoading(true);
-    if (product) {
-      setLoading(false);
-    }
-  }, [product]);
 
   return (
     <>

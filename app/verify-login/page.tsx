@@ -7,7 +7,7 @@ import Container from "@/components/container";
 import Image from "next/image";
 import React from "react";
 import VerifyOtp from "@/components/verify-otp";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import withOutAuth from "@/components/public-route";
 
 function OtpLogin() {
@@ -15,6 +15,7 @@ function OtpLogin() {
   const phone = searchParams.get("phone") || "";
   const code = searchParams.get("code") || "";
   const requestId = searchParams.get("requestId");
+  const router = useRouter();
 
   return (
     <Container>
@@ -23,13 +24,13 @@ function OtpLogin() {
       <section className="my-10 flex min-h-[95%] flex-col gap-6 md:my-[60px] xl:flex-row xl:justify-between xl:gap-0">
         {/* hero left section */}
         <div className="xl:w-[50%]">
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-2xl">
             <Image
               src="/assets/images/hero-background-vector.svg"
               alt="logo"
               width={269}
               height={443}
-              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px] rounded-2xl sm:block md:max-h-[300px] 2xl:max-h-[600px]"
+              className="absolute -left-24 top-0 z-20  max-h-[220px] w-[307px]  sm:block md:max-h-[300px] 2xl:max-h-[600px]"
             />
 
             <div className="absolute left-0 top-0 z-10 h-full w-full bg-gradient-to-r from-black opacity-80"></div>
@@ -39,7 +40,7 @@ function OtpLogin() {
               alt="logo"
               width={1280}
               height={853}
-              className="rounded-2xl"
+              className="rounded-2xl contrast-50 saturate-[2.5]"
             />
 
             <div className="absolute bottom-0 z-20 m-auto w-full">
@@ -61,7 +62,10 @@ function OtpLogin() {
 
           <Card className="my-8">
             {/* back button */}
-            <button className="mb-6 flex h-8 items-center justify-start gap-2 rounded-full border-2 border-[#E1E1E1] px-5">
+            <button
+              className="mb-6 flex h-8 items-center justify-start gap-2 rounded-full border-2 border-[#E1E1E1] px-5"
+              onClick={router.back}
+            >
               <Image
                 src="/assets/icons/arrow-back.svg"
                 alt="arrow-left"
@@ -79,7 +83,7 @@ function OtpLogin() {
               variant="span1-satoshi"
               className="mb-5 mt-[10px] text-primary"
             >
-              +251 93 542 5899
+              {phone}
             </Textt>
 
             {/* verify opt form */}

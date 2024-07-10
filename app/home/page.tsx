@@ -5,7 +5,7 @@ import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import FaqAccordion from "@/components/faq-accordion";
 import FooterAlt from "@/components/footer-alt";
@@ -21,6 +21,15 @@ function LandingPage() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const [receiverPhoneNumber, setReceiverPhoneNumber] = React.useState("");
   const router = useRouter();
+  const [isValidPhone, setIsValidPhone] = useState(false);
+  const validatePhoneNumber = () => {
+    // Regular expression for Ethiopian phone numbers
+    const ethiopianPhoneNumberRegex = /^(\+251)?[1-59]\d{8}$/;
+    setIsValidPhone(ethiopianPhoneNumberRegex.test(receiverPhoneNumber));
+  };
+  useEffect(() => {
+    validatePhoneNumber();
+  }, [receiverPhoneNumber]);
 
   useEffect(() => {
     const phone = sendTopup.to || "";
@@ -78,6 +87,7 @@ function LandingPage() {
                 variant="primary-gradient-top-left"
                 onClick={handleStartTopUp}
                 className=""
+                disabled={!isValidPhone}
               >
                 <Textt variant="h6-satoshi" className="font-[500] text-white">
                   Start top-up

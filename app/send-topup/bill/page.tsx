@@ -16,6 +16,7 @@ import userContext from "@/states/user-context";
 import EditDetailMenu from "@/components/edit-detail-menu";
 import ProductAndPlanOptionsModal from "@/components/product-and-plan-options-modal";
 import SetAutoTopupModal from "@/components/set-auto-topup-modal";
+import { toast } from "sonner";
 
 function Bill() {
   const {
@@ -48,48 +49,60 @@ function Bill() {
     setOpenProductAndPlanOptionsModal(false);
   };
 
+  const [checkoutIsLoading, setCheckoutIsLoading] = useState(false);
   // const navigateToPaymentPage = () => router.push(`/send-topup/payment`);
   const handleCheckout = async () => {
-    // make a request to /service/checkout
-    let subFreq;
-    if (sendTopup.topupFrequency === "7") {
-      subFreq = "WEEKLY";
-    } else if (sendTopup.topupFrequency === "14") {
-      subFreq = "BIWEEKLY";
-    } else if (sendTopup.topupFrequency === "30") {
-      subFreq = "MONTHLY";
-    }
+    setCheckoutIsLoading(true);
+    try {
+      // make a request to /service/checkout
+      let subFreq;
+      if (sendTopup.topupFrequency === "7") {
+        subFreq = "WEEKLY";
+      } else if (sendTopup.topupFrequency === "14") {
+        subFreq = "BIWEEKLY";
+      } else if (sendTopup.topupFrequency === "30") {
+        subFreq = "MONTHLY";
+      }
 
-    const payload: CheckoutPayload = {
-      receiverPhoneNumber: sendTopup.to,
-      receiverName: "",
-      // receiverName: "Brook",
-      productId: product.id,
-      subscription: subFreq,
-      successRoute: "/send-topup/success",
-      failureRoute: "/send-topup/bill",
-      // failureRoute: "/send-topup/failure",
-    };
+      const payload: CheckoutPayload = {
+        receiverPhoneNumber: sendTopup.to,
+        receiverName: "",
+        // receiverName: "Brook",
+        productId: product.id,
+        subscription: subFreq,
+        successRoute: "/send-topup/success",
+        failureRoute: "/send-topup/bill",
+        // failureRoute: "/send-topup/failure",
+      };
 
-    // router.push("/send-topup/success");
+      // router.push("/send-topup/success");
 
-    await processCheckout(payload, token)
-      .then((res: any) => {
-        if ((res.message = "Order Created")) {
-          // make the transaction id available in the context
-          setSendTopup({ ...sendTopup, transactionId: res.transaction_id });
+      await processCheckout(payload, token)
+        .then((res: any) => {
+          if ((res.message = "Order Created")) {
+            // make the transaction id available in the context
+            setSendTopup({ ...sendTopup, transactionId: res.transaction_id });
 
-          window.location = res.session.url;
-          // window.location.href = res.session.url;
-        } else {
-          console.log("something went wrong on checkout!");
-        }
-      })
-      .catch((err: any) => {
-        console.log("something went wrong while processing checkout: ", err);
+            window.location = res.session.url;
+            // window.location.href = res.session.url;
+          } else {
+            console.log("something went wrong on checkout!");
+          }
+        })
+        .catch((err: any) => {
+          console.log("something went wrong while processing checkout: ", err);
+        });
+
+      // if successful, navigate to /send-topup/success
+    } catch (e: any) {
+      toast.error(<p className="text-red-700">Checkout Error</p>, {
+        description:
+          e?.response?.data?.message ||
+          "Unknown error happened while trying to process checkout",
       });
-
-    // if successful, navigate to /send-topup/success
+    } finally {
+      setCheckoutIsLoading(false);
+    }
   };
 
   return (
@@ -201,6 +214,7 @@ function Bill() {
           variant="primary-normal"
           className="mb-[10px] mt-10"
           onClick={handleCheckout}
+          loading={checkoutIsLoading}
         >
           <Textt variant="h5-satoshi" className="text-white">
             Continue Payment

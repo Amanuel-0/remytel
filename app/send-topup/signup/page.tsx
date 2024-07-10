@@ -3,7 +3,7 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MyButton from "@/components/ui/my-button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
@@ -48,11 +48,15 @@ function SignupSendTopup() {
     router.push(`/send-topup/options`);
   };
 
+  const [signupLoading, setSignupLoading] = useState(false);
+
   const handleSubmit = async (e: any) => {
+    setSignupLoading(true);
     e.preventDefault();
 
     if (!isSenderPhoneValid) {
       setSenderPhoneTouched(true);
+      setSignupLoading(false);
       return;
     }
 
@@ -72,6 +76,8 @@ function SignupSendTopup() {
       router.push(
         `/send-topup/verify?selectedOption=${selectedOption}${newUser === "true" && "&newUser=true"}`,
       );
+    } else {
+      setSignupLoading(false);
     }
   };
 
@@ -211,6 +217,7 @@ function SignupSendTopup() {
             variant="primary-normal"
             className="my-4"
             disabled={!isSenderPhoneValid}
+            loading={signupLoading}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Confirm Phone Number

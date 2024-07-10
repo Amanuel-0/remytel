@@ -1,7 +1,7 @@
 "use client";
 import Footer from "@/components/footer";
 import Container from "@/components/container";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Textt from "@/components/text";
@@ -41,11 +41,14 @@ function Signup() {
     console.log(phone);
   }, [phone]);
 
+  const [signupLoading, setSignupLoading] = useState(false);
   const handleSubmit = async (e: any) => {
+    setSignupLoading(true);
     e.preventDefault();
 
     if (!isSenderPhoneValid) {
       setSenderPhoneTouched(true);
+      setSignupLoading(false);
       return;
     }
 
@@ -64,6 +67,8 @@ function Signup() {
           ...(requestId ? [{ name: "requestId", value: requestId }] : []),
         ])}`,
       );
+    } else {
+      setSignupLoading(false);
     }
   };
   const searchParam = useSearchParams();
@@ -209,6 +214,7 @@ function Signup() {
               variant="primary-normal"
               className="my-4"
               onClick={handleSubmit}
+              loading={signupLoading}
             >
               <Textt variant="h5-satoshi" className="text-white">
                 Confirm Phone Number

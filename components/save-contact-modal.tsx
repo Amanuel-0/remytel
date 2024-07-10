@@ -146,7 +146,7 @@ function SaveContactModal({
             variant="primary-normal"
             className="mt-2"
             onClick={saveContact}
-            disabled={saving}
+            loading={saving}
           >
             <Textt variant="h5-satoshi" className="text-white">
               Save Contact

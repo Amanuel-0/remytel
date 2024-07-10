@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 import Textt from "./text";
 
-export const LoadingSpinner = ({ className }: { className?: string }) => {
+export const LoadingSpinner = ({
+  className,
+  text = "Loading",
+}: {
+  className?: string;
+  text?: string;
+}) => {
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <svg
@@ -19,7 +25,7 @@ export const LoadingSpinner = ({ className }: { className?: string }) => {
         <path d="M21 12a9 9 0 1 1-6.219-8.56" />
       </svg>
 
-      <Textt variant="span1-craftwork">Loading</Textt>
+      <Textt variant="span1-craftwork">{text}</Textt>
     </div>
   );
 };

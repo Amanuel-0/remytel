@@ -66,7 +66,9 @@ function ProductAndPlanOptions({
 
   const router = useRouter();
 
+  const [selectIsLoading, setSelectIsLoading] = useState<string | null>(null);
   const handleProductSelection = (productId: number) => {
+    setSelectIsLoading(`${productId}`);
     const selectedProduct: Product | undefined = products?.find((product) => {
       return product.id === productId;
     });
@@ -88,6 +90,7 @@ function ProductAndPlanOptions({
     } else {
       toast.error("Something went wrong, please try again later");
     }
+    setSelectIsLoading(null);
   };
   useEffect(() => {
     if (
@@ -179,6 +182,7 @@ function ProductAndPlanOptions({
                       (product) => product.type === "Airtime",
                     )}
                     onProductSelection={handleProductSelection}
+                    loadingId={selectIsLoading}
                   />
                 ) : (
                   <PlansOptions
@@ -186,6 +190,7 @@ function ProductAndPlanOptions({
                       (product) => product.type === "Bundle",
                     )}
                     onProductSelection={handleProductSelection}
+                    loadingId={selectIsLoading}
                   />
                 )}
               </>

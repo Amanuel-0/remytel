@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Card from "@/components/card";
 import Footer from "@/components/footer";
@@ -29,6 +29,7 @@ function Login() {
   const { createQueryString } = useCreateQueryString();
 
   const isSenderPhoneValid = isPhoneValid(phone);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getUserIpInfo()
@@ -38,10 +39,12 @@ function Login() {
       .catch(() => {});
   }, []);
   const handleSubmit = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
 
     if (!isSenderPhoneValid) {
       setSenderPhoneTouched(true);
+      setLoading(false);
       return;
     }
 
@@ -59,6 +62,8 @@ function Login() {
           { name: "code", value: countryCode },
         ])}`,
       );
+    } else {
+      setLoading(false);
     }
   };
 
@@ -140,6 +145,7 @@ function Login() {
               variant="primary-normal"
               className="my-4"
               onClick={handleSubmit}
+              loading={loading}
             >
               <Textt variant="h5-satoshi" className="text-white">
                 Confirm Phone Number

@@ -4,12 +4,18 @@ import Textt from "./text";
 import Image from "next/image";
 import { Product } from "@/models";
 import Skeleton from "react-loading-skeleton";
+import MyButton from "./ui/my-button";
 
 interface TopupOptionsProps {
   products: Product[]; // product are type of 'Airtime'
   onProductSelection: (id: number) => void;
+  loadingId?: string | null;
 }
-function TopupOptions({ products, onProductSelection }: TopupOptionsProps) {
+function TopupOptions({
+  products,
+  onProductSelection,
+  loadingId = null,
+}: TopupOptionsProps) {
   return (
     <>
       {products.map((product) => (
@@ -42,14 +48,15 @@ function TopupOptions({ products, onProductSelection }: TopupOptionsProps) {
                 </Textt>
               </span>
 
-              <button
+              <MyButton
                 onClick={() => onProductSelection(product.id)}
-                className="h-full min-h-[38px] w-[120px] rounded-full bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]"
+                className="h-full min-h-[38px] w-max rounded-full bg-[#04A94D] px-6 text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]"
+                loading={loadingId === `${product.id}`}
               >
                 <Textt variant="span1-satoshi" className="text-white">
                   Buy {product.price.amount} USD
                 </Textt>
-              </button>
+              </MyButton>
             </div>
 
             {/* popular badge */}

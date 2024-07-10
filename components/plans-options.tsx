@@ -3,6 +3,7 @@ import Card from "./card";
 import Textt from "./text";
 import Image from "next/image";
 import { Product } from "@/models";
+import MyButton from "./ui/my-button";
 
 interface IPlan {
   id: number;
@@ -43,8 +44,13 @@ const plansOptions: IPlan[] = [
 interface PlansOptionsProps {
   products: Product[]; // product are type of 'Bundle'
   onProductSelection: (id: number) => void;
+  loadingId?: string | null;
 }
-function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
+function PlansOptions({
+  products,
+  onProductSelection,
+  loadingId,
+}: PlansOptionsProps) {
   return (
     <>
       {products.map((product) => (
@@ -68,14 +74,14 @@ function PlansOptions({ products, onProductSelection }: PlansOptionsProps) {
                 </Textt>
               </span>
 
-              <button
+              <MyButton
                 onClick={() => onProductSelection(product.id)}
-                className="h-full min-h-[35px] w-[120px] rounded-full bg-[#04A94D] text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]"
+                className="h-full min-h-[35px] w-max rounded-full bg-[#04A94D] px-6 text-white transition-colors duration-300 hover:bg-[hsl(147,95%,28%)]"
               >
                 <Textt variant="span1-satoshi" className="text-white">
                   Buy {product.price.amount} USD
                 </Textt>
-              </button>
+              </MyButton>
             </div>
 
             <div className="mt-[10px] flex items-center justify-start gap-2">

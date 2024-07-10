@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -13,6 +14,7 @@ interface ButtonProps {
   className?: string;
   onClick?: (param?: any) => void;
   disabled?: boolean;
+  loading?: boolean;
   reff?: any;
   href?: string;
 }
@@ -26,6 +28,7 @@ function MyButton({
   disabled = false,
   reff,
   href = "#",
+  loading = false,
 }: ButtonProps) {
   let className = "";
   if (variant === "primary-normal") {
@@ -58,9 +61,18 @@ function MyButton({
       ref={reff}
       onClick={onClick}
       type={type ?? "button"}
-      className={`h-full max-h-[54px] min-h-[44px] w-full rounded-full bg-200%  ${className} ${cn}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
-      disabled={disabled}
+      className={`flex  h-full max-h-[54px] min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-200%  ${className} ${cn}  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      disabled={disabled || loading}
     >
+      {loading && (
+        <Image
+          src="/assets/icons/loading-spinner.svg"
+          alt=""
+          className="h-8 w-8"
+          height={40}
+          width={40}
+        />
+      )}
       {children}
     </button>
   );
