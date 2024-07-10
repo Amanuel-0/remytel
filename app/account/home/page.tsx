@@ -6,7 +6,6 @@ import MyButton from "@/components/ui/my-button";
 import Card from "@/components/card";
 import SendYourFirstTopupBanner from "@/components/send-your-first-topup-banner";
 import userContext from "@/states/user-context";
-import { useRouter } from "next/navigation";
 import SaveContactModal from "@/components/save-contact-modal";
 import authContext from "@/states/auth-context";
 import withAuth from "@/components/protected-route";
@@ -22,6 +21,7 @@ import productContext from "@/states/product-context";
 import contactsContext from "@/states/contacts-context";
 import stc from "string-to-color";
 import { ContactsCard } from "./ContactsCard";
+import { useRouter } from "next-nprogress-bar";
 
 function AccountHome() {
   // const { isLoggedIn } = useContext(authContext);

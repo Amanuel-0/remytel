@@ -7,8 +7,9 @@ import VerifyOtp from "@/components/verify-otp";
 import Container from "@/components/container";
 import Image from "next/image";
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import withOutAuth from "@/components/public-route";
+import { useRouter } from "next-nprogress-bar";
 
 function VerifySignup() {
   const searchParams = useSearchParams();
@@ -64,7 +65,9 @@ function VerifySignup() {
             {/* back button */}
             <button
               className="mb-6 flex h-8 items-center justify-start gap-2 rounded-full border-2 border-[#E1E1E1] px-5"
-              onClick={router.back}
+              onClick={() => {
+                router.back();
+              }}
             >
               <Image
                 src="/assets/icons/arrow-back.svg"

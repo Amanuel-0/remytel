@@ -1,7 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import OtpInput from "./form/otp-input";
-import { useRouter } from "next/navigation";
 import { verifyOtp } from "@/services";
 import authContext from "@/states/auth-context";
 import userContext from "@/states/user-context";
@@ -9,6 +8,7 @@ import { User } from "@/models";
 import { toast } from "sonner";
 import MyButton from "./ui/my-button";
 import { LoadingSpinner } from "./loading-spinner";
+import { useRouter } from "next-nprogress-bar";
 
 interface VerifyOtpProps {
   redirectUrl: string;

@@ -7,7 +7,7 @@ import Image from "next/image";
 import Textt from "@/components/text";
 import Card from "@/components/card";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
 import { login } from "@/services";
@@ -15,6 +15,7 @@ import { isPhoneValid } from "@/utils";
 import useCreateQueryString from "@/hooks/use-create-query-params";
 import withOutAuth from "@/components/public-route";
 import { getUserIpInfo } from "@/services/util";
+import { useRouter } from "next-nprogress-bar";
 
 function Signup() {
   const [phone, setPhone] = React.useState("");

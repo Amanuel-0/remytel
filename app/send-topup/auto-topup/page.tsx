@@ -5,9 +5,9 @@ import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import MyButton from "@/components/ui/my-button";
 import productContext from "@/states/product-context";
-import { useRouter } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
 import withAuth from "@/components/protected-route";
+import { useRouter } from "next-nprogress-bar";
 
 function AutoTopup() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);

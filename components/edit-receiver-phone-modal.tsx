@@ -5,7 +5,6 @@ import Textt from "./text";
 import IconButton from "./ui/icon-button";
 import Image from "next/image";
 import MyButton from "./ui/my-button";
-import { useRouter } from "next/navigation";
 import PhoneInputLib from "./form/phone-input-lib";
 import sendTopupContext from "@/states/send-topup-context";
 import productContext from "@/states/product-context";
@@ -19,7 +18,6 @@ function EditReceiverPhoneModal({
 }) {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
-  const router = useRouter();
   const [receiverPhone, setReceiverPhone] = useState<string>(
     sendTopup.to || "",
   );
@@ -27,11 +25,6 @@ function EditReceiverPhoneModal({
   useEffect(() => {
     setReceiverPhone(sendTopup.to || "");
   }, [sendTopup.to]);
-
-  const handleProductEdit = () => {
-    onClose();
-    router.push(`/send-topup/options`);
-  };
 
   const handleStarttopup = () => {
     setSendTopup({ ...sendTopup, to: receiverPhone });

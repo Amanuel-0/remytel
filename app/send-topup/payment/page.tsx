@@ -5,7 +5,6 @@ import React, { useContext, useMemo, useState } from "react";
 import Image from "next/image";
 import IconButton from "@/components/ui/icon-button";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
 import productContext from "@/states/product-context";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 import EditReceiverPhoneModal from "@/components/edit-receiver-phone-modal";
@@ -16,6 +15,7 @@ import { COUNTRIES } from "@/components/country-selector/countries";
 import { SelectMenuOption } from "@/components/country-selector/types";
 import CountrySelector from "@/components/country-selector/selector";
 import Radio from "@/components/form/radio";
+import { useRouter } from "next-nprogress-bar";
 
 function Payment() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);

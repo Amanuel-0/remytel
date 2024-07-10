@@ -2,7 +2,6 @@
 import React from "react";
 import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
-import { useRouter } from "next/navigation";
 
 function CancelAutoTopupModal({
   open,
@@ -13,8 +12,6 @@ function CancelAutoTopupModal({
   onClose: () => void;
   handleConfirm: () => void;
 }) {
-  const router = useRouter();
-
   function onConfirm() {
     handleConfirm();
     onClose();

@@ -7,10 +7,10 @@ import { getProfile, updateProfile } from "@/services";
 import { createTopupRequest } from "@/services/request.service";
 import userContext from "@/states/user-context";
 import { validateEmail } from "@/utils";
-import { useRouter } from "next/navigation";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import withAuth from "@/components/protected-route";
 import { toast } from "sonner";
+import { useRouter } from "next-nprogress-bar";
 
 function CreateTopupLink() {
   const { user, onUser } = useContext(userContext);
@@ -222,7 +222,8 @@ function CreateTopupLink() {
         variant="primary-normal"
         className="my-4"
         onClick={handleSubmit}
-        disabled={!nameValid || !emailValid || creatingLink}
+        disabled={!nameValid || !emailValid}
+        loading={creatingLink}
       >
         <Textt variant="h5-satoshi" className="text-white">
           Create My Top-Up link

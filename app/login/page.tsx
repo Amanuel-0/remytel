@@ -7,7 +7,6 @@ import Navbar from "@/components/navbar";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import Container from "@/components/container";
-import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
 import useCreateQueryString from "@/hooks/use-create-query-params";
@@ -15,6 +14,7 @@ import { login } from "@/services";
 import { isPhoneValid } from "@/utils";
 import withOutAuth from "@/components/public-route";
 import { getUserIpInfo } from "@/services/util";
+import { useRouter } from "next-nprogress-bar";
 
 function Login() {
   const [phone, setPhone] = React.useState("");

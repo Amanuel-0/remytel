@@ -7,9 +7,9 @@ import IconButton from "@/components/ui/icon-button";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import withAuth from "@/components/protected-route";
-import { useRouter } from "next/navigation";
 import AccountNav from "../account-nav";
 import userContext from "@/states/user-context";
+import { useRouter } from "next-nprogress-bar";
 
 function Settings() {
   const {

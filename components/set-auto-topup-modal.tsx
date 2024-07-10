@@ -4,8 +4,7 @@ import Textt from "./text";
 import MyButton from "./ui/my-button";
 import Image from "next/image";
 import ModalWrapper from "./modal-wrapper";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+
 import withAuth from "./protected-route";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
@@ -14,6 +13,7 @@ import TopupOptions from "./topups-options";
 import { getOrderHistory } from "@/services/profile.service";
 import userContext from "@/states/user-context";
 import { SubscriptionTypeMap } from "@/services/type";
+import { useRouter } from "next-nprogress-bar";
 
 /**
  * a modal to set auto topup

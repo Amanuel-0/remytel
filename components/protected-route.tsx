@@ -1,8 +1,8 @@
 "use client";
 import React, { useContext, useEffect } from "react";
 // import { useRouter } from "next/router";
-import { useRouter } from "next/navigation";
 import authContext from "@/states/auth-context";
+import { useRouter } from "next-nprogress-bar";
 
 // This is a Higher Order Component (HOC) that wraps a component and checks if the user is authenticated
 const withAuth = (WrappedComponent: any) => {

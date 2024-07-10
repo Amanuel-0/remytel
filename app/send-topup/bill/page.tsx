@@ -7,7 +7,6 @@ import MyButton from "@/components/ui/my-button";
 import productContext from "@/states/product-context";
 import sendTopupContext from "@/states/send-topup-context";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { use, useContext, useState } from "react";
 import withAuth from "@/components/protected-route";
 import { processCheckout } from "@/services/checkout.service";
@@ -25,7 +24,6 @@ function Bill() {
   const { sendTopup, setSendTopup } = useContext(sendTopupContext);
   const { product } = useContext(productContext);
   const [showPaymentDetail, setShowPaymentDetail] = useState(false);
-  const router = useRouter();
   const [isEditDetailMenuOpen, setIdEditDetailMenuOpen] = useState(false);
   const [openAutoTopupModal, setOpenAutoTopupModal] = useState(false);
   const [openProductAndPlanOptionsModal, setOpenProductAndPlanOptionsModal] =

@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 
 function AccountNav() {
   const router = useRouter();

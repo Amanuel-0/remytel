@@ -5,9 +5,9 @@ import Card from "@/components/card";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
+import { useRouter } from "next-nprogress-bar";
 
 function To() {
   const {

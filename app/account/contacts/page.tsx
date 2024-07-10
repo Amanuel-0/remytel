@@ -10,9 +10,9 @@ import AccountNav from "../account-nav";
 import contactsContext from "@/states/contacts-context";
 import stc from "string-to-color";
 import sendTopupContext from "@/states/send-topup-context";
-import { useRouter } from "next/navigation";
 import userContext from "@/states/user-context";
 import SaveContactModal from "@/components/save-contact-modal";
+import { useRouter } from "next-nprogress-bar";
 
 function Contacts() {
   const { contacts, refetch } = useContext(contactsContext);

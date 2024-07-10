@@ -3,7 +3,6 @@ import Card from "@/components/card";
 import Textt from "@/components/text";
 import React, { useContext, useEffect } from "react";
 import MyButton from "@/components/ui/my-button";
-import { useRouter } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import Link from "next/link";
 import authContext from "@/states/auth-context";
@@ -11,6 +10,7 @@ import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
 import topupRequestContext from "@/states/request-topup-context";
 import withOutAuth from "@/components/public-route";
+import { useRouter } from "next-nprogress-bar";
 
 function SignupSendTopup() {
   const { topupRequest, setTopupRequest } = useContext(topupRequestContext);

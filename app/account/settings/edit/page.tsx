@@ -7,11 +7,11 @@ import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import AccountNav from "../../account-nav";
 import userContext from "@/states/user-context";
-import { useRouter } from "next/navigation";
 import { updateProfile } from "@/services";
 import { editProfile } from "@/services/profile.service";
 import { toast } from "sonner";
 import withAuth from "@/components/protected-route";
+import { useRouter } from "next-nprogress-bar";
 
 function SettingsEdit() {
   const {
@@ -58,19 +58,32 @@ function SettingsEdit() {
   }, [user]);
 
   // requests
+  const [loading, setLoading] = useState(false);
   const updatePersonalDetails = async (e: any) => {
-    e.preventDefault();
+    try {
+      setLoading(true);
+      e.preventDefault();
 
-    const response = await editProfile(token, {
-      first_name: personalDetails.first_name,
-      last_name: personalDetails.last_name,
-      email: personalDetails.email,
-      promoOptIn: notificationsEnabled,
-    });
+      const response = await editProfile(token, {
+        first_name: personalDetails.first_name,
+        last_name: personalDetails.last_name,
+        email: personalDetails.email,
+        promoOptIn: notificationsEnabled,
+      });
 
-    if (response) {
-      onUser({ token: token, user: { ...user, ...response } });
-      toast.success("Profile has been updated");
+      if (response) {
+        onUser({ token: token, user: { ...user, ...response } });
+        toast.success("Profile has been updated");
+      }
+    } catch (e: any) {
+      toast.error(
+        <p className="text-red-700">
+          {e?.response?.data?.message ||
+            "Unknown error while trying to save changes"}
+        </p>,
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,6 +222,7 @@ function SettingsEdit() {
                   variant="primary-normal"
                   className="max-w-[145px]"
                   onClick={updatePersonalDetails}
+                  loading={loading}
                 >
                   <Textt
                     variant="span1-satoshi"

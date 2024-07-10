@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import productContext from "@/states/product-context";
 import SaveContactModal from "@/components/save-contact-modal";
 import withAuth from "@/components/protected-route";
@@ -22,6 +22,7 @@ import moment from "moment";
 import { OrderT } from "@/services/type";
 import { nextBIllingDate } from "@/utils";
 import contactsContext from "@/states/contacts-context";
+import { useRouter } from "next-nprogress-bar";
 
 function Success() {
   const {

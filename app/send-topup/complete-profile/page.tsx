@@ -6,7 +6,8 @@ import MyButton from "@/components/ui/my-button";
 import { editProfile } from "@/services/profile.service";
 import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -29,7 +30,9 @@ export default function CompleteProfilePage() {
       router.push(`/send-topup/options`);
     }
   };
+  const [loading, setLoading] = useState(false);
   const updateUserInfo = useCallback(() => {
+    setLoading(true);
     if (token) {
       if (
         (user?.email || email?.length > 0) &&
@@ -55,6 +58,7 @@ export default function CompleteProfilePage() {
         });
       }
     }
+    setLoading(false);
   }, [token, email, firstName, lastName, user]);
   const handleContinue = () => {
     updateUserInfo();
@@ -140,6 +144,7 @@ export default function CompleteProfilePage() {
             variant="primary-normal"
             className="mt-[10px]"
             onClick={handleContinue}
+            loading={loading}
           >
             <Textt variant="span2-satoshi" className="text-white">
               Continue

@@ -5,7 +5,7 @@ import TopupOptionDetailCard from "@/components/topup-option-detail-card";
 import TopupToDetailCard from "@/components/topup-to-detail-card";
 import React, { useContext, useEffect, useState } from "react";
 import MyButton from "@/components/ui/my-button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PhoneInputLib from "@/components/form/phone-input-lib";
 import { isPhoneValid } from "@/utils";
 import { login } from "@/services";
@@ -15,6 +15,7 @@ import { ParsedCountry } from "react-international-phone";
 // import {parsePhoneNumber} from 'google-libphonenumber'
 import withOutAuth from "@/components/public-route";
 import { getUserIpInfo } from "@/services/util";
+import { useRouter } from "next-nprogress-bar";
 
 function SignupSendTopup() {
   const searchParams = useSearchParams();

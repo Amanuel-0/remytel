@@ -4,8 +4,8 @@ import Textt from "@/components/text";
 import MyButton from "@/components/ui/my-button";
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import withAuth from "@/components/protected-route";
+import { useRouter } from "next-nprogress-bar";
 
 function Success() {
   const router = useRouter();

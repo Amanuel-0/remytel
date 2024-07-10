@@ -10,9 +10,10 @@ import Image from "next/image";
 import FaqAccordion from "@/components/faq-accordion";
 import FooterAlt from "@/components/footer-alt";
 import PhoneInputLib from "@/components/form/phone-input-lib";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
+import { useRouter } from "next-nprogress-bar";
 
 function LandingPage() {
   const {
@@ -223,7 +224,8 @@ function LandingPage() {
               <div className="w-36">
                 <MyButton
                   variant="primary-gradient-bottom-right"
-                  onClick={() => router.push("/send-topup/to")}
+                  href="/send-topup/to"
+                  type="link"
                 >
                   Start top-up
                 </MyButton>

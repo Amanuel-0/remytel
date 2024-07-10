@@ -13,9 +13,10 @@ import sendTopupContext from "@/states/send-topup-context";
 import userContext from "@/states/user-context";
 import { toast } from "sonner";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useRouter } from "next-nprogress-bar";
 
 type MenuType = "topup" | "plans";
 

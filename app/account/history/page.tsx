@@ -17,7 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
 import topupRequestContext from "@/states/request-topup-context";
 import sendTopupContext from "@/states/send-topup-context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 
 function History() {
   const {

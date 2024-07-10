@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useContext } from "react";
 import Card from "./card";
 import authContext from "@/states/auth-context";
@@ -12,6 +11,7 @@ import { User } from "@/models";
 import sendTopupContext from "@/states/send-topup-context";
 import topupRequestContext from "@/states/request-topup-context";
 import Image from "next/image";
+import { useRouter } from "next-nprogress-bar";
 
 function AccountMenu({ ref }: { ref?: React.MutableRefObject<null> }) {
   const { onLogin } = useContext(authContext);

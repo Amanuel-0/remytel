@@ -7,11 +7,11 @@ import CopyToClipboardBtn from "@/components/ui/copy-to-clipboard-btn";
 import ModalWrapper from "@/components/modal-wrapper";
 import userContext from "@/states/user-context";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import withAuth from "@/components/protected-route";
 import { GetRequestResponse } from "@/models";
 import { getRequest } from "@/services/request.service";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { useRouter } from "next-nprogress-bar";
 
 function TopupLink() {
   const { user, onUser } = useContext(userContext);
