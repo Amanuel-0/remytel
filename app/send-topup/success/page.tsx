@@ -180,10 +180,10 @@ function Success() {
         <div className="mb-6 mt-5 flex items-center justify-between">
           <div className="flex gap-2">
             <Textt variant="p1-satoshi" className="text-start">
-              Transaction ID
+              Transaction ID: {}
             </Textt>
             <Textt variant="p1-satoshi" className="text-primary">
-              {sendTopup?.transactionId ?? null}
+              {transaction?.chargeId ?? null}
               {/* 10052435 */}
             </Textt>
           </div>
@@ -205,7 +205,7 @@ function Success() {
 
         {/* // */}
         {transaction?.subscription && (
-          <div className="mt-7">
+          <div className="my-7">
             <div className="flex items-center justify-between">
               <Textt variant="h6-satoshi" className="text-start">
                 Scheduled top-up set

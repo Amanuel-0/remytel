@@ -89,6 +89,13 @@ function Bill() {
         })
         .catch((err: any) => {
           // console.log("something went wrong while processing checkout: ", err);
+          toast.error(
+            <p className="text-red-700">
+              {err?.response?.data?.error ||
+                err?.response?.data?.message ||
+                "Unknown error while trying to process payment"}
+            </p>,
+          );
         });
 
       // if successful, navigate to /send-topup/success
