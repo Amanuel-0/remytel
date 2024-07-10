@@ -25,7 +25,6 @@ function ProductAndPlanOptionsModal({
           msOverflowStyle: "none",
         }}
         // onClick={(e) => e.stopPropagation()}
-        onClick={() => console.log("clicked")}
       >
         <IconButton
           className="ml-auto h-8 w-8 border-none transition-all duration-300"

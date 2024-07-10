@@ -19,10 +19,6 @@ function To() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("isValidPhone", isValidPhone);
-  }, [isValidPhone]);
-
-  useEffect(() => {
     validatePhoneNumber();
   }, [toPhone]);
 

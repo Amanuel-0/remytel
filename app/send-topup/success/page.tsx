@@ -18,6 +18,10 @@ import sendTopupContext from "@/states/send-topup-context";
 import Link from "next/link";
 import { getOrderDetails, getOrderHistory } from "@/services/profile.service";
 import userContext from "@/states/user-context";
+import moment from "moment";
+import { OrderT } from "@/services/type";
+import { nextBIllingDate } from "@/utils";
+import contactsContext from "@/states/contacts-context";
 
 function Success() {
   const {
@@ -28,7 +32,7 @@ function Success() {
   const [openSaveContactModal, setOpenSaveContactModal] = React.useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [transaction, setTransaction] = useState<Transaction>();
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     fetchOrderHistory();
@@ -40,8 +44,6 @@ function Success() {
     if (orderId) {
       // write a get order details function
       getOrderDetails(orderId, token).then((order) => {
-        console.log("orderid", orderId);
-        console.log("created transaction", order);
         setTransaction(order);
         // setSendTopup({
         //   ...sendTopup,
@@ -67,15 +69,6 @@ function Success() {
     .splice(1, 4)
     .join(" ");
 
-  // current date: should be the date the top-up was made
-  const currentDate = new Date(Date.now())
-    .toDateString()
-    .split(" ")
-    .splice(1, 4)
-    .join(" ");
-  // current time: should be the time the top-up was made
-  const currentTime = new Date(Date.now()).toLocaleTimeString();
-
   const handleSendAnotherTopup = () => {
     onProductChange({} as Product);
     router.push("/send-topup/options");
@@ -84,6 +77,10 @@ function Success() {
     router.push("/account/home");
     onProductChange({} as Product);
   };
+  const { contacts } = useContext(contactsContext);
+  const receiverContact = contacts?.items?.filter?.(
+    (c) => c.phoneNumber === transaction?.receiver,
+  )?.[0];
 
   return (
     <>
@@ -99,11 +96,11 @@ function Success() {
           Top-up Completed
         </Textt>
         <Textt variant="span2-satoshi" className="mt-2">
-          {currentDate}, {currentTime}
+          {moment(transaction?.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
           {/* 22 Mar 2024, 03:07 PM */}
         </Textt>
 
-        {sendTopup.topupFrequency && (
+        {transaction?.subscription?.interval && (
           <div className="mt-2 flex items-center justify-start gap-2">
             <Image
               src={"/assets/icons/schedule-icon.svg"}
@@ -113,7 +110,7 @@ function Success() {
             />
 
             <Textt variant="span1-satoshi">
-              Auto top-up every {sendTopup.topupFrequency} days 
+              Auto top-up every {transaction?.subscription?.interval} days 
             </Textt>
           </div>
         )}
@@ -135,9 +132,28 @@ function Success() {
 
       <Card className="mt-5">
         <div className="flex items-center justify-between">
-          <Textt variant="h4-satoshi" className="text-start">
-            {sendTopup.to}
-          </Textt>
+          {!receiverContact && (
+            <Textt variant="h4-satoshi" className="text-start">
+              {transaction?.receiver}
+            </Textt>
+          )}
+          {receiverContact && (
+            <div className={`flex items-center justify-start gap-2`}>
+              <div
+                className={`flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#80C03F] to-[#2CA342] text-white `}
+              >
+                <Image
+                  src={"/assets/icons/account-white.svg"}
+                  alt={"account-white"}
+                  width={12}
+                  height={15}
+                />
+              </div>
+              <Textt variant="h4-satoshi" className="text-start">
+                {receiverContact?.name?.split?.(" ")?.[0]}
+              </Textt>
+            </div>
+          )}
 
           <button
             className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]"
@@ -173,7 +189,7 @@ function Success() {
 
           <div className="flex gap-2">
             <Textt variant="p1-satoshi" className="text-start">
-              Sent in 5 seconds
+              Sent {moment(transaction?.createdAt).fromNow()}
             </Textt>
             <Image
               src={"/assets/icons/lighting-bolt-icon.svg"}
@@ -184,33 +200,39 @@ function Success() {
           </div>
         </div>
 
-        <hr />
+        <hr className="my-6" />
 
         {/* // */}
-        <div className="my-7">
-          <div className="flex items-center justify-between">
-            <Textt variant="h6-satoshi" className="text-start">
-              Scheduled top-up set
+        {transaction?.subscription && (
+          <div className="mt-7">
+            <div className="flex items-center justify-between">
+              <Textt variant="h6-satoshi" className="text-start">
+                Scheduled top-up set
+              </Textt>
+
+              <button className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
+                <Link href={"/account/auto-topups"}>
+                  <Textt variant="span2-satoshi">See more</Textt>
+                </Link>
+                <Image
+                  src={"/assets/icons/arrow-right.svg"}
+                  alt={"right"}
+                  width={5}
+                  height={9}
+                />
+              </button>
+            </div>
+
+            <Textt variant="p1-satoshi" className="mt-2 text-start">
+              Next payment on{" "}
+              {nextBIllingDate(
+                moment(transaction?.createdAt).toDate(),
+                transaction?.subscription?.type,
+              )}
+              {/* Next payment on 21 Apr 2024 */}
             </Textt>
-
-            <button className="flex h-[34px] w-[120px] items-center justify-center gap-[10px] rounded-full border border-[#DDD]">
-              <Link href={"/account/auto-topups"}>
-                <Textt variant="span2-satoshi">See more</Textt>
-              </Link>
-              <Image
-                src={"/assets/icons/arrow-right.svg"}
-                alt={"right"}
-                width={5}
-                height={9}
-              />
-            </button>
           </div>
-
-          <Textt variant="p1-satoshi" className="mt-2 text-start">
-            Next payment on {nextPaymentDate}
-            {/* Next payment on 21 Apr 2024 */}
-          </Textt>
-        </div>
+        )}
 
         <MyButton variant="primary-normal" onClick={handleSendAnotherTopup}>
           <Textt variant="h5-satoshi" className="text-white">
@@ -233,6 +255,7 @@ function Success() {
       <SaveContactModal
         open={openSaveContactModal}
         onClose={() => setOpenSaveContactModal(false)}
+        phone={transaction?.receiver}
       />
     </>
   );

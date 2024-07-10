@@ -86,11 +86,11 @@ function Bill() {
             window.location = res.session.url;
             // window.location.href = res.session.url;
           } else {
-            console.log("something went wrong on checkout!");
+            // console.log("something went wrong on checkout!");
           }
         })
         .catch((err: any) => {
-          console.log("something went wrong while processing checkout: ", err);
+          // console.log("something went wrong while processing checkout: ", err);
         });
 
       // if successful, navigate to /send-topup/success

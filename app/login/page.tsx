@@ -53,7 +53,6 @@ function Login() {
       phoneNumber: phone,
       code: countryCode, // the country code of the sender phone number
     });
-    console.log("signup data: ", userData);
 
     if (userData) {
       router.push(

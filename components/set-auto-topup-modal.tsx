@@ -68,7 +68,6 @@ function SetAutoTopupModal({
   const [unavaliableProducts, setUnavaliableProducts] = useState<string[]>([]);
   useEffect(() => {
     if (sendTopup?.to) {
-      console.log("tooooooooooo", sendTopup?.to);
       getOrderHistory({ page: 0, size: 10 }, token, sendTopup.to).then((d) => {
         setUnavaliableProducts(
           d.items?.map(

@@ -44,7 +44,6 @@ export default function CompleteProfilePage() {
         })
           .then((d) => {
             onUser({ token, user: d });
-            console.log(d);
           })
           .catch(() => {
             toast("Some error happened while trying to save your info");

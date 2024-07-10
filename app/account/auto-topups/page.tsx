@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import InfiniteScroll from "react-infinite-scroll-component";
 import moment from "moment";
+import { nextBIllingDate } from "@/utils";
 
 function AutoTopups() {
   const {
@@ -138,19 +139,7 @@ interface AutoTopupProps {
   item: SubscriptionT;
   setOpenCancelAutoTopupModal: (open: boolean) => void;
 }
-const nextBIllingDate = (
-  createdAt: Date,
-  type: "MONTHLY" | "WEEKLY" | "BIWEEKLY",
-) => {
-  const startDate = moment(createdAt);
-  const datesPassed = moment().diff(startDate, "days");
-  let daysRemainingForNextBill = 0;
-  let daysPassedAfterLastBill = 0;
-  const freq = parseInt(SubscriptionTypeMap[type]) || 0;
-  daysPassedAfterLastBill = datesPassed % freq;
-  daysRemainingForNextBill = freq - daysPassedAfterLastBill;
-  return moment().add(daysRemainingForNextBill, "days").format("D / M / YYYY");
-};
+
 const AutoTopup = ({ item, setOpenCancelAutoTopupModal }: AutoTopupProps) => {
   return (
     <>

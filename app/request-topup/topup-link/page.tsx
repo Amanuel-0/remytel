@@ -25,7 +25,6 @@ function TopupLink() {
   const onCopyLinkCopied = () => {
     // console.log("Link copied");
     setTimeout(() => {
-      console.log("Link copied");
       router.push("/request-topup/success");
     }, 1000);
   };

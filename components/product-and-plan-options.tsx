@@ -43,10 +43,6 @@ function ProductAndPlanOptions({
   //   React.useState(false);
 
   useEffect(() => {
-    console.log("window location", window.location.pathname);
-  }, []);
-
-  useEffect(() => {
     setLoading(true);
     if (products?.length !== 0) {
       setLoading(false);
@@ -72,14 +68,12 @@ function ProductAndPlanOptions({
     const selectedProduct: Product | undefined = products?.find((product) => {
       return product.id === productId;
     });
-    console.log(selectedProduct);
     if (selectedProduct) {
       onProductChange(selectedProduct);
       setSendTopup({ ...sendTopup, product: selectedProduct });
 
       // navigate to login if user is not logged in
       if (user) {
-        console.log("product selected: product id is: ", productId);
         handleAutoTopupModal && handleAutoTopupModal(true);
         // setOpenAutoTopupModal(true);
       } else {
@@ -112,14 +106,12 @@ function ProductAndPlanOptions({
             return product.id === productId;
           },
         );
-        console.log(products);
         if (selectedProduct) {
           onProductChange(selectedProduct);
           setSendTopup({ ...sendTopup, product: selectedProduct });
 
           // navigate to login if user is not logged in
           if (user) {
-            console.log("product selected: product id is: ", productId);
             handleAutoTopupModal && handleAutoTopupModal(true);
             // setOpenAutoTopupModal(true);
           } else {

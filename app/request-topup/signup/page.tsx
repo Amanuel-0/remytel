@@ -28,10 +28,6 @@ function SignupSendTopup() {
 
   const isSenderPhoneValid = isPhoneValid(senderPhoneNumber);
 
-  useEffect(() => {
-    console.log(senderPhoneNumber);
-  }, [senderPhoneNumber]);
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -45,7 +41,6 @@ function SignupSendTopup() {
       phoneNumber: senderPhoneNumber,
       code, // the country code of the sender phone number
     });
-    console.log("login reponse data: ", userData);
 
     if (userData) {
       setTopupRequest({ ...topupRequest, senderPhoneNumber, code });

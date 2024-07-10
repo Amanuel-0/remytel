@@ -43,7 +43,6 @@ function VerifyOtp({
         onUser({ ...otpResponse } as User);
       }
 
-      console.log("returning to", redirectUrl);
       if (
         otpResponse?.user?.firstName ||
         otpResponse?.user?.lastName ||

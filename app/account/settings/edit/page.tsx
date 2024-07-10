@@ -57,14 +57,9 @@ function SettingsEdit() {
     });
   }, [user]);
 
-  useEffect(() => {
-    console.log("notificationsEnabled", notificationsEnabled);
-  }, [notificationsEnabled]);
-
   // requests
   const updatePersonalDetails = async (e: any) => {
     e.preventDefault();
-    console.log(personalDetails);
 
     const response = await editProfile(token, {
       first_name: personalDetails.first_name,
@@ -77,8 +72,6 @@ function SettingsEdit() {
       onUser({ token: token, user: { ...user, ...response } });
       toast.success("Profile has been updated");
     }
-
-    console.log("edit profile response", response);
   };
 
   //

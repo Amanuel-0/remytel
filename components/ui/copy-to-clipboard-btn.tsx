@@ -30,7 +30,6 @@ function CopyToClipboardBtn({
 
     // Event listener for successful copy
     clipboard.on("success", (e) => {
-      console.log("Text copied to clipboard:", e.text);
       // You can add any additional logic here, such as showing a success message
     });
 

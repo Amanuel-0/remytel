@@ -102,9 +102,7 @@ function CreateTopupLink() {
     }
   };
 
-  useEffect(() => {
-    console.log("subscription", subscription);
-  }, [subscription]);
+  useEffect(() => {}, [subscription]);
 
   return (
     <Card>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import ModalWrapper from "./modal-wrapper";
 import Textt from "./text";
@@ -13,15 +13,17 @@ import { toast } from "sonner";
 function SaveContactModal({
   open,
   onClose,
+  phone = "",
 }: {
   open: boolean;
   onClose: () => void;
+  phone?: string;
 }) {
   const { user } = useContext(userContext);
   const [contactName, setContactName] = useState<string>("");
   const [contactNameValid, setContactNameValid] = useState<boolean>(false);
   const [contactNameTouched, setContactNameTouched] = useState<boolean>(false);
-  const [contactPhoneNumber, setContactPhoneNumber] = useState<string>("");
+  const [contactPhoneNumber, setContactPhoneNumber] = useState<string>(phone);
   const [contactPhoneNumberValid, setContactPhoneNumberValid] =
     useState<boolean>(false);
   const [contactPhoneNumberTouched, setContactPhoneNumberTouched] =
@@ -29,7 +31,16 @@ function SaveContactModal({
 
   const searchParams = useSearchParams();
   const [saving, setSaving] = useState(false);
-
+  useEffect(() => {
+    if (phone) {
+      setContactPhoneNumber(phone);
+      if (isPhoneValid(phone)) {
+        setContactPhoneNumberValid(true);
+      } else {
+        setContactPhoneNumberValid(false);
+      }
+    }
+  }, [phone]);
   // const receiverPhone = searchParams.get("to") || "";
   // const [receiverName, setReceiverName] = useState<string>("");
 
